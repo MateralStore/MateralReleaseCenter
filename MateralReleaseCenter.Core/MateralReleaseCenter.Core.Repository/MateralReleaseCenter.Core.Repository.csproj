@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="../../Common.props"/>
+	<ItemGroup>
+		<PackageReference Include="Materal.TTA.SqliteEFRepository" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MateralReleaseCenter.Core.Abstractions\MateralReleaseCenter.Core.Abstractions.csproj" />
+	</ItemGroup>
+</Project>

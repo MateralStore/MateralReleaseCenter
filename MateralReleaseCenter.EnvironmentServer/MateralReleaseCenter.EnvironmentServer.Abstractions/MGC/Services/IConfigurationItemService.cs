@@ -1,0 +1,15 @@
+﻿/*
+ * Generator Code From MateralMergeBlock=>GeneratorIServicesCodeAsync
+ */
+using MateralReleaseCenter.EnvironmentServer.Abstractions.DTO.ConfigurationItem;
+using MateralReleaseCenter.EnvironmentServer.Abstractions.Services.Models.ConfigurationItem;
+
+namespace MateralReleaseCenter.EnvironmentServer.Abstractions.Services
+{
+    /// <summary>
+    /// 配置项服务
+    /// </summary>
+    public partial interface IConfigurationItemService : IBaseService<AddConfigurationItemModel, EditConfigurationItemModel, QueryConfigurationItemModel, ConfigurationItemDTO, ConfigurationItemListDTO>
+    {
+    }
+}

@@ -1,0 +1,7 @@
+﻿{
+  "EnvironmentServer": {
+    "DBConfig": {
+      "Source": "E:\\Project\\Materal\\MateralReleaseCenter\\MateralReleaseCenter.EnvironmentServer\\MateralReleaseCenter.EnvironmentServer.WebAPI\\bin\\MateralReleaseCenterEnvironmentServer.db"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="../../Common.props" />
+	<ItemGroup>
+		<PackageReference Include="Materal.EventBus.RabbitMQ" />
+		<PackageReference Include="Materal.MergeBlock.Authorization.Abstractions" />
+		<PackageReference Include="Materal.MergeBlock.Consul.Abstractions" />
+		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\MateralReleaseCenter.Core\MateralReleaseCenter.Core.Application\MateralReleaseCenter.Core.Application.csproj" />
+		<ProjectReference Include="..\..\MateralReleaseCenter.ServerCenter\MateralReleaseCenter.ServerCenter.Abstractions\MateralReleaseCenter.ServerCenter.Abstractions.csproj" />
+		<ProjectReference Include="..\MateralReleaseCenter.EnvironmentServer.Repository\MateralReleaseCenter.EnvironmentServer.Repository.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="MateralReleaseCenter.EnvironmentServer.Application.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

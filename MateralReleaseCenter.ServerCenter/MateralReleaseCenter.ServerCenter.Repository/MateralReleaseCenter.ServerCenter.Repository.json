@@ -1,0 +1,7 @@
+﻿{
+  "ServerCenter": {
+    "DBConfig": {
+      "Source": "E:\\Project\\Materal\\MateralReleaseCenter\\MateralReleaseCenter.ServerCenter\\MateralReleaseCenter.ServerCenter.WebAPI\\bin\\MateralReleaseCenterServerCenter.db"
+    }
+  }
+}

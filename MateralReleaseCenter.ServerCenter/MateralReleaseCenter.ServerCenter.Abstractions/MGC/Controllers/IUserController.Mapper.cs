@@ -1,0 +1,26 @@
+﻿using MateralReleaseCenter.ServerCenter.Abstractions.DTO.User;
+using MateralReleaseCenter.ServerCenter.Abstractions.RequestModel.User;
+
+namespace MateralReleaseCenter.ServerCenter.Abstractions.Controllers
+{
+    /// <summary>
+    /// 用户服务控制器
+    /// </summary>
+    public partial interface IUserController : IMergeBlockController
+    {
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut]
+        Task<ResultModel<string>> ResetPasswordAsync(Guid id);
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        Task<ResultModel> ChangePasswordAsync(ChangePasswordRequestModel requestModel);
+    }
+}

@@ -1,0 +1,15 @@
+﻿/*
+ * Generator Code From MateralMergeBlock=>GeneratorIControllerCodeAsync
+ */
+using MateralReleaseCenter.ServerCenter.Abstractions.DTO.Project;
+using MateralReleaseCenter.ServerCenter.Abstractions.RequestModel.Project;
+
+namespace MateralReleaseCenter.ServerCenter.Abstractions.Controllers
+{
+    /// <summary>
+    /// 项目控制器
+    /// </summary>
+    public partial interface IProjectController : IMergeBlockController<AddProjectRequestModel, EditProjectRequestModel, QueryProjectRequestModel, ProjectDTO, ProjectListDTO>
+    {
+    }
+}

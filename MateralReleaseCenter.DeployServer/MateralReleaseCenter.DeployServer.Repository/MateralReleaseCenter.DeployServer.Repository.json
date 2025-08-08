@@ -1,0 +1,7 @@
+﻿{
+  "DeployServer": {
+    "DBConfig": {
+      "Source": "E:\\Project\\Materal\\MateralReleaseCenter\\MateralReleaseCenter.DeployServer\\MateralReleaseCenter.DeployServer.WebAPI\\bin\\MateralReleaseCenterDeployServer.db"
+    }
+  }
+}

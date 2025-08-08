@@ -1,0 +1,15 @@
+﻿/*
+ * Generator Code From MateralMergeBlock=>GeneratorIControllerCodeAsync
+ */
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
+using MateralReleaseCenter.DeployServer.Abstractions.RequestModel.ApplicationInfo;
+
+namespace MateralReleaseCenter.DeployServer.Abstractions.Controllers
+{
+    /// <summary>
+    /// 应用程序信息控制器
+    /// </summary>
+    public partial interface IApplicationInfoController : IMergeBlockController<AddApplicationInfoRequestModel, EditApplicationInfoRequestModel, QueryApplicationInfoRequestModel, ApplicationInfoDTO, ApplicationInfoListDTO>
+    {
+    }
+}

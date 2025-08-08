@@ -29,6 +29,7 @@
     <PackageVersion Include="Materal.TTA.SqliteEFRepository" Version="1.3.0" />
     <PackageVersion Include="Materal.Utils" Version="1.3.2" />
     <PackageVersion Include="Materal.Utils.Consul" Version="1.3.2" />
+    <PackageVersion Include="Materal.Utils.Windows" Version="1.3.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />
   </ItemGroup>

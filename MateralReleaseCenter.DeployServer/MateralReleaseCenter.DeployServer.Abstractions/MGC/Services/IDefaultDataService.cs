@@ -1,0 +1,15 @@
+﻿/*
+ * Generator Code From MateralMergeBlock=>GeneratorIServicesCodeAsync
+ */
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.DefaultData;
+using MateralReleaseCenter.DeployServer.Abstractions.Services.Models.DefaultData;
+
+namespace MateralReleaseCenter.DeployServer.Abstractions.Services
+{
+    /// <summary>
+    /// 默认数据服务
+    /// </summary>
+    public partial interface IDefaultDataService : IBaseService<AddDefaultDataModel, EditDefaultDataModel, QueryDefaultDataModel, DefaultDataDTO, DefaultDataListDTO>
+    {
+    }
+}

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="../../Common.props"/>
+	<ItemGroup>
+		<ProjectReference Include="..\..\MateralReleaseCenter.Core\MateralReleaseCenter.Core.Repository\MateralReleaseCenter.Core.Repository.csproj" />
+		<ProjectReference Include="..\MateralReleaseCenter.DeployServer.Abstractions\MateralReleaseCenter.DeployServer.Abstractions.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="MateralReleaseCenter.DeployServer.Repository.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

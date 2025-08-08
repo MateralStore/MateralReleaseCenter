@@ -1,0 +1,14 @@
+﻿global using Materal.MergeBlock.Abstractions.Models;
+global using Materal.MergeBlock.Abstractions.Services;
+global using Materal.MergeBlock.Domain.Abstractions;
+global using Materal.MergeBlock.GeneratorCode.Attributers;
+global using Materal.MergeBlock.Web.Abstractions;
+global using Materal.MergeBlock.Web.Abstractions.Controllers;
+global using Materal.TTA.Common;
+global using Materal.Utils.Model;
+global using MateralReleaseCenter.Authority.Abstractions.Controllers;
+global using MateralReleaseCenter.Authority.Abstractions.Domain;
+global using MateralReleaseCenter.Core.Abstractions;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using System.ComponentModel.DataAnnotations;

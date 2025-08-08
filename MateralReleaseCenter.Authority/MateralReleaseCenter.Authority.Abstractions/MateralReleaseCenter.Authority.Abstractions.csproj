@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="../../Common.props" />
+	<ItemGroup>
+		<PackageReference Include="Materal.MergeBlock.GeneratorCode" />
+		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\MateralReleaseCenter.Core\MateralReleaseCenter.Core.Repository\MateralReleaseCenter.Core.Repository.csproj" />
+	</ItemGroup>
+</Project>

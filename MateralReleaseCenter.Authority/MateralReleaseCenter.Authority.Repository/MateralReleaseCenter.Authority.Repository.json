@@ -1,0 +1,7 @@
+﻿{
+  "Authority": {
+    "DBConfig": {
+      "Source": "E:\\Project\\Materal\\MateralReleaseCenter\\MateralReleaseCenter.Authority\\MateralReleaseCenter.Authority.WebAPI\\bin\\MateralReleaseCenterAuthority.db"
+    }
+  }
+}

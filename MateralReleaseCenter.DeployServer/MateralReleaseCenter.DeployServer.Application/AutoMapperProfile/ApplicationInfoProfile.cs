@@ -11,7 +11,7 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
         /// <summary>
         /// 初始化
         /// </summary>
-        protected ApplicationInfoProfile()
+        public ApplicationInfoProfile()
         {
             CreateMap<ApplicationRuntimeModel, ApplicationInfoDTO>((mapper, m, n) =>
             {
@@ -27,8 +27,9 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
         /// </summary>
         /// <param name="model"></param>
         /// <param name="dto"></param>
-        private void ApplicationRuntimeModelToDTO(ApplicationRuntimeModel model, ApplicationInfoListDTO dto)
+        private void ApplicationRuntimeModelToDTO(ApplicationRuntimeModel model, ApplicationInfoListDTO? dto)
         {
+            dto ??= new();
             dto.ID = model.ApplicationInfo.ID;
             dto.CreateTime = model.ApplicationInfo.CreateTime;
             dto.Name = model.ApplicationInfo.Name;

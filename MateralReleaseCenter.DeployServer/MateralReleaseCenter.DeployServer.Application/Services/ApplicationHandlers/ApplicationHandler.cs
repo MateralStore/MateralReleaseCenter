@@ -1,4 +1,4 @@
-﻿using MateralReleaseCenter.DeployServer.Application.Services.Models;
+using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
@@ -64,9 +64,18 @@ public abstract class ApplicationHandler : IApplicationHandler
     protected virtual void CloseProcess(ApplicationRuntimeModel applicationRuntime)
     {
         if (BindProcess == null) return;
+        // 尝试优雅关闭
         if (!BindProcess.CloseMainWindow())
         {
-            BindProcess.Kill();
+            BindProcess.Kill(entireProcessTree: true);
+        }
+        else
+        {
+            BindProcess.WaitForExit(10000); // 等待最多10秒
+            if (!BindProcess.HasExited)
+            {
+                BindProcess.Kill(entireProcessTree: true);
+            }
         }
         BindProcess.WaitForExit();
         BindProcess.Close();
@@ -79,7 +88,7 @@ public abstract class ApplicationHandler : IApplicationHandler
     protected virtual void KillProcess()
     {
         if (BindProcess == null) return;
-        BindProcess.Kill();
+        BindProcess.Kill(entireProcessTree: true);
         BindProcess.WaitForExit();
         BindProcess.Close();
         BindProcess.Dispose();

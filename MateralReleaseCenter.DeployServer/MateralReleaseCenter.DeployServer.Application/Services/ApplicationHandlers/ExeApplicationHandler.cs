@@ -1,5 +1,6 @@
 ﻿using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
 
@@ -30,7 +31,8 @@ public class ExeApplicationHandler : ApplicationHandler
     /// <param name="runParams"></param>
     public virtual async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime, string exePath, string? runParams)
     {
-        if (!exePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("主模块必须以.exe结尾");
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !exePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            throw new MateralReleaseCenterException("主模块必须以.exe结尾");
         if (applicationRuntime.ApplicationStatus != ApplicationStatusEnum.Stop) throw new MateralReleaseCenterException("应用程序尚未停止");
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
@@ -75,13 +77,16 @@ public class ExeApplicationHandler : ApplicationHandler
             FileName = processPath,
             UseShellExecute = false,
             CreateNoWindow = false,
-            WindowStyle = ProcessWindowStyle.Minimized,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             Arguments = arg,
             WorkingDirectory = workingDirectory
         };
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            processStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+        }
         return processStartInfo;
     }
 }

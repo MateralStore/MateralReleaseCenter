@@ -21,10 +21,6 @@ namespace MateralReleaseCenter.DeployServer.Application
         /// </summary>
         public string UploadFilePath { get; set; } = "UploadFiles";
         /// <summary>
-        /// WinRar路径
-        /// </summary>
-        public string WinRarPath { get; set; } = "C:\\Program Files\\WinRAR";
-        /// <summary>
         /// 控制台消息数量
         /// </summary>
         public int MaxConsoleMessageCount { get; set; } = 500;

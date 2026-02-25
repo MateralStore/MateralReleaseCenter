@@ -4,7 +4,7 @@
 		<PackageReference Include="Materal.MergeBlock.Authorization.Abstractions" />
 		<PackageReference Include="Materal.MergeBlock.Consul.Abstractions" />
 		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
-		<PackageReference Include="Materal.Utils.Windows" />
+		<PackageReference Include="SharpCompress" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\MateralReleaseCenter.Core\MateralReleaseCenter.Core.Application\MateralReleaseCenter.Core.Application.csproj" />

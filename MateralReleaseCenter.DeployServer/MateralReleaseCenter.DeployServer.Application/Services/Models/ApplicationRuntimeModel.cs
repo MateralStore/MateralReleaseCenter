@@ -1,9 +1,9 @@
-﻿using Materal.Utils.Windows;
-using MateralReleaseCenter.DeployServer.Abstractions.Services.Models;
+﻿using MateralReleaseCenter.DeployServer.Abstractions.Services.Models;
 using MateralReleaseCenter.DeployServer.Application.Hubs;
 using MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
 using Microsoft.AspNetCore.SignalR;
-using System.Diagnostics;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using System.Threading.Tasks.Dataflow;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services.Models;
@@ -186,7 +186,7 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
                 rarFileInfo = rarFileInfos.OrderByDescending(m => m.LastWriteTime).FirstOrDefault();
             }
             if (rarFileInfo == null) return;
-            string unRarDirectoryPath = UnRarFile(rarFileInfo.FullName);
+            string unRarDirectoryPath = ExtractFile(rarFileInfo.FullName);
             DirectoryInfo unRarDirectoryInfo = new(unRarDirectoryPath);
             try
             {
@@ -227,29 +227,44 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
         }
     }
     /// <summary>
-    /// 解压文件
+    /// 解压文件（支持 RAR、ZIP、TAR、GZIP、BZIP2、7Z）
     /// </summary>
-    /// <param name="rarFilePath"></param>
+    /// <param name="archiveFilePath"></param>
     /// <returns></returns>
     /// <exception cref="MateralReleaseCenterException"></exception>
-    private string UnRarFile(string rarFilePath)
+    private string ExtractFile(string archiveFilePath)
     {
-        AddConsoleMessage($"解压文件{Path.GetFileName(rarFilePath)}...");
-        string unRarPath = Path.Combine(RarFilesDirectoryPath, "Temp");
-        DirectoryInfo unRarDirectoryInfo = Directory.CreateDirectory(unRarPath);
-        string winRarPath = Path.Combine(applicationConfig.CurrentValue.WinRarPath, "UnRaR.exe");
-        if (!File.Exists(winRarPath)) throw new MateralReleaseCenterException("UnRar.exe文件丢失");
-        string cmdArgs = $"x -o+ -y \"{rarFilePath}\" \"{unRarPath}\"";
-        ProcessHelper processHelper = new();
-        void DataHandler(object sender, DataReceivedEventArgs e)
+        string fileName = Path.GetFileName(archiveFilePath);
+        AddConsoleMessage($"解压文件{fileName}...");
+        string extractPath = Path.Combine(RarFilesDirectoryPath, "Temp");
+        Directory.CreateDirectory(extractPath);
+        try
         {
-            if (e.Data == null || string.IsNullOrWhiteSpace(e.Data)) return;
-            AddConsoleMessage(e.Data);
+            using var stream = File.OpenRead(archiveFilePath);
+            ReaderOptions readerOptions = new()
+            {
+                LeaveStreamOpen = false,
+                ExtractFullPath = true,
+                Overwrite = true,
+                PreserveFileTime = true
+            };
+            using IReader reader = ReaderFactory.OpenReader(stream, readerOptions);
+            while (reader.MoveToNextEntry())
+            {
+                if (reader.Entry.IsDirectory) continue;
+                reader.WriteEntryToDirectory(extractPath);
+                if (!string.IsNullOrWhiteSpace(reader.Entry.Key))
+                {
+                    AddConsoleMessage($"  提取: {reader.Entry.Key}");
+                }
+            }
         }
-        processHelper.ErrorDataReceived += DataHandler;
-        processHelper.OutputDataReceived += DataHandler;
-        processHelper.ProcessStart(winRarPath, cmdArgs);
-        return unRarPath;
+        catch (Exception ex)
+        {
+            throw new MateralReleaseCenterException($"解压文件失败: {ex.Message}", ex);
+        }
+        AddConsoleMessage("解压完成");
+        return extractPath;
     }
     /// <summary>
     /// 拷贝文件夹

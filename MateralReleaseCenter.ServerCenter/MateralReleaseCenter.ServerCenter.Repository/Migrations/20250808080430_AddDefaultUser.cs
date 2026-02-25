@@ -1,4 +1,4 @@
-﻿using Materal.Extensions;
+﻿using Materal.Utils.Crypto;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -23,7 +23,7 @@ namespace MateralReleaseCenter.ServerCenter.Repository.Migrations
                 Guid.NewGuid(),
                 "管理员",
                 "Admin",
-                $"Materal123456Materal".ToMd5_32Encode(),
+                MD5Crypto.Hash32($"Materal123456Materal"),
                 DateTime.Now,
                 DateTime.Now
             ]);

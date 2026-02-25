@@ -35,11 +35,11 @@ namespace MateralReleaseCenter.DeployServer.Application.Services
         /// <param name="orderExpression"></param>
         /// <param name="sortOrder"></param>
         /// <returns></returns>
-        protected override async Task<(List<DefaultDataListDTO> data, RangeModel rangeInfo)> GetListAsync(Expression<Func<DefaultData, bool>> expression, QueryDefaultDataModel model, Expression<Func<DefaultData, object>>? orderExpression = null, SortOrderEnum sortOrder = SortOrderEnum.Descending)
+        protected override async Task<(List<DefaultDataListDTO> data, RangeModel rangeInfo)> GetListAsync(Expression<Func<DefaultData, bool>> expression, QueryDefaultDataModel model, Expression<Func<DefaultData, object>>? orderExpression = null, SortOrder sortOrder = SortOrder.Descending)
         {
             if (orderExpression == null)
             {
-                sortOrder = SortOrderEnum.Ascending;
+                sortOrder = SortOrder.Ascending;
                 orderExpression = m => m.Key;
             }
             return await base.GetListAsync(expression, model, orderExpression, sortOrder);

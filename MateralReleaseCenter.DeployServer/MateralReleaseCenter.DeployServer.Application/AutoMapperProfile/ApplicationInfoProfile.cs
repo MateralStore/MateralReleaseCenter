@@ -13,14 +13,8 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
         /// </summary>
         public ApplicationInfoProfile()
         {
-            CreateMap<ApplicationRuntimeModel, ApplicationInfoDTO>((mapper, m, n) =>
-            {
-                ApplicationRuntimeModelToDTO(m, n);
-            });
-            CreateMap<ApplicationRuntimeModel, ApplicationInfoListDTO>((mapper, m, n) =>
-            {
-                ApplicationRuntimeModelToDTO(m, n);
-            });
+            CreateMap<ApplicationRuntimeModel, ApplicationInfoDTO>((mapper, m, n) => ApplicationRuntimeModelToDTO(m, n));
+            CreateMap<ApplicationRuntimeModel, ApplicationInfoListDTO>((mapper, m, n) => ApplicationRuntimeModelToDTO(m, n));
         }
         /// <summary>
         /// 模型转换为数据传输模型

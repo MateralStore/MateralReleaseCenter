@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MateralReleaseCenter.EnvironmentServer.WebAPI", "MateralReleaseCenter.EnvironmentServer.WebAPI\MateralReleaseCenter.EnvironmentServer.WebAPI.csproj", "{6256F084-9DD2-4D1C-9E7F-E057974246D0}"
 EndProject
@@ -21,6 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MateralReleaseCenter.Enviro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{0DFF95F9-E0E4-4046-A178-25825EB36C9E}"
 	ProjectSection(SolutionItems) = preProject
+		..\Common.props = ..\Common.props
 		..\Directory.Build.props = ..\Directory.Build.props
 		..\Directory.Packages.props = ..\Directory.Packages.props
 	EndProjectSection
@@ -76,5 +77,8 @@ Global
 		{6B625896-D156-48E3-8A1F-A0182DA7A9B1} = {F57D8F82-4DD1-4E5D-A9FC-D9A66F31A80E}
 		{C0186B26-A963-403F-8E6D-915BBAACA132} = {F57D8F82-4DD1-4E5D-A9FC-D9A66F31A80E}
 		{62727332-F7C8-5E51-4CB4-6F4F1458BC42} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64DD2EBF-6E7B-4411-9796-80A02889AD05}
 	EndGlobalSection
 EndGlobal

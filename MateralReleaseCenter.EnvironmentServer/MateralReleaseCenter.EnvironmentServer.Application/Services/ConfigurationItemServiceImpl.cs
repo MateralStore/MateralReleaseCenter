@@ -50,8 +50,8 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.Services
         /// <param name="orderExpression"></param>
         /// <param name="sortOrder"></param>
         /// <returns></returns>
-        protected override async Task<(List<ConfigurationItemListDTO> data, RangeModel rangeInfo)> GetListAsync(Expression<Func<ConfigurationItem, bool>> expression, QueryConfigurationItemModel model, Expression<Func<ConfigurationItem, object>>? orderExpression = null, SortOrderEnum sortOrder = SortOrderEnum.Descending)
-            => await base.GetListAsync(expression, model, m => m.Key, SortOrderEnum.Ascending);
+        protected override async Task<(List<ConfigurationItemListDTO> data, RangeModel rangeInfo)> GetListAsync(Expression<Func<ConfigurationItem, bool>> expression, QueryConfigurationItemModel model, Expression<Func<ConfigurationItem, object>>? orderExpression = null, SortOrder sortOrder = SortOrder.Descending)
+            => await base.GetListAsync(expression, model, m => m.Key, SortOrder.Ascending);
         /// <summary>
         /// 初始化
         /// </summary>
@@ -63,7 +63,7 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.Services
             Guid[] hastIDs;
             Guid[] removeIDs;
             #region 移除项目不存在的
-            Guid[] allProjectIDs = configurationItems.Select(m => m.ProjectID).Distinct().ToArray();
+            Guid[] allProjectIDs = [.. configurationItems.Select(m => m.ProjectID).Distinct()];
             if (allProjectIDs.Length > 0)
             {
                 CollectionResultModel<ProjectListDTO> allProjectInfo = await projectHttpClient.GetListAsync(new()
@@ -74,17 +74,17 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.Services
                 });
                 if (allProjectInfo.Data != null && allProjectInfo.Data.Count > 0)
                 {
-                    hastIDs = allProjectInfo.Data.Select(m => m.ID).ToArray();
-                    removeIDs = allProjectIDs.Except(hastIDs).ToArray();
+                    hastIDs = [.. allProjectInfo.Data.Select(m => m.ID)];
+                    removeIDs = [.. allProjectIDs.Except(hastIDs)];
                     if (removeIDs.Length > 0)
                     {
-                        removeItems.AddRange(configurationItems.Where(m => removeIDs.Contains(m.ProjectID)).ToList());
+                        removeItems.AddRange([.. configurationItems.Where(m => removeIDs.Contains(m.ProjectID))]);
                     }
                 }
             }
             #endregion
             #region 移除命名空间不存在的
-            Guid[] allNamespaceIDs = configurationItems.Select(m => m.NamespaceID).Distinct().ToArray();
+            Guid[] allNamespaceIDs = [.. configurationItems.Select(m => m.NamespaceID).Distinct()];
             if (allNamespaceIDs.Length > 0)
             {
                 CollectionResultModel<NamespaceListDTO> allNamespaceInfo = await namespaceHttpClient.GetListAsync(new()
@@ -95,16 +95,16 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.Services
                 });
                 if (allNamespaceInfo.Data != null && allNamespaceInfo.Data.Count > 0)
                 {
-                    hastIDs = allNamespaceInfo.Data.Select(m => m.ID).ToArray();
-                    removeIDs = allNamespaceIDs.Except(hastIDs).ToArray();
+                    hastIDs = [.. allNamespaceInfo.Data.Select(m => m.ID)];
+                    removeIDs = [.. allNamespaceIDs.Except(hastIDs)];
                     if (removeIDs.Length > 0)
                     {
-                        removeItems.AddRange(configurationItems.Where(m => removeIDs.Contains(m.NamespaceID)).ToList());
+                        removeItems.AddRange([.. configurationItems.Where(m => removeIDs.Contains(m.NamespaceID))]);
                     }
                 }
             }
             #endregion
-            removeItems = removeItems.Distinct().ToList();
+            removeItems = [.. removeItems.Distinct()];
             foreach (ConfigurationItem item in removeItems)
             {
                 UnitOfWork.RegisterDelete(item);

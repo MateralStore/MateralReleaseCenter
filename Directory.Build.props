@@ -9,7 +9,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Materal.Abstractions" />
-		<PackageReference Include="Materal.Extensions" />
 		<PackageReference Include="Materal.Extensions.DependencyInjection" />
 		<PackageReference Include="Materal.Utils" />
 	</ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
+﻿using Materal.Utils.Extensions;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace MateralReleaseCenter.Core.Repository;
 

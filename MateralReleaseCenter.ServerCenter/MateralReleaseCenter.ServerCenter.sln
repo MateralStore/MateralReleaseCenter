@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MateralReleaseCenter.ServerCenter.WebAPI", "MateralReleaseCenter.ServerCenter.WebAPI\MateralReleaseCenter.ServerCenter.WebAPI.csproj", "{6256F084-9DD2-4D1C-9E7F-E057974246D0}"
 EndProject
@@ -20,6 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MateralReleaseCenter.Server
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{0DFF95F9-E0E4-4046-A178-25825EB36C9E}"
 	ProjectSection(SolutionItems) = preProject
+		..\Common.props = ..\Common.props
 		..\Directory.Build.props = ..\Directory.Build.props
 		..\Directory.Packages.props = ..\Directory.Packages.props
 	EndProjectSection

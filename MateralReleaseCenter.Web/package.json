@@ -1,0 +1,27 @@
+{
+  "name": "rcservercenterweb",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build --emptyOutDir",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.1",
+    "@microsoft/signalr": "^8.0.0",
+    "axios": "^1.6.8",
+    "monaco-editor": "^0.45.0",
+    "vue": "^3.4.27"
+  },
+  "devDependencies": {
+    "@arco-design/web-vue": "^2.55.1",
+    "@vitejs/plugin-vue": "^4.6.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vue-tsc": "^1.8.27"
+  },
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
+}

@@ -1,23 +1,20 @@
-﻿using MateralReleaseCenter.DeployServer.Application.Services.Models;
+﻿namespace MateralReleaseCenter.DeployServer.Application.Services.Models;
 
-namespace MateralReleaseCenter.DeployServer.ServiceImpl.Models
+/// <summary>
+/// 应用程序任务
+/// </summary>
+public class ApplicationTask
 {
     /// <summary>
-    /// 应用程序任务
+    /// 应用程序
     /// </summary>
-    public class ApplicationTask
-    {
-        /// <summary>
-        /// 应用程序
-        /// </summary>
-        public ApplicationRuntimeModel? Application { get; set; }
-        /// <summary>
-        /// 目标任务
-        /// </summary>
-        public Func<Task>? TargetTask { get; set; }
-        /// <summary>
-        /// 目标任务
-        /// </summary>
-        public Action? TargetAction { get; set; }
-    }
+    public ApplicationRuntimeModel? Application { get; set; }
+    /// <summary>
+    /// 目标任务
+    /// </summary>
+    public Func<Task>? TargetTask { get; set; }
+    /// <summary>
+    /// 目标任务
+    /// </summary>
+    public Action? TargetAction { get; set; }
 }

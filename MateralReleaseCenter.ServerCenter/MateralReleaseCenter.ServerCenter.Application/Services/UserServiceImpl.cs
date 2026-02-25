@@ -1,4 +1,5 @@
-﻿using MateralReleaseCenter.ServerCenter.Abstractions.DTO.User;
+﻿using Materal.Utils.Crypto;
+using MateralReleaseCenter.ServerCenter.Abstractions.DTO.User;
 using MateralReleaseCenter.ServerCenter.Abstractions.Services.Models.User;
 
 namespace MateralReleaseCenter.ServerCenter.Application.Services;
@@ -101,5 +102,5 @@ public partial class UserServiceImpl(IOptionsMonitor<ApplicationConfig> config)
     /// </summary>
     /// <param name="inputString"></param>
     /// <returns></returns>
-    private static string EncodePassword(string inputString) => $"Materal{inputString}Materal".ToMd5_32Encode();
+    private static string EncodePassword(string inputString) => MD5Crypto.Hash32($"Materal{inputString}Materal");
 }

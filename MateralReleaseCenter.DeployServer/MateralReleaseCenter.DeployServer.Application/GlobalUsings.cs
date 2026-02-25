@@ -1,5 +1,4 @@
 ﻿global using Materal.Abstractions;
-global using Materal.Extensions;
 global using Materal.Extensions.DependencyInjection;
 global using Materal.MergeBlock.Abstractions;
 global using Materal.MergeBlock.Abstractions.Models;
@@ -8,7 +7,8 @@ global using Materal.MergeBlock.Application.Abstractions.Services;
 global using Materal.MergeBlock.Web.Abstractions.Controllers;
 global using Materal.Utils.AutoMapper;
 global using Materal.Utils.Enums;
-global using Materal.Utils.Model;
+global using Materal.Utils.Extensions;
+global using Materal.Utils.Models;
 global using MateralReleaseCenter.Core.Abstractions;
 global using MateralReleaseCenter.Core.Application;
 global using MateralReleaseCenter.DeployServer.Abstractions;

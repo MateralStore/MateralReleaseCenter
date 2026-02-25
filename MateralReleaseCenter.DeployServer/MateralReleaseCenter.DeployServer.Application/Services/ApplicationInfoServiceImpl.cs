@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
+﻿using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Abstractions.Services.Models;
 using MateralReleaseCenter.DeployServer.Abstractions.Services.Models.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Application.Services.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services
 {
@@ -18,7 +18,7 @@ namespace MateralReleaseCenter.DeployServer.Application.Services
             IServiceProvider services = scope.ServiceProvider;
             IApplicationInfoRepository applicationInfoRepository = services.GetRequiredService<IApplicationInfoRepository>();
             IOptionsMonitor<ApplicationConfig> config = services.GetRequiredService<IOptionsMonitor<ApplicationConfig>>();
-            List<ApplicationInfo> allApplicationInfos = applicationInfoRepository.Find(m => true, m => m.Name, SortOrderEnum.Ascending);
+            List<ApplicationInfo> allApplicationInfos = applicationInfoRepository.Find(m => true, m => m.Name, SortOrder.Ascending);
             foreach (ApplicationInfo applicationInfo in allApplicationInfos)
             {
                 ApplicationRuntimeModel model = new(services, applicationInfo, config);
@@ -105,7 +105,7 @@ namespace MateralReleaseCenter.DeployServer.Application.Services
             DirectoryInfo rarFilesDirectoryInfo = new(application.RarFilesDirectoryPath);
             if (rarFilesDirectoryInfo.Exists)
             {
-                result.UploadFileNames = rarFilesDirectoryInfo.GetFiles().Select(m => m.Name).ToArray();
+                result.UploadFileNames = [.. rarFilesDirectoryInfo.GetFiles().Select(m => m.Name)];
             }
             return Task.FromResult(result);
         }
@@ -116,18 +116,18 @@ namespace MateralReleaseCenter.DeployServer.Application.Services
         /// <returns></returns>
         public override Task<(List<ApplicationInfoListDTO> data, RangeModel rangeInfo)> GetListAsync(QueryApplicationInfoModel model)
         {
-            List<ApplicationRuntimeModel> allApplications = ApplicationRuntimeHost.ApplicationRuntimes.Select(m => m.Value).ToList();
+            List<ApplicationRuntimeModel> allApplications = [.. ApplicationRuntimeHost.ApplicationRuntimes.Select(m => m.Value)];
             if (model.ApplicationStatus != null)
             {
-                allApplications = allApplications.Where(m => m.ApplicationStatus == model.ApplicationStatus.Value).ToList();
+                allApplications = [.. allApplications.Where(m => m.ApplicationStatus == model.ApplicationStatus.Value)];
             }
-            Guid[] targetApplicationIDs = allApplications.Select(m => m.ApplicationInfo).Where(model.GetSearchDelegate<ApplicationInfo>()).Select(m => m.ID).ToArray();
+            Guid[] targetApplicationIDs = [.. allApplications.Select(m => m.ApplicationInfo).Where(model.GetSearchDelegate<ApplicationInfo>()).Select(m => m.ID)];
             allApplications =
             [
                 .. allApplications.Where(m => targetApplicationIDs.Contains(m.ApplicationInfo.ID)).OrderBy(m => m.ApplicationInfo.MainModule),
             ];
             RangeModel pageInfo = new(model.SkipInt, model.TakeInt, allApplications.Count);
-            allApplications = allApplications.Skip(model.SkipInt).Take(model.TakeInt).ToList();
+            allApplications = [.. allApplications.Skip(model.SkipInt).Take(model.TakeInt)];
             List<ApplicationInfoListDTO> result = Mapper.Map<List<ApplicationInfoListDTO>>(allApplications) ?? throw new MateralReleaseCenterException("映射失败");
             return Task.FromResult((result, pageInfo));
         }

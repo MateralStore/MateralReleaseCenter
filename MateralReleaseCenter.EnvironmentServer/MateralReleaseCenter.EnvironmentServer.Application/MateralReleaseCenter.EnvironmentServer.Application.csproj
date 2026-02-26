@@ -3,7 +3,6 @@
 	<ItemGroup>
 		<PackageReference Include="Materal.EventBus.RabbitMQ" />
 		<PackageReference Include="Materal.MergeBlock.Authorization.Abstractions" />
-		<PackageReference Include="Materal.MergeBlock.Consul.Abstractions" />
 		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
 	</ItemGroup>
 	<ItemGroup>

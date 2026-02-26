@@ -1,5 +1,4 @@
-﻿using Materal.EventBus.RabbitMQ;
-using MateralReleaseCenter.EnvironmentServer.Abstractions.DTO.ConfigurationItem;
+﻿using MateralReleaseCenter.EnvironmentServer.Abstractions.DTO.ConfigurationItem;
 using MateralReleaseCenter.EnvironmentServer.Abstractions.Enums;
 using MateralReleaseCenter.EnvironmentServer.Abstractions.Events;
 
@@ -8,7 +7,7 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.EventHandlers
     /// <summary>
     /// 同步配置事件处理器
     /// </summary>
-    public class SyncConfigEventHandler(IOptionsMonitor<ApplicationConfig> applicationConfig, IOptionsMonitor<RabbitMQEventBusOptions> eventBusConfig, IMapper mapper, IEnvironmentServerUnitOfWork unitOfWork, IConfigurationItemRepository configurationItemRepository) : RCEnvironmentServerEventHandler<SyncConfigEvent>(applicationConfig, eventBusConfig)
+    public class SyncConfigEventHandler(IOptionsMonitor<ApplicationConfig> applicationConfig, IMapper mapper, IEnvironmentServerUnitOfWork unitOfWork, IConfigurationItemRepository configurationItemRepository) : EnvironmentServerEventHandler<SyncConfigEvent>(applicationConfig)
     {
         private static readonly object _syncLockObj = new();
         /// <summary>

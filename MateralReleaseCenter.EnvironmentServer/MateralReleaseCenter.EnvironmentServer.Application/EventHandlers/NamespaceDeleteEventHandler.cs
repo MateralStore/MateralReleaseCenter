@@ -5,7 +5,7 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.EventHandlers
     /// <summary>
     /// 命名空间删除事件处理器
     /// </summary>
-    public class NamespaceDeleteEventHandler(IOptionsMonitor<ApplicationConfig> applicationConfig, IOptionsMonitor<RabbitMQEventBusOptions> eventBusConfig, IEnvironmentServerUnitOfWork unitOfWork, IConfigurationItemRepository configurationItemRepository) : RCEnvironmentServerEventHandler<NamespaceDeleteEvent>(applicationConfig, eventBusConfig)
+    public class NamespaceDeleteEventHandler(IOptionsMonitor<ApplicationConfig> applicationConfig, IEnvironmentServerUnitOfWork unitOfWork, IConfigurationItemRepository configurationItemRepository) : EnvironmentServerEventHandler<NamespaceDeleteEvent>(applicationConfig)
     {
         /// <summary>
         /// 处理

@@ -1,5 +1,4 @@
-﻿using Materal.MergeBlock.Consul.Abstractions;
-using Materal.MergeBlock.Web.Abstractions;
+﻿using Materal.MergeBlock.Web.Abstractions;
 using MateralReleaseCenter.DeployServer.Application.Hubs;
 using MateralReleaseCenter.DeployServer.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -23,11 +22,6 @@ public class DeployServerModule() : MateralReleaseCenterModule("MateralReleaseCe
     {
         base.OnConfigureServices(context);
         context.Services.TryAddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
-        if (context.Configuration is null) return;
-        IConfigurationSection configurationSection = context.Configuration.GetSection("Deploy");
-        string? serviceName = configurationSection.GetConfigItem<string>("ServiceName") ?? "RCDeploy";
-        string? serviceDescription = configurationSection.GetConfigItem<string>("ServiceDescription") ?? "RC发布服务";
-        context.Services.AddConsulConfig(serviceName, ["MateralReleaseCenter.DeployServer", serviceDescription]);
     }
     /// <inheritdoc/>
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

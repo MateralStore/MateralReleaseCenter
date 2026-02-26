@@ -2,7 +2,6 @@
 	<Import Project="../../Common.props" />
 	<ItemGroup>
 		<PackageReference Include="Materal.MergeBlock.Authorization.Abstractions" />
-		<PackageReference Include="Materal.MergeBlock.Consul.Abstractions" />
 		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
 		<PackageReference Include="SharpCompress" />
 	</ItemGroup>

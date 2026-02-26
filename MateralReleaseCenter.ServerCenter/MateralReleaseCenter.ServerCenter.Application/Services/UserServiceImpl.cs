@@ -32,16 +32,6 @@ public partial class UserServiceImpl(IOptionsMonitor<ApplicationConfig> config)
         return await base.AddAsync(domain, model);
     }
     /// <summary>
-    /// 修改
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    public override async Task EditAsync(EditUserModel model)
-    {
-        if (await DefaultRepository.ExistedAsync(m => m.ID != model.ID && m.Account == model.Account)) throw new MateralReleaseCenterException("账号已存在");
-        await base.EditAsync(model);
-    }
-    /// <summary>
     /// 登录
     /// </summary>
     /// <param name="model"></param>

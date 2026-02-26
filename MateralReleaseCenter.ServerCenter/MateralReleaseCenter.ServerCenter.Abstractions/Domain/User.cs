@@ -16,6 +16,7 @@ public class User : BaseDomain, IDomain
     /// </summary>
     [Required(ErrorMessage = "账号为空"), StringLength(100, ErrorMessage = "账号最多100个字符")]
     [Equal]
+    [NotEdit]
     public string Account { get; set; } = string.Empty;
     /// <summary>
     /// 密码

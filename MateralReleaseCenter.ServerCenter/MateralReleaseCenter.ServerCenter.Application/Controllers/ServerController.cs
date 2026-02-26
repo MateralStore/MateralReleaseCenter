@@ -1,6 +1,5 @@
-﻿using Materal.MergeBlock.Consul.Abstractions;
-using Materal.Utils.Consul;
-using Materal.Utils.Consul.Models;
+﻿using Consul;
+using Materal.MergeBlock.Web.Abstractions;
 using MateralReleaseCenter.ServerCenter.Abstractions.DTO.Server;
 
 namespace MateralReleaseCenter.ServerCenter.Application.Controllers;
@@ -8,7 +7,7 @@ namespace MateralReleaseCenter.ServerCenter.Application.Controllers;
 /// <summary>
 /// 服务控制器
 /// </summary>
-public partial class ServerController(IMapper mapper, IConsulService consulService, IOptionsMonitor<MergeBlockConsulOptions> mergeBlockConsulConfig, IOptionsMonitor<ApplicationConfig> applicationConfig) : ServerCenterController
+public partial class ServerController(IOptionsMonitor<ConsulOptions> consulOptions, IOptionsMonitor<WebOptions> webConfig) : ServerCenterController
 {
     /// <summary>
     /// 获得发布程序列表
@@ -17,8 +16,22 @@ public partial class ServerController(IMapper mapper, IConsulService consulServi
     [HttpGet]
     public async Task<ResultModel<List<DeployListDTO>>> GetDeployListAsync()
     {
-        List<ConsulServiceModel> consulServices = await consulService.GetServiceListAsync(mergeBlockConsulConfig.CurrentValue.ConsulUrl.Url, m => m.Tags != null && m.Tags.Length > 0 && m.Tags.Contains("RC.Deploy"));
-        List<DeployListDTO> result = mapper.Map<List<DeployListDTO>>(consulServices) ?? throw new MateralReleaseCenterException("映射失败");
+        ConsulClient client = new(options => options.Address = new(consulOptions.CurrentValue.Host));
+        QueryResult<Dictionary<string, string[]>> servicesResult = await client.Catalog.Services();
+        List<DeployListDTO> result = [];
+        foreach (KeyValuePair<string, string[]> service in servicesResult.Response)
+        {
+            if (!service.Value.Contains("MRCDS")) continue;
+            QueryResult<CatalogService[]> serviceResult = await client.Catalog.Service(service.Key);
+            CatalogService serviceInfo = serviceResult.Response.First();
+            DeployListDTO item = new()
+            {
+                Host = serviceInfo.ServiceAddress,
+                Name = serviceInfo.ServiceName,
+                Port = serviceInfo.ServicePort
+            };
+            result.Add(item);
+        }
         result = [.. result.OrderBy(m => m.Port)];
         return ResultModel<List<DeployListDTO>>.Success(result, "查询成功");
     }
@@ -29,8 +42,22 @@ public partial class ServerController(IMapper mapper, IConsulService consulServi
     [HttpGet]
     public async Task<ResultModel<List<EnvironmentServerListDTO>>> GetEnvironmentServerListAsync()
     {
-        List<ConsulServiceModel> consulServices = await consulService.GetServiceListAsync(mergeBlockConsulConfig.CurrentValue.ConsulUrl.Url, m => m.Tags != null && m.Tags.Length > 0 && m.Tags.Contains("RC.EnvironmentServer"));
-        List<EnvironmentServerListDTO> result = mapper.Map<List<EnvironmentServerListDTO>>(consulServices) ?? throw new MateralReleaseCenterException("映射失败");
+        ConsulClient client = new(options => options.Address = new(consulOptions.CurrentValue.Host));
+        QueryResult<Dictionary<string, string[]>> servicesResult = await client.Catalog.Services();
+        List<EnvironmentServerListDTO> result = [];
+        foreach (KeyValuePair<string, string[]> service in servicesResult.Response)
+        {
+            if (!service.Value.Contains("MRCES")) continue;
+            QueryResult<CatalogService[]> serviceResult = await client.Catalog.Service(service.Key);
+            CatalogService serviceInfo = serviceResult.Response.First();
+            EnvironmentServerListDTO item = new()
+            {
+                Host = serviceInfo.ServiceAddress,
+                Name = serviceInfo.ServiceName,
+                Port = serviceInfo.ServicePort
+            };
+            result.Add(item);
+        }
         result = [.. result.OrderBy(m => m.Port)];
         return ResultModel<List<EnvironmentServerListDTO>>.Success(result, "查询成功");
     }
@@ -39,5 +66,5 @@ public partial class ServerController(IMapper mapper, IConsulService consulServi
     /// </summary>
     /// <returns></returns>
     [HttpGet, AllowAnonymous]
-    public ResultModel<string> GetBaseUrl() => ResultModel<string>.Success(applicationConfig.CurrentValue.GatewayUrl, "查询成功");
+    public ResultModel<string> GetBaseUrl() => ResultModel<string>.Success(webConfig.CurrentValue.BaseUrl, "查询成功");
 }

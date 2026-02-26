@@ -1,5 +1,6 @@
 ﻿<Project ToolsVersion="15.0">
   <ItemGroup>
+    <PackageVersion Include="Consul" Version="1.7.14.11" />
     <PackageVersion Include="Materal.Abstractions" Version="1.4.2" />
     <PackageVersion Include="Materal.EventBus.Abstraction" Version="1.4.2" />
     <PackageVersion Include="Materal.EventBus.RabbitMQ" Version="1.4.2" />

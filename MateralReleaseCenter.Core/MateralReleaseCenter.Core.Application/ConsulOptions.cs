@@ -10,4 +10,9 @@ public class ConsulOptions : IOptions
     /// 主机
     /// </summary>
     public string Host { get; set; } = "http://127.0.0.1:8500";
+
+    /// <summary>
+    /// 名称
+    /// </summary>
+    public string Name { get; set; } = "MRC";
 }

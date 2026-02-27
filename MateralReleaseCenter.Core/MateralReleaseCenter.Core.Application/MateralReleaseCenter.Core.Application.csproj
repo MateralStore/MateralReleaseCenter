@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="../../Common.props"/>
 	<ItemGroup>
+		<PackageReference Include="Consul" />
 		<PackageReference Include="Materal.MergeBlock.Application.Abstractions" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 	</ItemGroup>

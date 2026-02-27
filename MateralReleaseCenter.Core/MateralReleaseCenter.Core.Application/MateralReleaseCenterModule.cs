@@ -1,7 +1,4 @@
-﻿using Materal.MergeBlock.Abstractions;
-using Materal.MergeBlock.Web.Abstractions.ControllerHttpHelper;
-using Materal.Utils.Extensions;
-using MateralReleaseCenter.Core.Abstractions;
+﻿using Materal.MergeBlock.Web.Abstractions.ControllerHttpHelper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

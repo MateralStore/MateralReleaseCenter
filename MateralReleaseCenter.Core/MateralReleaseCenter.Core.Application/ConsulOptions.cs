@@ -1,4 +1,4 @@
-﻿namespace MateralReleaseCenter.ServerCenter.Application;
+﻿namespace MateralReleaseCenter.Core.Application;
 
 /// <summary>
 /// Consul配置

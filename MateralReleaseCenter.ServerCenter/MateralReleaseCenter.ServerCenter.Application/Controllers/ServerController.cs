@@ -1,5 +1,6 @@
 ﻿using Consul;
 using Materal.MergeBlock.Web.Abstractions;
+using MateralReleaseCenter.Core.Application;
 using MateralReleaseCenter.ServerCenter.Abstractions.DTO.Server;
 
 namespace MateralReleaseCenter.ServerCenter.Application.Controllers;

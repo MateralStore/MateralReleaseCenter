@@ -1,4 +1,5 @@
 ﻿using MateralReleaseCenter.EnvironmentServer.Repository;
+using MateralReleaseCenter.ServerCenter.Abstractions.ControllerAccessors;
 
 namespace MateralReleaseCenter.EnvironmentServer.Application;
 
@@ -8,4 +9,10 @@ namespace MateralReleaseCenter.EnvironmentServer.Application;
 [DependsOn(typeof(EnvironmentServerRepositoryModule))]
 public class EnvironmentServerModule() : MateralReleaseCenterModule("MateralReleaseCenterEnvironmentServer模块")
 {
+    /// <inheritdoc/>
+    public override void OnConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddServerCenterControllerAccessors();
+        base.OnConfigureServices(context);
+    }
 }

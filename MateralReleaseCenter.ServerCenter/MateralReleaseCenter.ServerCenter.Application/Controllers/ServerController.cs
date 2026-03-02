@@ -8,7 +8,7 @@ namespace MateralReleaseCenter.ServerCenter.Application.Controllers;
 /// <summary>
 /// 服务控制器
 /// </summary>
-public partial class ServerController(IOptionsMonitor<ConsulOptions> consulOptions, IOptionsMonitor<WebOptions> webConfig) : ServerCenterController
+public partial class ServerController(IOptionsMonitor<ConsulOptions> consulOptions, IOptionsMonitor<WebOptions> webConfig, IOptionsMonitor<ApplicationConfig> applicationConfig) : ServerCenterController
 {
     /// <summary>
     /// 获得发布程序列表
@@ -67,5 +67,9 @@ public partial class ServerController(IOptionsMonitor<ConsulOptions> consulOptio
     /// </summary>
     /// <returns></returns>
     [HttpGet, AllowAnonymous]
-    public ResultModel<string> GetBaseUrl() => ResultModel<string>.Success(webConfig.CurrentValue.BaseUrl, "查询成功");
+    public ResultModel<string> GetBaseUrl()
+    {
+        string baseUrl = applicationConfig.CurrentValue.GatewayUrl ?? webConfig.CurrentValue.BaseUrl;
+        return ResultModel<string>.Success(baseUrl, "查询成功");
+    }
 }

@@ -10,5 +10,10 @@
         /// 默认密码
         /// </summary>
         public string DefaultPassword { get; set; } = "123456";
+
+        /// <summary>
+        /// 网关地址
+        /// </summary>
+        public string? GatewayUrl { get; set; }
     }
 }

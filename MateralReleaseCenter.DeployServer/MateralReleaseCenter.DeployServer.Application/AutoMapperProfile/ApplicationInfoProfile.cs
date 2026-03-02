@@ -13,15 +13,16 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
         /// </summary>
         public ApplicationInfoProfile()
         {
-            CreateMap<ApplicationRuntimeModel, ApplicationInfoDTO>((mapper, m, n) => ApplicationRuntimeModelToDTO(m, n));
-            CreateMap<ApplicationRuntimeModel, ApplicationInfoListDTO>((mapper, m, n) => ApplicationRuntimeModelToDTO(m, n));
+            CreateMap<ApplicationRuntimeModel, ApplicationInfoDTO>((mapper, m, n) => ApplicationRuntimeModelToApplicationInfoDTO(m, n), null, false);
+            CreateMap<ApplicationRuntimeModel, ApplicationInfoListDTO>((mapper, m, n) => ApplicationRuntimeModelToApplicationInfoDTO(m, n), null, false);
         }
+
         /// <summary>
         /// 模型转换为数据传输模型
         /// </summary>
         /// <param name="model"></param>
         /// <param name="dto"></param>
-        private void ApplicationRuntimeModelToDTO(ApplicationRuntimeModel model, ApplicationInfoListDTO? dto)
+        private void ApplicationRuntimeModelToApplicationInfoDTO(ApplicationRuntimeModel model, ApplicationInfoListDTO? dto)
         {
             dto ??= new();
             dto.ID = model.ApplicationInfo.ID;
@@ -30,6 +31,7 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
             dto.RootPath = model.ApplicationInfo.RootPath;
             dto.MainModule = model.ApplicationInfo.MainModule;
             dto.ApplicationType = model.ApplicationInfo.ApplicationType;
+            dto.ApplicationStatus = model.ApplicationStatus;
             dto.IsIncrementalUpdating = model.ApplicationInfo.IsIncrementalUpdating;
             dto.RunParams = model.ApplicationInfo.RunParams;
         }

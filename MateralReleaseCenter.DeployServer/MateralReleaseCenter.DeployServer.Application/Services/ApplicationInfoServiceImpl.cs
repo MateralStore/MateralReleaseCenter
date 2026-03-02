@@ -1,4 +1,5 @@
-﻿using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
+﻿using Materal.Utils.Helpers;
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Abstractions.Services.Models;
 using MateralReleaseCenter.DeployServer.Abstractions.Services.Models.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Application.Services.Models;
@@ -307,12 +308,14 @@ public partial class ApplicationInfoServiceImpl(IServiceProvider serviceProvider
         ApplicationRuntimeModel application = value;
         FileInfo[]? fileInfos = application.GetRarFileNames();
         if (fileInfos == null) return [];
-        List<FileInfoDTO> result = Mapper.Map<List<FileInfoDTO>>(fileInfos) ?? throw new MateralReleaseCenterException("映射失败");
-        result = [.. result.OrderByDescending(m => m.LastWriteTime)];
-        foreach (FileInfoDTO fileInfo in result)
+        List<FileInfoDTO> result = [];
+        foreach (FileInfo fileInfo in fileInfos)
         {
-            fileInfo.DownloadUrl = $"/UploadFiles/{application.ApplicationInfo.Name}/{fileInfo.Name}";
+            FileInfoDTO resultItem = CopyPropertiesHelper.CopyProperties<FileInfoDTO>(fileInfo);
+            resultItem.DownloadUrl = $"/UploadFiles/{application.ApplicationInfo.Name}/{fileInfo.Name}";
+            result.Add(resultItem);
         }
+        result = [.. result.OrderByDescending(m => m.LastWriteTime)];
         return result;
     }
 }

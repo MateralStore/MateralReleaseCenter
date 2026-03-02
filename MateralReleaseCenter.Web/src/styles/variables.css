@@ -1,0 +1,50 @@
+/* 间距系统 */
+:root {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+/* 中性色系 */
+:root {
+  --color-title: rgba(0, 0, 0, 0.88);
+  --color-text: rgba(0, 0, 0, 0.65);
+  --color-text-secondary: rgba(0, 0, 0, 0.45);
+  --color-border: #d9d9d9;
+  --color-disabled: rgba(0, 0, 0, 0.25);
+  --color-bg: #f5f5f5;
+}
+
+/* 功能色系 */
+:root {
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-error: #ff4d4f;
+  --color-info: #1677ff;
+}
+
+/* 页面容器 */
+.page-container {
+  padding: var(--spacing-lg);
+  background: var(--color-bg);
+}
+
+/* 卡片样式 */
+.page-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.02);
+  padding: var(--spacing-lg);
+}
+
+/* 页面最大宽度 */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ant-layout {
+  overflow: hidden;
+}

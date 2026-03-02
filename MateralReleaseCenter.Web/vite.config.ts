@@ -1,12 +1,23 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import react from '@vitejs/plugin-react'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
-  base: '/RCManagement',
-  plugins: [vue()],
+  // base: '/',
+  plugins: [
+    react(),
+    Components({
+      resolvers: [
+        AntDesignVueResolver({
+          importStyle: 'css',
+        }),
+      ],
+    }),
+  ],
   build: {
-    chunkSizeWarningLimit: 3500,
-    outDir: '../MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.Application/RCManagement'
-  }
+    outDir: '../MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.Application/MRCManagement',
+    // outDir: '../MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/bin/Debug/net10.0/MRCManagement',
+  },
 })

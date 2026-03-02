@@ -2,6 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="Consul" Version="1.7.14.11" />
     <PackageVersion Include="Materal.Abstractions" Version="1.4.3" />
+    <PackageVersion Include="Materal.EventBus.Abstraction" Version="1.4.2" />
     <PackageVersion Include="Materal.Extensions.DependencyInjection" Version="1.4.3" />
     <PackageVersion Include="Materal.MergeBlock.Abstractions" Version="1.4.17" />
     <PackageVersion Include="Materal.MergeBlock.AccessLog" Version="1.4.17" />

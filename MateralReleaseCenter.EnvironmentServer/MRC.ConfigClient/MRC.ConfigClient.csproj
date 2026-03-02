@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Materal.Utils.Network" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" />
-  </ItemGroup>
-
+	<Import Project="../../Packable.props" />
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Materal.Utils.Network" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" />
+	</ItemGroup>
 </Project>

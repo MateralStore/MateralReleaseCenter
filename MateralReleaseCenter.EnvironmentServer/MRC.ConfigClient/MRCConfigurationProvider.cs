@@ -3,6 +3,8 @@ using Materal.Utils.Extensions;
 using Materal.Utils.Models;
 using Materal.Utils.Network.Http;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Nodes;
 
 namespace MRC.ConfigClient;
@@ -10,15 +12,67 @@ namespace MRC.ConfigClient;
 /// <summary>
 /// 配置供应器
 /// </summary>
-public class MRCConfigurationProvider(MRCConfigurationSource source) : ConfigurationProvider
+public class MRCConfigurationProvider(MRCConfigurationSource source) : ConfigurationProvider, IDisposable
 {
-    private IHttpHelper _httpHelper = new HttpHelper();
+    private readonly IHttpHelper _httpHelper = new HttpHelper();
+    private Timer? _timer;
+    private string? _lastConfigHash;
 
     /// <inheritdoc/>
     public override void Load()
     {
         Task loadTask = Task.Run(LoadConfigItemsAsync);
         loadTask.Wait();
+        StartPolling();
+    }
+
+    private void StartPolling()
+        => _timer = new Timer(async _ => await CheckAndReloadAsync(), null, source.ReloadInterval, source.ReloadInterval);
+
+    private async Task CheckAndReloadAsync()
+    {
+        try
+        {
+            CollectionResultModel<ConfigItem> dataResult = await _httpHelper.SendPostAsync<CollectionResultModel<ConfigItem>>($"{source.Url}/EnvironmentServerAPI/ConfigurationItem/GetList", null, new
+            {
+                PageIndex = 1,
+                PageSize = int.MaxValue,
+                ProjectName = source.Project,
+                NamespaceNames = source.Namespaces,
+            });
+            if (dataResult.ResultType != ResultType.Success || dataResult.Data is null || dataResult.Data.Count == 0) return;
+
+            string currentHash = ComputeConfigHash(dataResult.Data);
+            if (currentHash != _lastConfigHash)
+            {
+                _lastConfigHash = currentHash;
+                LoadConfigItems(dataResult.Data);
+                OnReload();
+            }
+        }
+        catch
+        {
+            // 忽略轮询过程中的异常，避免影响应用程序
+        }
+    }
+
+    private string ComputeConfigHash(ICollection<ConfigItem> configItems)
+    {
+        StringBuilder sb = new();
+        foreach (ConfigItem? item in configItems.OrderBy(x => x.Key))
+        {
+            sb.Append(item.Key);
+            sb.Append(item.Value);
+        }
+        byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(sb.ToString()));
+        return Convert.ToHexString(bytes);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        _timer?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     private async Task LoadConfigItemsAsync()
@@ -31,8 +85,13 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
             NamespaceNames = source.Namespaces,
         });
         if (dataResult.ResultType != ResultType.Success || dataResult.Data is null || dataResult.Data.Count == 0) return;
+        LoadConfigItems(dataResult.Data);
+    }
+
+    private void LoadConfigItems(ICollection<ConfigItem> configItems)
+    {
         Data = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
-        foreach (ConfigItem item in dataResult.Data)
+        foreach (ConfigItem item in configItems)
         {
             if (item.Value.IsJson())
             {

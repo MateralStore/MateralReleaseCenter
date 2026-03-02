@@ -14,7 +14,11 @@ public static class ConfigurationBuilderExtensions
     /// <param name="url">Url</param>
     /// <param name="project">应用程序</param>
     /// <param name="namespaces">要加载的命名空间</param>
+    /// <param name="reloadInterval">轮询间隔（默认 30 秒）</param>
     /// <returns></returns>
-    public static IConfigurationBuilder AddMRCConfig(this IConfigurationBuilder builder, string url, string project, params string[] namespaces)
-        => builder.Add(new MRCConfigurationSource(url, project, ["Application", .. namespaces]));
+    public static IConfigurationBuilder AddMRCConfig(this IConfigurationBuilder builder, string url, string project, string[]? namespaces = null, TimeSpan? reloadInterval = null)
+    {
+        MRCConfigurationSource source = new(url, project, namespaces ?? ["Application"], reloadInterval ?? TimeSpan.FromSeconds(30));
+        return builder.Add(source);
+    }
 }

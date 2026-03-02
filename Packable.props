@@ -1,11 +1,12 @@
 <Project>
+	<Import Project="Common.props" />
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageOutputPath>/MateralNugetPackages</PackageOutputPath>
+		<PackageOutputPath>../../../Packages</PackageOutputPath>
 		<Company>Materal</Company>
 		<Product>Materal</Product>
 		<Authors>Materal</Authors>
@@ -22,7 +23,8 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<None Include="../../../README.md" Pack="true" PackagePath="" />
-		<None Include="../../../LICENSE" Pack="true" PackagePath="" />
+		<None Include="../../README.md" Pack="true" PackagePath="" />
+		<None Include="../../LICENSE" Pack="true" PackagePath="" />
+		<None Include="../../LICENSE_CN" Pack="true" PackagePath="" />
 	</ItemGroup>
 </Project>

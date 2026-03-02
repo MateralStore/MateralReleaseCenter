@@ -14,7 +14,7 @@ internal class Program
             {
                 config.SetBasePath(Directory.GetCurrentDirectory());
                 config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                config.AddMRCConfig("http://winserver.devserver.ink:10000/MRCESAPI_Dev", "TestProject", ["TestNamespace"]);
+                config.AddMRCConfig("http://winserver.devserver.ink:10000/MRCESAPI_Dev", "TestProject", ["TestNamespace"], TimeSpan.FromSeconds(5));
             })
             .ConfigureServices((context, services) =>
             {

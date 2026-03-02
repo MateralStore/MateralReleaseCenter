@@ -5,7 +5,7 @@ namespace MRC.ConfigClient;
 /// <summary>
 /// 配置源
 /// </summary>
-public class MRCConfigurationSource(string url, string project, string[] namespaces) : IConfigurationSource
+public class MRCConfigurationSource(string url, string project, string[] namespaces, TimeSpan reloadInterval) : IConfigurationSource
 {
     /// <summary>
     /// 配置地址
@@ -19,6 +19,10 @@ public class MRCConfigurationSource(string url, string project, string[] namespa
     /// 命名空间组
     /// </summary>
     public string[] Namespaces { get; set; } = namespaces;
+    /// <summary>
+    /// 轮询间隔（默认 30 秒）
+    /// </summary>
+    public TimeSpan ReloadInterval { get; set; } = reloadInterval;
 
     /// <summary>
     /// 构建

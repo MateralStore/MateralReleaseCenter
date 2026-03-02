@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="../MateralReleaseCenter.Core/MateralReleaseCenter.Core.Abstractions/MateralReleaseCenter.Core.Abstractions.csproj" />
+    <Project Path="../MateralReleaseCenter.Core/MateralReleaseCenter.Core.Application/MateralReleaseCenter.Core.Application.csproj" />
+    <Project Path="../MateralReleaseCenter.Core/MateralReleaseCenter.Core.Repository/MateralReleaseCenter.Core.Repository.csproj" />
+  </Folder>
+  <Folder Name="/ServerCenter/">
+    <Project Path="../MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.Abstractions/MateralReleaseCenter.ServerCenter.Abstractions.csproj" />
+  </Folder>
+  <Folder Name="/解决方案项/">
+    <File Path="../Common.props" />
+    <File Path="../Directory.Build.props" />
+    <File Path="../Directory.Packages.props" />
+  </Folder>
+  <Project Path="MateralReleaseCenter.EnvironmentServer.Abstractions/MateralReleaseCenter.EnvironmentServer.Abstractions.csproj" />
+  <Project Path="MateralReleaseCenter.EnvironmentServer.Application/MateralReleaseCenter.EnvironmentServer.Application.csproj" />
+  <Project Path="MateralReleaseCenter.EnvironmentServer.Repository/MateralReleaseCenter.EnvironmentServer.Repository.csproj" />
+  <Project Path="MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj" />
+  <Project Path="MRC.ConfigClient.ConsoleTest/MRC.ConfigClient.ConsoleTest.csproj" />
+  <Project Path="MRC.ConfigClient/MRC.ConfigClient.csproj" />
+</Solution>

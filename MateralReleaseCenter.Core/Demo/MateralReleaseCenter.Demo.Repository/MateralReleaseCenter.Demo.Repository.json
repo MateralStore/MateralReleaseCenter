@@ -1,7 +1,0 @@
-﻿{
-  "Demo": {
-    "DBConfig": {
-      "Source": "E:\\Project\\Materal\\MateralReleaseCenter\\MateralReleaseCenter.Core\\Demo\\MateralReleaseCenter.Demo.WebAPI\\bin\\MateralReleaseCenterDemo.db"
-    }
-  }
-}

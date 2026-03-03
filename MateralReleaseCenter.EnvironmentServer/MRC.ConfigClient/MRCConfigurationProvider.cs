@@ -14,7 +14,7 @@ namespace MRC.ConfigClient;
 /// </summary>
 public class MRCConfigurationProvider(MRCConfigurationSource source) : ConfigurationProvider, IDisposable
 {
-    private readonly IHttpHelper _httpHelper = new HttpHelper();
+    private readonly HttpHelper _httpHelper = new();
     private Timer? _timer;
     private string? _lastConfigHash;
 

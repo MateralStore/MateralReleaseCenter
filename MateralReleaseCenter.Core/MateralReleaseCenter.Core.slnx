@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/解决方案项/">
+    <File Path="../Common.props" />
+    <File Path="../Directory.Build.props" />
+    <File Path="../Directory.Packages.props" />
+    <File Path="../Packable.props" />
+    <File Path="../README.md" />
+  </Folder>
+  <Project Path="MateralReleaseCenter.Core.Abstractions/MateralReleaseCenter.Core.Abstractions.csproj" />
+  <Project Path="MateralReleaseCenter.Core.Application/MateralReleaseCenter.Core.Application.csproj" />
+  <Project Path="MateralReleaseCenter.Core.Repository/MateralReleaseCenter.Core.Repository.csproj" />
+</Solution>

@@ -7,6 +7,10 @@
   <Folder Name="/ServerCenter/">
     <Project Path="../MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.Abstractions/MateralReleaseCenter.ServerCenter.Abstractions.csproj" />
   </Folder>
+  <Folder Name="/Test/">
+    <Project Path="MRC.ConfigClient.ConsoleTest/MRC.ConfigClient.ConsoleTest.csproj" />
+    <Project Path="MRC.TestModule.Application/MRC.TestModule.Application.csproj" Id="e3237db4-548d-4b63-a2cd-4419864ab2dc" />
+  </Folder>
   <Folder Name="/解决方案项/">
     <File Path="../Common.props" />
     <File Path="../Directory.Build.props" />
@@ -15,10 +19,10 @@
     <File Path="../MergeBlockLibrary.props" />
     <File Path="../Packable.props" />
   </Folder>
+  <Project Path="Materal.MergeBlock.RemoteConfig/Materal.MergeBlock.RemoteConfig.csproj" Id="1e2acd8c-93dc-4190-8281-6078bc6bae29" />
   <Project Path="MateralReleaseCenter.EnvironmentServer.Abstractions/MateralReleaseCenter.EnvironmentServer.Abstractions.csproj" />
   <Project Path="MateralReleaseCenter.EnvironmentServer.Application/MateralReleaseCenter.EnvironmentServer.Application.csproj" />
   <Project Path="MateralReleaseCenter.EnvironmentServer.Repository/MateralReleaseCenter.EnvironmentServer.Repository.csproj" />
   <Project Path="MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj" />
-  <Project Path="MRC.ConfigClient.ConsoleTest/MRC.ConfigClient.ConsoleTest.csproj" />
   <Project Path="MRC.ConfigClient/MRC.ConfigClient.csproj" />
 </Solution>

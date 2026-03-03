@@ -607,7 +607,7 @@ export function DefaultDataListPage() {
               label="键"
               rules={[{ required: true, message: '请输入键' }]}
             >
-              <Input placeholder="请输入键" disabled={!!editingData} />
+              <Input placeholder="请输入键" />
             </Form.Item>
             <Form.Item
               name="value"

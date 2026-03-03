@@ -104,6 +104,7 @@ export function AppFormModal({
         // 编辑
         await client.deployServerAPI.applicationInfo.edit.put({
           iD: id,
+          applicationType: values.applicationType,
           mainModule: values.mainModule,
           isIncrementalUpdating: values.isIncrementalUpdating,
           runParams: values.runParameters,
@@ -142,22 +143,22 @@ export function AppFormModal({
       destroyOnHidden
     >
       <Form form={form} layout="vertical" preserve={false}>
+        <Form.Item
+          name="applicationType"
+          label="应用程序类型"
+          rules={[{ required: true, message: '请选择应用程序类型' }]}
+        >
+          <Select
+            placeholder="请选择应用程序类型"
+            loading={appTypeLoading}
+            options={appTypeEnum.map(item => ({
+              value: item.key!,
+              label: item.value,
+            }))}
+          />
+        </Form.Item>
         {!id && (
           <>
-            <Form.Item
-              name="applicationType"
-              label="应用程序类型"
-              rules={[{ required: true, message: '请选择应用程序类型' }]}
-            >
-              <Select
-                placeholder="请选择应用程序类型"
-                loading={appTypeLoading}
-                options={appTypeEnum.map(item => ({
-                  value: item.key!,
-                  label: item.value,
-                }))}
-              />
-            </Form.Item>
             <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
               <Input placeholder="请输入名称" />
             </Form.Item>
@@ -168,9 +169,6 @@ export function AppFormModal({
         )}
         {id && editingData && (
           <>
-            <Form.Item label="应用程序类型">
-              <Input value={getAppTypeText(editingData.applicationType)} disabled />
-            </Form.Item>
             <Form.Item label="名称">
               <Input value={editingData.name} disabled />
             </Form.Item>

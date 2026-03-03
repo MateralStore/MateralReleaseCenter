@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace MRC.ConfigClient;
+namespace MateralReleaseCenter.EnvironmentServer.ConfigClient;
 
 /// <summary>
 /// 配置项构建器扩展
@@ -16,9 +16,10 @@ public static class ConfigurationBuilderExtensions
     /// <param name="namespaces">要加载的命名空间</param>
     /// <param name="reloadInterval">轮询间隔（默认 30 秒）</param>
     /// <returns></returns>
-    public static IConfigurationBuilder AddMRCConfig(this IConfigurationBuilder builder, string url, string project, string[]? namespaces = null, TimeSpan? reloadInterval = null)
+    public static IConfigurationBuilder AddMRCConfig(this IConfigurationBuilder builder, string url, string project, string[] namespaces, TimeSpan? reloadInterval = null)
     {
-        MRCConfigurationSource source = new(url, project, namespaces ?? ["Application"], reloadInterval ?? TimeSpan.FromSeconds(30));
+        string[] trueNamespaces = ["Application", .. namespaces];
+        MRCConfigurationSource source = new(url, project, trueNamespaces, reloadInterval ?? TimeSpan.FromSeconds(30));
         return builder.Add(source);
     }
 }

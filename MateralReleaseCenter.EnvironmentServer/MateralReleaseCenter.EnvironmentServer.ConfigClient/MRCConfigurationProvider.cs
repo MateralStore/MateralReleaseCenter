@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace MRC.ConfigClient;
+namespace MateralReleaseCenter.EnvironmentServer.ConfigClient;
 
 /// <summary>
 /// 配置供应器

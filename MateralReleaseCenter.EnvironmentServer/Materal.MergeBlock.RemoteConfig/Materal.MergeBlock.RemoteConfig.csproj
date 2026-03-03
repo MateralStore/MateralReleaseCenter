@@ -6,6 +6,6 @@
 		<Description>Materal MergeBlock远程配置模块</Description>
 	</PropertyGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\MRC.ConfigClient\MRC.ConfigClient.csproj" />
+	  <ProjectReference Include="..\MateralReleaseCenter.EnvironmentServer.ConfigClient\MateralReleaseCenter.EnvironmentServer.ConfigClient.csproj" />
 	</ItemGroup>
 </Project>

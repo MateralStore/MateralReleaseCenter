@@ -1,6 +1,6 @@
 using Materal.Utils.Extensions;
 using Microsoft.Extensions.Configuration;
-using MRC.ConfigClient;
+using MateralReleaseCenter.EnvironmentServer.ConfigClient;
 
 namespace Materal.MergeBlock.RemoteConfig;
 

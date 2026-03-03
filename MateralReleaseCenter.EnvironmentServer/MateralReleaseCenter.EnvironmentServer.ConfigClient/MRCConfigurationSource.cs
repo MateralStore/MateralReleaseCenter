@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace MRC.ConfigClient;
+namespace MateralReleaseCenter.EnvironmentServer.ConfigClient;
 
 /// <summary>
 /// 配置源

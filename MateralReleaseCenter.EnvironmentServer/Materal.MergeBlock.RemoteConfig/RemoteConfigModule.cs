@@ -1,6 +1,6 @@
 using Materal.Utils.Extensions;
-using Microsoft.Extensions.Configuration;
 using MateralReleaseCenter.EnvironmentServer.ConfigClient;
+using Microsoft.Extensions.Configuration;
 
 namespace Materal.MergeBlock.RemoteConfig;
 
@@ -17,7 +17,7 @@ public class RemoteConfigModule() : MergeBlockModule("远程配置模块")
         MergeBlockContext? mergeBlockContext = context.Services.GetSingletonInstance<MergeBlockContext>();
         if (mergeBlockContext is not null)
         {
-            configUrl = mergeBlockContext.Args.FirstOrDefault(m => m.StartsWith("ConfigUrl"));
+            configUrl = mergeBlockContext.Args.FirstOrDefault(m => m.StartsWith("--ConfigUrl") || m.StartsWith("ConfigUrl"));
             if (!string.IsNullOrWhiteSpace(configUrl))
             {
                 string[] configUrls = configUrl.Split("=");

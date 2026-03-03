@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Table, Button, Input, Form, Modal, Pagination, Space, App, Tooltip } from 'antd'
+import { Table, Button, Input, Form, Modal, Pagination, Space, App, Tooltip, Spin } from 'antd'
 import {
   PlusOutlined,
   SearchOutlined,
@@ -65,6 +65,8 @@ export function UserListPage() {
   const [modalTitle, setModalTitle] = useState('')
   const [editingUser, setEditingUser] = useState<UserListDTO | null>(null)
   const [submitLoading, setSubmitLoading] = useState(false)
+  const [infoLoading, setInfoLoading] = useState(false)
+  const [formValues, setFormValues] = useState<UserFormValues>({ account: '', name: '' })
 
   // 获取用户列表
   const fetchUserList = useCallback(async () => {
@@ -130,10 +132,41 @@ export function UserListPage() {
   }
 
   // 打开编辑模态窗
-  const handleEdit = (record: UserListDTO) => {
+  const handleEdit = async (record: UserListDTO) => {
     setEditingUser(record)
     setModalTitle('编辑用户')
+    setFormValues({ account: '', name: '' })
     setModalVisible(true)
+    setInfoLoading(true)
+    try {
+      const result = await rcscApiClient.serverCenterAPI.user.getInfo.get({
+        queryParameters: {
+          id: record.iD!,
+        },
+      })
+      if (result?.resultType === 0 && result.data) {
+        const newFormValues = {
+          account: result.data.account || '',
+          name: result.data.name || '',
+        }
+        setFormValues(newFormValues)
+        // 异步设置表单值，确保 Form 渲染完成后再设置
+        setTimeout(() => {
+          userForm.setFieldsValue(newFormValues)
+        }, 0)
+      } else {
+        messageApi.error(result?.message || '获取用户信息失败')
+        setModalVisible(false)
+        return
+      }
+    } catch (error) {
+      console.error('获取用户信息错误:', error)
+      messageApi.error('获取用户信息失败')
+      setModalVisible(false)
+      return
+    } finally {
+      setInfoLoading(false)
+    }
   }
 
   // 删除用户
@@ -374,18 +407,25 @@ export function UserListPage() {
         confirmLoading={submitLoading}
         width={480}
         destroyOnHidden
+        closable={!infoLoading}
+        mask={{ closable: !infoLoading }}
       >
-        <Form
-          form={userForm}
-          layout="vertical"
-          preserve={false}
-          key={editingUser?.iD?.toString() || 'add'}
-          initialValues={editingUser ? { name: editingUser.name || '' } : undefined}
-        >
-          {editingUser ? (
-            <Form.Item label="账号">
-              <Input value={editingUser.account || ''} disabled />
-            </Form.Item>
+        {infoLoading ? (
+          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+            <Spin />
+          </div>
+        ) : (
+          <Form
+            form={userForm}
+            layout="vertical"
+            preserve={false}
+            key={editingUser?.iD?.toString() || 'add'}
+            initialValues={formValues}
+          >
+            {editingUser ? (
+              <Form.Item label="账号">
+                <Input value={formValues.account || ''} disabled />
+              </Form.Item>
           ) : (
             <Form.Item
               name="account"
@@ -399,6 +439,7 @@ export function UserListPage() {
             <Input placeholder="请输入姓名" />
           </Form.Item>
         </Form>
+        )}
       </Modal>
     </div>
   )

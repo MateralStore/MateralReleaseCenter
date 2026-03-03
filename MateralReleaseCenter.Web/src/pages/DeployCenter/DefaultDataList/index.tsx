@@ -250,6 +250,8 @@ export function DefaultDataListPage() {
   const handleEdit = async (record: DefaultDataListDTO) => {
     setEditingData(record)
     setModalTitle('编辑默认数据')
+    setFormValues({ valueType: 'text' })
+    setModalVisible(true)
     setInfoLoading(true)
     try {
       const client = createRCDSClient(getApiPath())
@@ -270,24 +272,30 @@ export function DefaultDataListPage() {
         } catch {
           valueType = 'text'
         }
-        setFormValues({
+        const newFormValues = {
           applicationType: info.applicationType ?? undefined,
           key: info.key ?? undefined,
           valueType,
           value,
-        })
+        }
+        setFormValues(newFormValues)
+        // 异步设置表单值，确保 Form 渲染完成后再设置
+        setTimeout(() => {
+          dataForm.setFieldsValue(newFormValues)
+        }, 0)
       } else {
         messageApi.error(result?.message || '获取默认数据信息失败')
+        setModalVisible(false)
         return
       }
     } catch (error) {
       console.error('获取默认数据信息错误:', error)
       messageApi.error('获取默认数据信息失败')
+      setModalVisible(false)
       return
     } finally {
       setInfoLoading(false)
     }
-    setModalVisible(true)
   }
 
   // 删除默认数据
@@ -587,7 +595,7 @@ export function DefaultDataListPage() {
             layout="vertical"
             preserve={false}
             key={editingData?.iD?.toString() || 'add'}
-            initialValues={formValues}
+            initialValues={infoLoading ? undefined : formValues}
           >
             <Form.Item
               name="applicationType"

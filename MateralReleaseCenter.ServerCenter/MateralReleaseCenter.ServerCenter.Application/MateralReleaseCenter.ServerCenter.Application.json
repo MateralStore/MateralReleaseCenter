@@ -1,5 +1,5 @@
 ﻿{
   "ServerCenter": {
-    "GatewayUrl": ""
+    "GatewayUrl": "http://127.0.0.1:10000"
   }
 }

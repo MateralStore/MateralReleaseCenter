@@ -208,6 +208,8 @@ export function NamespaceListPage() {
   const handleEdit = async (record: NamespaceListDTO) => {
     setEditingNamespace(record)
     setModalTitle('编辑命名空间')
+    setFormValues({})
+    setModalVisible(true)
     setInfoLoading(true)
     try {
       const result = await rcscApiClient.serverCenterAPI.namespace.getInfo.get({
@@ -216,22 +218,28 @@ export function NamespaceListPage() {
         },
       })
       if (result?.resultType === 0 && result.data) {
-        setFormValues({
+        const newFormValues = {
           name: result.data.name || '',
           description: result.data.description || '',
-        })
+        }
+        setFormValues(newFormValues)
+        // 异步设置表单值，确保 Form 渲染完成后再设置
+        setTimeout(() => {
+          namespaceForm.setFieldsValue(newFormValues)
+        }, 0)
       } else {
         messageApi.error(result?.message || '获取命名空间信息失败')
+        setModalVisible(false)
         return
       }
     } catch (error) {
       console.error('获取命名空间信息错误:', error)
       messageApi.error('获取命名空间信息失败')
+      setModalVisible(false)
       return
     } finally {
       setInfoLoading(false)
     }
-    setModalVisible(true)
   }
 
   // 删除命名空间
@@ -467,7 +475,7 @@ export function NamespaceListPage() {
             layout="vertical"
             preserve={false}
             key={editingNamespace?.iD?.toString() || 'add'}
-            initialValues={formValues}
+            initialValues={infoLoading ? undefined : formValues}
           >
             {editingNamespace ? (
               <Form.Item label="名称">

@@ -135,6 +135,8 @@ export function ProjectListPage() {
   const handleEdit = async (record: ProjectListDTO) => {
     setEditingProject(record)
     setModalTitle('编辑项目')
+    setFormValues({})
+    setModalVisible(true)
     setInfoLoading(true)
     try {
       // 调用 GetInfo 接口获取项目详情
@@ -144,22 +146,28 @@ export function ProjectListPage() {
         },
       })
       if (result?.resultType === 0 && result.data) {
-        setFormValues({
+        const newFormValues = {
           name: result.data.name || '',
           description: result.data.description || '',
-        })
+        }
+        setFormValues(newFormValues)
+        // 异步设置表单值，确保 Form 渲染完成后再设置
+        setTimeout(() => {
+          projectForm.setFieldsValue(newFormValues)
+        }, 0)
       } else {
         messageApi.error(result?.message || '获取项目信息失败')
+        setModalVisible(false)
         return
       }
     } catch (error) {
       console.error('获取项目信息错误:', error)
       messageApi.error('获取项目信息失败')
+      setModalVisible(false)
       return
     } finally {
       setInfoLoading(false)
     }
-    setModalVisible(true)
   }
 
   // 删除项目
@@ -378,7 +386,7 @@ export function ProjectListPage() {
             layout="vertical"
             preserve={false}
             key={editingProject?.iD?.toString() || 'add'}
-            initialValues={formValues}
+            initialValues={infoLoading ? undefined : formValues}
           >
             {editingProject ? (
               <Form.Item label="名称">

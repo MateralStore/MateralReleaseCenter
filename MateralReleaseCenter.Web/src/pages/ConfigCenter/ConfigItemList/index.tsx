@@ -441,6 +441,8 @@ export function ConfigItemListPage() {
     if (!currentRCESClient) return
     setEditingConfigItem(record)
     setEditModalTitle('编辑配置项')
+    setFormValues({ description: '', key: '', value: '' })
+    setEditModalVisible(true)
     setEditInfoLoading(true)
     try {
       const result = await currentRCESClient.environmentServerAPI.configurationItem.getInfo.get({
@@ -461,23 +463,29 @@ export function ConfigItemListPage() {
           }
         }
         setValueType(currentValueType)
-        setFormValues({
+        const newFormValues = {
           description: data.description || '',
           key: data.key || '',
           value: data.value || '',
-        })
+        }
+        setFormValues(newFormValues)
+        // 异步设置表单值，确保 Form 渲染完成后再设置
+        setTimeout(() => {
+          editForm.setFieldsValue(newFormValues)
+        }, 0)
       } else {
         messageApi.error(result?.message || '获取配置项信息失败')
+        setEditModalVisible(false)
         return
       }
     } catch (error) {
       console.error('获取配置项信息错误:', error)
       messageApi.error('获取配置项信息失败')
+      setEditModalVisible(false)
       return
     } finally {
       setEditInfoLoading(false)
     }
-    setEditModalVisible(true)
   }
 
   // 提交表单
@@ -778,7 +786,7 @@ export function ConfigItemListPage() {
             layout="vertical"
             preserve={false}
             key={editingConfigItem?.iD?.toString() || 'add'}
-            initialValues={formValues}
+            initialValues={editInfoLoading ? undefined : formValues}
           >
             {editingConfigItem ? (
               <Form.Item label="键">

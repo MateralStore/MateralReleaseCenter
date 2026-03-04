@@ -30,6 +30,13 @@ public partial class ApplicationInfoControllerAccessor(IServiceProvider serviceP
     public ResultModel ApplyLasetFile(Guid id)
         => HttpHelper.SendAsync<IApplicationInfoController, ResultModel>(ProjectName, ModuleName, nameof(ApplyLasetFile), []).Result;
     /// <summary>
+    /// 应用最好一个发布
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public ResultModel ApplyLasetReleases(Guid id)
+        => HttpHelper.SendAsync<IApplicationInfoController, ResultModel>(ProjectName, ModuleName, nameof(ApplyLasetReleases), []).Result;
+    /// <summary>
     /// 应用文件
     /// </summary>
     /// <param name="id"></param>

@@ -32,6 +32,11 @@ public partial class QueryApplicationInfoModel : PageRequestModel, IQueryService
     [Equal]
     public bool? IsIncrementalUpdating { get; set; }
     /// <summary>
+    /// 仓库地址
+    /// </summary>
+    [Equal]
+    public string? RepositoryUrl { get; set; }
+    /// <summary>
     /// 唯一标识组
     /// </summary>
     [Contains("ID")]

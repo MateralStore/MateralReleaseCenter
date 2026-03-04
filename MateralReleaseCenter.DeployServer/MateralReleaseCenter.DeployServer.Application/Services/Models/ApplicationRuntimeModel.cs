@@ -1,8 +1,8 @@
 ﻿using MateralReleaseCenter.DeployServer.Abstractions.Services.Models;
+using MateralReleaseCenter.DeployServer.Application.Helpers;
 using MateralReleaseCenter.DeployServer.Application.Hubs;
 using MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
 using Microsoft.AspNetCore.SignalR;
-using SharpCompress.Common;
 using SharpCompress.Readers;
 using System.Threading.Tasks.Dataflow;
 
@@ -73,6 +73,14 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
     {
         Application = this,
         TargetTask = StopAsync
+    });
+    /// <summary>
+    /// 执行应用最后一个发布
+    /// </summary>
+    public void ExecuteApplyLasetReleasesTask() => _taskQueue.Post(new ApplicationTask
+    {
+        Application = this,
+        TargetTask = () => ApplyReleasesAsync()
     });
     /// <summary>
     /// 执行应用最后一个文件任务
@@ -153,6 +161,36 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
     /// </summary>
     /// <exception cref="MateralReleaseCenterException"></exception>
     private async Task StopAsync() => await _applicationHandler.StopApplicationAsync(this);
+    private async Task ApplyReleasesAsync()
+    {
+        if (string.IsNullOrWhiteSpace(ApplicationInfo.RepositoryUrl)) return;
+        bool canRuning = false;
+        try
+        {
+            IHttpClientFactory httpClientFactory = MateralServices.ServiceProvider.GetRequiredService<IHttpClientFactory>();
+            AddConsoleMessage($"{ApplicationInfo.Name}开始下载最新的Releases...");
+            string savePath = await GitHubHelper.DownloadLastReleasesFileAsync(httpClientFactory, applicationInfo.RootPath, ApplicationInfo.RepositoryUrl, ApplicationInfo.AuthToken, RarFilesDirectoryPath);
+            string fileName = Path.GetFileName(savePath);
+            AddConsoleMessage($"{ApplicationInfo.Name}Releases下载完毕:{fileName}");
+            if (ApplicationStatus != ApplicationStatusEnum.Stop)
+            {
+                await StopAsync();
+                canRuning = true;
+            }
+            ApplyFile(fileName);
+        }
+        catch (Exception ex)
+        {
+            AddConsoleMessage(ex.GetErrorMessage());
+        }
+        finally
+        {
+            if (canRuning)
+            {
+                await StartAsync();
+            }
+        }
+    }
     /// <summary>
     /// 更新最新的文件
     /// </summary>

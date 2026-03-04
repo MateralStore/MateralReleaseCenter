@@ -34,4 +34,12 @@ public partial class AddApplicationInfoModel : IAddServiceModel
     /// 运行参数
     /// </summary>
     public string? RunParams { get; set; }
+    /// <summary>
+    /// 仓库地址
+    /// </summary>
+    public string? RepositoryUrl { get; set; }
+    /// <summary>
+    /// 授权令牌
+    /// </summary>
+    public string? AuthToken { get; set; }
 }

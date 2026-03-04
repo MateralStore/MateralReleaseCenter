@@ -7,7 +7,7 @@ namespace MateralReleaseCenter.DeployServer.Abstractions.Services;
 /// <summary>
 /// 应用程序服务
 /// </summary>
-public partial interface IApplicationInfoService : IMergeBlockController
+public partial interface IApplicationInfoService
 {
     /// <summary>
     /// 保存文件
@@ -23,6 +23,12 @@ public partial interface IApplicationInfoService : IMergeBlockController
     /// <returns></returns>
     [MapperController(MapperType.Put)]
     void ApplyLasetFile(Guid id);
+    /// <summary>
+    /// 应用最好一个发布
+    /// </summary>
+    /// <param name="id"></param>
+    [MapperController(MapperType.Put)]
+    void ApplyLasetReleases(Guid id);
     /// <summary>
     /// 应用文件
     /// </summary>

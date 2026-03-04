@@ -23,6 +23,16 @@ public partial class ApplicationInfoController
         return ResultModel.Success("应用最后一个文件成功");
     }
     /// <summary>
+    /// 应用最好一个发布
+    /// </summary>
+    /// <param name="id"></param>
+    [HttpPut]
+    public ResultModel ApplyLasetReleases(Guid id)
+    {
+        DefaultService.ApplyLasetReleases(id);
+        return ResultModel.Success("应用最好一个发布成功");
+    }
+    /// <summary>
     /// 应用文件
     /// </summary>
     /// <param name="id"></param>

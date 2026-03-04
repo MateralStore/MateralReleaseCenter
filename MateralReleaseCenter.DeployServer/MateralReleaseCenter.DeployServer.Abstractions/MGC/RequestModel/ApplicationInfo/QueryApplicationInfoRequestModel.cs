@@ -27,6 +27,10 @@ public partial class QueryApplicationInfoRequestModel : PageRequestModel, IQuery
     /// </summary>
     public bool? IsIncrementalUpdating { get; set; }
     /// <summary>
+    /// 仓库地址
+    /// </summary>
+    public string? RepositoryUrl { get; set; }
+    /// <summary>
     /// 唯一标识组
     /// </summary>
     public List<Guid>? IDs { get; set; }

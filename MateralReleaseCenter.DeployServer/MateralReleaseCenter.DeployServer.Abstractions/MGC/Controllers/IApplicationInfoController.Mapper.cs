@@ -18,6 +18,12 @@ public partial interface IApplicationInfoController : IMergeBlockController
     [HttpPut]
     ResultModel ApplyLasetFile(Guid id);
     /// <summary>
+    /// 应用最好一个发布
+    /// </summary>
+    /// <param name="id"></param>
+    [HttpPut]
+    ResultModel ApplyLasetReleases(Guid id);
+    /// <summary>
     /// 应用文件
     /// </summary>
     /// <param name="id"></param>

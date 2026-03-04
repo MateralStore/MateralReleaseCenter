@@ -161,6 +161,14 @@ public partial class ApplicationInfoServiceImpl(IServiceProvider serviceProvider
         }
         applicationInfo.ExecuteApplyLatestFileTask();
     }
+
+    /// <inheritdoc/>
+    public void ApplyLasetReleases([Required(ErrorMessage = "唯一标识为空")] Guid id)
+    {
+        if (!ApplicationRuntimeHost.ApplicationRuntimes.TryGetValue(id, out ApplicationRuntimeModel? value)) throw new MateralReleaseCenterException("应用程序信息不存在");
+        ApplicationRuntimeModel applicationInfo = value;
+        applicationInfo.ExecuteApplyLasetReleasesTask();
+    }
     /// <summary>
     /// 应用最后一个文件
     /// </summary>

@@ -21,6 +21,7 @@ public class DeployServerModule() : MateralReleaseCenterModule("MateralReleaseCe
     public override void OnConfigureServices(ServiceConfigurationContext context)
     {
         base.OnConfigureServices(context);
+        context.Services.AddHttpClient();
         context.Services.TryAddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
     }
     /// <inheritdoc/>

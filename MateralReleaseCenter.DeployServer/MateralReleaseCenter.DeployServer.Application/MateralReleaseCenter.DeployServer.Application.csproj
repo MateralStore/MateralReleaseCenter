@@ -4,6 +4,7 @@
 		<PackageReference Include="Materal.EventBus.RabbitMQ" />
 		<PackageReference Include="Materal.MergeBlock.Authorization.Abstractions" />
 		<PackageReference Include="Materal.MergeBlock.Web.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
 		<PackageReference Include="SharpCompress" />
 	</ItemGroup>
 	<ItemGroup>

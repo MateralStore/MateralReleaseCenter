@@ -32,6 +32,10 @@ public class ApplicationInfoConfigBase : BaseEntityConfig<ApplicationInfo>
             .HasComment("增量更新");
         builder.Property(e => e.RunParams)
             .HasComment("运行参数");
+        builder.Property(e => e.RepositoryUrl)
+            .HasComment("仓库地址");
+        builder.Property(e => e.AuthToken)
+            .HasComment("授权令牌");
     }
 }
 /// <summary>

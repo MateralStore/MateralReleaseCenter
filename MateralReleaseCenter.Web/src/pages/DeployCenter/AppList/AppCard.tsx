@@ -12,6 +12,7 @@ import {
   CreditCardOutlined,
   PoweroffOutlined,
   LinkOutlined,
+  CloudDownloadOutlined,
 } from '@ant-design/icons'
 import { createRCDSClient } from '../../../api/api-client'
 import type {
@@ -239,6 +240,25 @@ export function AppCard({
     }
   }
 
+  // 应用最新Releases
+  const handleApplyReleases = async () => {
+    try {
+      const client = createRCDSClient(apiPath)
+      const result = await client.deployServerAPI.applicationInfo.applyLasetReleases.put({
+        queryParameters: { id: record.iD! },
+      })
+      if (result?.resultType === 0) {
+        messageApi.success('应用最新Releases成功')
+        onRefresh()
+      } else {
+        messageApi.error(result?.message || '应用最新Releases失败')
+      }
+    } catch (error) {
+      console.error('应用最新Releases错误:', error)
+      messageApi.error('应用最新Releases失败')
+    }
+  }
+
   return (
     <>
       <Card
@@ -319,6 +339,12 @@ export function AppCard({
                           icon: <CopyOutlined />,
                           label: '应用最新',
                           onClick: handleApply,
+                        },
+                        {
+                          key: 'applyReleases',
+                          icon: <CloudDownloadOutlined />,
+                          label: '应用Releases',
+                          onClick: handleApplyReleases,
                         },
                         {
                           key: 'edit',

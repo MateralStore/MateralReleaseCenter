@@ -8,6 +8,8 @@ import { ApplyFileRequestBuilderRequestsMetadata, type ApplyFileRequestBuilder }
 // @ts-ignore
 import { ApplyLasetFileRequestBuilderRequestsMetadata, type ApplyLasetFileRequestBuilder } from './applyLasetFile/index.js';
 // @ts-ignore
+import { ApplyLasetReleasesRequestBuilderRequestsMetadata, type ApplyLasetReleasesRequestBuilder } from './applyLasetReleases/index.js';
+// @ts-ignore
 import { ClearConsoleMessagesRequestBuilderRequestsMetadata, type ClearConsoleMessagesRequestBuilder } from './clearConsoleMessages/index.js';
 // @ts-ignore
 import { DeleteRequestBuilderRequestsMetadata, type DeleteRequestBuilder } from './delete/index.js';
@@ -56,6 +58,10 @@ export interface ApplicationInfoRequestBuilder extends BaseRequestBuilder<Applic
      * The ApplyLasetFile property
      */
     get applyLasetFile(): ApplyLasetFileRequestBuilder;
+    /**
+     * The ApplyLasetReleases property
+     */
+    get applyLasetReleases(): ApplyLasetReleasesRequestBuilder;
     /**
      * The ClearConsoleMessages property
      */
@@ -133,6 +139,9 @@ export const ApplicationInfoRequestBuilderNavigationMetadata: Record<Exclude<key
     },
     applyLasetFile: {
         requestsMetadata: ApplyLasetFileRequestBuilderRequestsMetadata,
+    },
+    applyLasetReleases: {
+        requestsMetadata: ApplyLasetReleasesRequestBuilderRequestsMetadata,
     },
     clearConsoleMessages: {
         requestsMetadata: ClearConsoleMessagesRequestBuilderRequestsMetadata,

@@ -13,6 +13,10 @@ export interface AddApplicationInfoRequestModel extends Parsable {
      */
     applicationType?: number | null;
     /**
+     * 授权令牌
+     */
+    authToken?: string | null;
+    /**
      * 增量更新
      */
     isIncrementalUpdating?: boolean | null;
@@ -24,6 +28,10 @@ export interface AddApplicationInfoRequestModel extends Parsable {
      * 名称
      */
     name?: string | null;
+    /**
+     * 仓库地址
+     */
+    repositoryUrl?: string | null;
     /**
      * 根路径
      */
@@ -71,6 +79,10 @@ export interface ApplicationInfoDTO extends Parsable {
      */
     applicationTypeTxt?: string | null;
     /**
+     * 授权令牌
+     */
+    authToken?: string | null;
+    /**
      * 创建时间
      */
     createTime?: Date | null;
@@ -90,6 +102,10 @@ export interface ApplicationInfoDTO extends Parsable {
      * 名称
      */
     name?: string | null;
+    /**
+     * 仓库地址
+     */
+    repositoryUrl?: string | null;
     /**
      * 根路径
      */
@@ -138,6 +154,10 @@ export interface ApplicationInfoListDTO extends Parsable {
      */
     applicationTypeTxt?: string | null;
     /**
+     * 授权令牌
+     */
+    authToken?: string | null;
+    /**
      * 创建时间
      */
     createTime?: Date | null;
@@ -157,6 +177,10 @@ export interface ApplicationInfoListDTO extends Parsable {
      * 名称
      */
     name?: string | null;
+    /**
+     * 仓库地址
+     */
+    repositoryUrl?: string | null;
     /**
      * 根路径
      */
@@ -591,9 +615,11 @@ export interface DefaultDataListDTOCollectionResultModel extends Parsable {
 export function deserializeIntoAddApplicationInfoRequestModel(addApplicationInfoRequestModel: Partial<AddApplicationInfoRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "ApplicationType": n => { addApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
+        "AuthToken": n => { addApplicationInfoRequestModel.authToken = n.getStringValue(); },
         "IsIncrementalUpdating": n => { addApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { addApplicationInfoRequestModel.mainModule = n.getStringValue(); },
         "Name": n => { addApplicationInfoRequestModel.name = n.getStringValue(); },
+        "RepositoryUrl": n => { addApplicationInfoRequestModel.repositoryUrl = n.getStringValue(); },
         "RootPath": n => { addApplicationInfoRequestModel.rootPath = n.getStringValue(); },
         "RunParams": n => { addApplicationInfoRequestModel.runParams = n.getStringValue(); },
     }
@@ -623,11 +649,13 @@ export function deserializeIntoApplicationInfoDTO(applicationInfoDTO: Partial<Ap
         "ApplicationStatusTxt": n => { applicationInfoDTO.applicationStatusTxt = n.getStringValue(); },
         "ApplicationType": n => { applicationInfoDTO.applicationType = n.getNumberValue(); },
         "ApplicationTypeTxt": n => { applicationInfoDTO.applicationTypeTxt = n.getStringValue(); },
+        "AuthToken": n => { applicationInfoDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoDTO.createTime = n.getDateValue(); },
         "ID": n => { applicationInfoDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoDTO.mainModule = n.getStringValue(); },
         "Name": n => { applicationInfoDTO.name = n.getStringValue(); },
+        "RepositoryUrl": n => { applicationInfoDTO.repositoryUrl = n.getStringValue(); },
         "RootPath": n => { applicationInfoDTO.rootPath = n.getStringValue(); },
         "RunParams": n => { applicationInfoDTO.runParams = n.getStringValue(); },
         "UploadFileNames": n => { applicationInfoDTO.uploadFileNames = n.getCollectionOfPrimitiveValues<string>(); },
@@ -658,11 +686,13 @@ export function deserializeIntoApplicationInfoListDTO(applicationInfoListDTO: Pa
         "ApplicationStatusTxt": n => { applicationInfoListDTO.applicationStatusTxt = n.getStringValue(); },
         "ApplicationType": n => { applicationInfoListDTO.applicationType = n.getNumberValue(); },
         "ApplicationTypeTxt": n => { applicationInfoListDTO.applicationTypeTxt = n.getStringValue(); },
+        "AuthToken": n => { applicationInfoListDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoListDTO.createTime = n.getDateValue(); },
         "ID": n => { applicationInfoListDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoListDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoListDTO.mainModule = n.getStringValue(); },
         "Name": n => { applicationInfoListDTO.name = n.getStringValue(); },
+        "RepositoryUrl": n => { applicationInfoListDTO.repositoryUrl = n.getStringValue(); },
         "RootPath": n => { applicationInfoListDTO.rootPath = n.getStringValue(); },
         "RunParams": n => { applicationInfoListDTO.runParams = n.getStringValue(); },
     }
@@ -801,9 +831,11 @@ export function deserializeIntoDefaultDataListDTOCollectionResultModel(defaultDa
 export function deserializeIntoEditApplicationInfoRequestModel(editApplicationInfoRequestModel: Partial<EditApplicationInfoRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "ApplicationType": n => { editApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
+        "AuthToken": n => { editApplicationInfoRequestModel.authToken = n.getStringValue(); },
         "ID": n => { editApplicationInfoRequestModel.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { editApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { editApplicationInfoRequestModel.mainModule = n.getStringValue(); },
+        "RepositoryUrl": n => { editApplicationInfoRequestModel.repositoryUrl = n.getStringValue(); },
         "RunParams": n => { editApplicationInfoRequestModel.runParams = n.getStringValue(); },
     }
 }
@@ -911,6 +943,7 @@ export function deserializeIntoQueryApplicationInfoRequestModel(queryApplication
         "Name": n => { queryApplicationInfoRequestModel.name = n.getStringValue(); },
         "PageIndex": n => { queryApplicationInfoRequestModel.pageIndex = n.getNumberValue(); },
         "PageSize": n => { queryApplicationInfoRequestModel.pageSize = n.getNumberValue(); },
+        "RepositoryUrl": n => { queryApplicationInfoRequestModel.repositoryUrl = n.getStringValue(); },
         "RootPath": n => { queryApplicationInfoRequestModel.rootPath = n.getStringValue(); },
         "Skip": n => { queryApplicationInfoRequestModel.skip = n.getNumberValue(); },
         "SortPropertyName": n => { queryApplicationInfoRequestModel.sortPropertyName = n.getStringValue(); },
@@ -1012,6 +1045,10 @@ export interface EditApplicationInfoRequestModel extends Parsable {
      */
     applicationType?: number | null;
     /**
+     * 授权令牌
+     */
+    authToken?: string | null;
+    /**
      * 唯一标识
      */
     iD?: Guid | null;
@@ -1023,6 +1060,10 @@ export interface EditApplicationInfoRequestModel extends Parsable {
      * 主模块
      */
     mainModule?: string | null;
+    /**
+     * 仓库地址
+     */
+    repositoryUrl?: string | null;
     /**
      * 运行参数
      */
@@ -1195,6 +1236,10 @@ export interface QueryApplicationInfoRequestModel extends Parsable {
      */
     pageSize?: number | null;
     /**
+     * 仓库地址
+     */
+    repositoryUrl?: string | null;
+    /**
      * 根路径
      */
     rootPath?: string | null;
@@ -1326,9 +1371,11 @@ export interface ResultTypeKeyValueModelListResultModel extends Parsable {
 export function serializeAddApplicationInfoRequestModel(writer: SerializationWriter, addApplicationInfoRequestModel: Partial<AddApplicationInfoRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!addApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", addApplicationInfoRequestModel.applicationType);
+    writer.writeStringValue("AuthToken", addApplicationInfoRequestModel.authToken);
     writer.writeBooleanValue("IsIncrementalUpdating", addApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", addApplicationInfoRequestModel.mainModule);
     writer.writeStringValue("Name", addApplicationInfoRequestModel.name);
+    writer.writeStringValue("RepositoryUrl", addApplicationInfoRequestModel.repositoryUrl);
     writer.writeStringValue("RootPath", addApplicationInfoRequestModel.rootPath);
     writer.writeStringValue("RunParams", addApplicationInfoRequestModel.runParams);
 }
@@ -1356,11 +1403,13 @@ export function serializeApplicationInfoDTO(writer: SerializationWriter, applica
     if (!applicationInfoDTO || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationStatus", applicationInfoDTO.applicationStatus);
     writer.writeNumberValue("ApplicationType", applicationInfoDTO.applicationType);
+    writer.writeStringValue("AuthToken", applicationInfoDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoDTO.createTime);
     writer.writeGuidValue("ID", applicationInfoDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoDTO.mainModule);
     writer.writeStringValue("Name", applicationInfoDTO.name);
+    writer.writeStringValue("RepositoryUrl", applicationInfoDTO.repositoryUrl);
     writer.writeStringValue("RootPath", applicationInfoDTO.rootPath);
     writer.writeStringValue("RunParams", applicationInfoDTO.runParams);
     writer.writeCollectionOfPrimitiveValues<string>("UploadFileNames", applicationInfoDTO.uploadFileNames);
@@ -1389,11 +1438,13 @@ export function serializeApplicationInfoListDTO(writer: SerializationWriter, app
     if (!applicationInfoListDTO || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationStatus", applicationInfoListDTO.applicationStatus);
     writer.writeNumberValue("ApplicationType", applicationInfoListDTO.applicationType);
+    writer.writeStringValue("AuthToken", applicationInfoListDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoListDTO.createTime);
     writer.writeGuidValue("ID", applicationInfoListDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoListDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoListDTO.mainModule);
     writer.writeStringValue("Name", applicationInfoListDTO.name);
+    writer.writeStringValue("RepositoryUrl", applicationInfoListDTO.repositoryUrl);
     writer.writeStringValue("RootPath", applicationInfoListDTO.rootPath);
     writer.writeStringValue("RunParams", applicationInfoListDTO.runParams);
 }
@@ -1528,9 +1579,11 @@ export function serializeDefaultDataListDTOCollectionResultModel(writer: Seriali
 export function serializeEditApplicationInfoRequestModel(writer: SerializationWriter, editApplicationInfoRequestModel: Partial<EditApplicationInfoRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!editApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", editApplicationInfoRequestModel.applicationType);
+    writer.writeStringValue("AuthToken", editApplicationInfoRequestModel.authToken);
     writer.writeGuidValue("ID", editApplicationInfoRequestModel.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", editApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", editApplicationInfoRequestModel.mainModule);
+    writer.writeStringValue("RepositoryUrl", editApplicationInfoRequestModel.repositoryUrl);
     writer.writeStringValue("RunParams", editApplicationInfoRequestModel.runParams);
 }
 /**
@@ -1636,6 +1689,7 @@ export function serializeQueryApplicationInfoRequestModel(writer: SerializationW
     writer.writeStringValue("Name", queryApplicationInfoRequestModel.name);
     writer.writeNumberValue("PageIndex", queryApplicationInfoRequestModel.pageIndex);
     writer.writeNumberValue("PageSize", queryApplicationInfoRequestModel.pageSize);
+    writer.writeStringValue("RepositoryUrl", queryApplicationInfoRequestModel.repositoryUrl);
     writer.writeStringValue("RootPath", queryApplicationInfoRequestModel.rootPath);
     writer.writeNumberValue("Skip", queryApplicationInfoRequestModel.skip);
     writer.writeStringValue("SortPropertyName", queryApplicationInfoRequestModel.sortPropertyName);

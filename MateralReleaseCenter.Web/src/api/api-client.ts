@@ -35,7 +35,8 @@ export function createRCDSClient(apiPath: string): RCDSAPI {
 
 const requestAdapter = new DefaultRequestAdapter(authenticationProvider)
 if (import.meta.env.DEV) {
-  requestAdapter.baseUrl = `http://winserver.devserver.ink:10010`
+  // requestAdapter.baseUrl = `http://winserver.devserver.ink:10010`
+  requestAdapter.baseUrl = `http://127.0.0.1:10010`
 }
 else {
   requestAdapter.baseUrl = `${window.location.protocol}//${window.location.host}`

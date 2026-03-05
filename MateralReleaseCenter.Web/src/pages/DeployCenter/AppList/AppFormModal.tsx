@@ -11,6 +11,8 @@ interface AppFormValues {
   mainModule?: string
   isIncrementalUpdating?: boolean
   runParameters?: string
+  repositoryUrl?: string
+  authToken?: string
 }
 
 interface AppFormModalProps {
@@ -69,6 +71,8 @@ export function AppFormModal({
             mainModule: result.data.mainModule ?? undefined,
             isIncrementalUpdating: result.data.isIncrementalUpdating ?? undefined,
             runParameters: result.data.runParams ?? undefined,
+            repositoryUrl: result.data.repositoryUrl ?? undefined,
+            authToken: result.data.authToken ?? undefined,
           }
           setEditingData(data)
           // 直接设置表单值
@@ -108,6 +112,8 @@ export function AppFormModal({
           mainModule: values.mainModule,
           isIncrementalUpdating: values.isIncrementalUpdating,
           runParams: values.runParameters,
+          repositoryUrl: values.repositoryUrl,
+          authToken: values.authToken,
         })
       } else {
         // 新增
@@ -118,6 +124,8 @@ export function AppFormModal({
           mainModule: values.mainModule!,
           isIncrementalUpdating: values.isIncrementalUpdating || false,
           runParams: values.runParameters,
+          repositoryUrl: values.repositoryUrl,
+          authToken: values.authToken,
         })
       }
       onSuccess()
@@ -142,7 +150,7 @@ export function AppFormModal({
       width={480}
       destroyOnHidden
     >
-      <Form form={form} layout="vertical" preserve={false}>
+      <Form form={form} layout="vertical" preserve={false} autoComplete="off">
         <Form.Item
           name="applicationType"
           label="应用程序类型"
@@ -189,6 +197,12 @@ export function AppFormModal({
         </Form.Item>
         <Form.Item name="runParameters" label="运行参数">
           <Input.TextArea placeholder="请输入运行参数" rows={3} />
+        </Form.Item>
+        <Form.Item name="repositoryUrl" label="仓库地址">
+          <Input placeholder="请输入仓库地址" autoComplete="off" data-form-unique="repo" />
+        </Form.Item>
+        <Form.Item name="authToken" label="授权Token">
+          <Input.Password placeholder="请输入授权Token" autoComplete="new-custom-token" data-form-unique="token" />
         </Form.Item>
       </Form>
     </Modal>

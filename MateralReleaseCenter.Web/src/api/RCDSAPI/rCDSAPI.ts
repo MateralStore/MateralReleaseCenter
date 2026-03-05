@@ -19,13 +19,13 @@ export function createRCDSAPI(requestAdapter: RequestAdapter) {
     const serializationWriterFactory = requestAdapter.getSerializationWriterFactory() as SerializationWriterFactoryRegistry;
     const parseNodeFactoryRegistry = requestAdapter.getParseNodeFactory() as ParseNodeFactoryRegistry;
     const backingStoreFactory = requestAdapter.getBackingStoreFactory();
-    
+
     if (parseNodeFactoryRegistry.registerDefaultDeserializer) {
     }
-    
+
     if (serializationWriterFactory.registerDefaultSerializer) {
     }
-    
+
     const pathParameters: Record<string, unknown> = {
         "baseurl": requestAdapter.baseUrl,
     };

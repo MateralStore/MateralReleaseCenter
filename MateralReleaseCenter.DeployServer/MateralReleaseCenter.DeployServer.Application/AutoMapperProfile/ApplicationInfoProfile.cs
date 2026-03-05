@@ -34,6 +34,8 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
             dto.ApplicationStatus = model.ApplicationStatus;
             dto.IsIncrementalUpdating = model.ApplicationInfo.IsIncrementalUpdating;
             dto.RunParams = model.ApplicationInfo.RunParams;
+            dto.RepositoryUrl = model.ApplicationInfo.RepositoryUrl;
+            dto.AuthToken = model.ApplicationInfo.AuthToken;
         }
     }
 }

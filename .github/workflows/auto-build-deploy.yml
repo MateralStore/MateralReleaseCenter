@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # 构建前端
       - name: 安装 pnpm
@@ -44,16 +46,30 @@ jobs:
         run: mkdir -p Application/MateralReleaseCenter
 
       # 发布 ServerCenter
+      - name: 还原 NuGet 包 - ServerCenter
+        run: dotnet restore MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj -f net10.0
+
       - name: 发布 ServerCenter 项目
-        run: dotnet publish MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/ServerCenter
+        run: dotnet publish MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/ServerCenter --no-restore -f net10.0
 
       # 发布 EnvironmentServer
+      - name: 还原 NuGet 包 - EnvironmentServer
+        run: dotnet restore MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj -f net10.0
+
       - name: 发布 EnvironmentServer 项目
-        run: dotnet publish MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/EnvironmentServer
+        run: dotnet publish MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/EnvironmentServer --no-restore -f net10.0
 
       # 发布 DeployServer
+      - name: 还原 NuGet 包 - DeployServer
+        run: dotnet restore MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj -f net10.0
+
       - name: 发布 DeployServer 项目
-        run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer
+        run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer --no-restore -f net10.0
+
+      # 构建 NuGet 包
+      - name: 构建 NuGet 包
+        run: |
+          dotnet build MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.slnx -c Release --no-restore -p:PackageOutputPath=${{ github.workspace }}/Packages
 
       # 压缩输出文件
       - name: 设置时间戳
@@ -62,6 +78,21 @@ jobs:
 
       - name: 压缩输出文件
         run: cd Application && zip -r MateralReleaseCenter${{ steps.timestamp.outputs.ts }}.zip MateralReleaseCenter
+
+      # 发布 NuGet 包
+      - name: 发布 NuGet 包
+        run: |
+          if [ -z "$(ls -A ${{ github.workspace }}/Packages/*.nupkg 2>/dev/null)" ]; then
+            echo "没有需要发布的包"
+            exit 0
+          fi
+          for nupkg in ${{ github.workspace }}/Packages/*.nupkg; do
+            echo "正在发布: $nupkg"
+            dotnet nuget push "$nupkg" \
+              --source https://api.nuget.org/v3/index.json \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --skip-duplicate
+          done
 
       # 创建 GitHub Release
       - name: 删除旧 Release（只保留最近2个）

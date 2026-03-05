@@ -1,0 +1,121 @@
+name: 自动编译并发布到 Releases
+
+# 触发条件：推送到 main 分支时执行
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 构建前端
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装前端依赖
+        working-directory: MateralReleaseCenter.Web
+        run: pnpm install
+
+      - name: 构建前端
+        working-directory: MateralReleaseCenter.Web
+        run: pnpm build
+
+      # 构建后端
+      - name: 设置 .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0'
+
+      - name: 创建输出目录
+        run: mkdir -p Application/MateralReleaseCenter
+
+      # 发布 ServerCenter
+      - name: 还原 NuGet 包 - ServerCenter
+        run: dotnet restore MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj
+
+      - name: 发布 ServerCenter 项目
+        run: dotnet publish MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/ServerCenter --no-restore
+
+      # 发布 EnvironmentServer
+      - name: 还原 NuGet 包 - EnvironmentServer
+        run: dotnet restore MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj
+
+      - name: 发布 EnvironmentServer 项目
+        run: dotnet publish MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/EnvironmentServer --no-restore
+
+      # 发布 DeployServer
+      - name: 还原 NuGet 包 - DeployServer
+        run: dotnet restore MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj
+
+      - name: 发布 DeployServer 项目
+        run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer --no-restore
+
+      # 压缩输出文件
+      - name: 设置时间戳
+        id: timestamp
+        run: echo "ts=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: 压缩输出文件
+        run: cd Application && zip -r MateralReleaseCenter${{ steps.timestamp.outputs.ts }}.zip MateralReleaseCenter
+
+      # 创建 GitHub Release
+      - name: 删除旧 Release（只保留最近2个）
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            // 按创建时间排序（最新的在前）
+            const sortedReleases = releases.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            // 只保留最近1个旧版本，加上新发布的就是2个
+            const toDelete = sortedReleases.slice(1);
+            for (const release of toDelete) {
+              console.log(`Deleting release: ${release.tag_name}`);
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+              // 删除对应的 tag
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${release.tag_name}`
+                });
+              } catch (e) {
+                console.log(`Tag ${release.tag_name} may already be deleted`);
+              }
+            }
+            console.log(`Deleted ${toDelete.length} old releases, kept 2 latest`);
+
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: release-${{ steps.timestamp.outputs.ts }}
+          name: MateralReleaseCenter Release ${{ steps.timestamp.outputs.ts }}
+          draft: false
+          prerelease: false
+          files: |
+            Application/MateralReleaseCenter${{ steps.timestamp.outputs.ts }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

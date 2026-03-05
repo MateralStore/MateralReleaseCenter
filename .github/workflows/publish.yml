@@ -71,6 +71,13 @@ jobs:
         id: timestamp
         run: echo "ts=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
 
+      # 构建 NuGet 包
+      - name: 构建 NuGet 包 - ConfigClient
+        run: dotnet build MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.ConfigClient/MateralReleaseCenter.EnvironmentServer.ConfigClient.csproj -c Release --no-restore -p:PackageOutputPath=${{ github.workspace }}/Packages
+
+      - name: 构建 NuGet 包 - RemoteConfig
+        run: dotnet build MateralReleaseCenter.EnvironmentServer/Materal.MergeBlock.RemoteConfig/Materal.MergeBlock.RemoteConfig.csproj -c Release --no-restore -p:PackageOutputPath=${{ github.workspace }}/Packages
+
       # 压缩输出文件
       - name: 压缩输出文件
         run: cd Application && zip -r MateralReleaseCenter${{ steps.timestamp.outputs.ts }}.zip MateralReleaseCenter

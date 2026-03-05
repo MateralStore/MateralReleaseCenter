@@ -66,18 +66,19 @@ jobs:
       - name: 发布 DeployServer 项目
         run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer --no-restore --framework net10.0
 
-      # 构建 NuGet 包
-      - name: 构建 NuGet 包
-        run: |
-          dotnet build MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.slnx -c Release --no-restore -p:PackageOutputPath=${{ github.workspace }}/Packages
-
-      # 压缩输出文件
+      # 设置时间戳
       - name: 设置时间戳
         id: timestamp
         run: echo "ts=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
 
+      # 压缩输出文件
       - name: 压缩输出文件
         run: cd Application && zip -r MateralReleaseCenter${{ steps.timestamp.outputs.ts }}.zip MateralReleaseCenter
+
+      # 构建 NuGet 包
+      - name: 构建 NuGet 包
+        run: |
+          dotnet build MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.slnx -c Release --no-restore -p:PackageOutputPath=${{ github.workspace }}/Packages
 
       # 发布 NuGet 包
       - name: 发布 NuGet 包
@@ -94,8 +95,8 @@ jobs:
               --skip-duplicate
           done
 
-      # 创建 GitHub Release
-      - name: 删除旧 Release（只保留最近2个）
+      # 删除旧 Release（只保留最近2个）
+      - name: 删除旧 Release
         uses: actions/github-script@v7
         with:
           script: |
@@ -105,10 +106,8 @@ jobs:
               per_page: 100
             });
 
-            // 按创建时间排序（最新的在前）
             const sortedReleases = releases.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-            // 只保留最近1个旧版本，加上新发布的就是2个
             const toDelete = sortedReleases.slice(1);
             for (const release of toDelete) {
               console.log(`Deleting release: ${release.tag_name}`);
@@ -117,7 +116,6 @@ jobs:
                 repo: context.repo.repo,
                 release_id: release.id
               });
-              // 删除对应的 tag
               try {
                 await github.rest.git.deleteRef({
                   owner: context.repo.owner,
@@ -130,6 +128,7 @@ jobs:
             }
             console.log(`Deleted ${toDelete.length} old releases, kept 2 latest`);
 
+      # 创建 Release
       - name: 创建 Release
         uses: softprops/action-gh-release@v2
         with:

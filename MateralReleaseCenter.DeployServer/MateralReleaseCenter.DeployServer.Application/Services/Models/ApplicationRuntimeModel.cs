@@ -4,6 +4,7 @@ using MateralReleaseCenter.DeployServer.Application.Hubs;
 using MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
 using Microsoft.AspNetCore.SignalR;
 using SharpCompress.Readers;
+using SharpCompress.Common;
 using System.Threading.Tasks.Dataflow;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services.Models;
@@ -282,6 +283,9 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
             ReaderOptions readerOptions = new()
             {
                 LeaveStreamOpen = false,
+            };
+            ExtractionOptions extractionOptions = new()
+            {
                 ExtractFullPath = true,
                 Overwrite = true,
                 PreserveFileTime = true
@@ -290,7 +294,7 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
             while (reader.MoveToNextEntry())
             {
                 if (reader.Entry.IsDirectory) continue;
-                reader.WriteEntryToDirectory(extractPath);
+                reader.WriteEntryToDirectory(extractPath, extractionOptions);
                 if (!string.IsNullOrWhiteSpace(reader.Entry.Key))
                 {
                     AddConsoleMessage($"  提取: {reader.Entry.Key}");

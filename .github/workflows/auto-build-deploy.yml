@@ -45,24 +45,24 @@ jobs:
 
       # 发布 ServerCenter
       - name: 还原 NuGet 包 - ServerCenter
-        run: dotnet restore MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj
+        run: dotnet restore MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj -f net10.0
 
       - name: 发布 ServerCenter 项目
-        run: dotnet publish MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/ServerCenter --no-restore
+        run: dotnet publish MateralReleaseCenter.ServerCenter/MateralReleaseCenter.ServerCenter.WebAPI/MateralReleaseCenter.ServerCenter.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/ServerCenter --no-restore -f net10.0
 
       # 发布 EnvironmentServer
       - name: 还原 NuGet 包 - EnvironmentServer
-        run: dotnet restore MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj
+        run: dotnet restore MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj -f net10.0
 
       - name: 发布 EnvironmentServer 项目
-        run: dotnet publish MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/EnvironmentServer --no-restore
+        run: dotnet publish MateralReleaseCenter.EnvironmentServer/MateralReleaseCenter.EnvironmentServer.WebAPI/MateralReleaseCenter.EnvironmentServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/EnvironmentServer --no-restore -f net10.0
 
       # 发布 DeployServer
       - name: 还原 NuGet 包 - DeployServer
-        run: dotnet restore MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj
+        run: dotnet restore MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj -f net10.0
 
       - name: 发布 DeployServer 项目
-        run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer --no-restore
+        run: dotnet publish MateralReleaseCenter.DeployServer/MateralReleaseCenter.DeployServer.WebAPI/MateralReleaseCenter.DeployServer.WebAPI.csproj --configuration Release --output Application/MateralReleaseCenter/DeployServer --no-restore -f net10.0
 
       # 压缩输出文件
       - name: 设置时间戳

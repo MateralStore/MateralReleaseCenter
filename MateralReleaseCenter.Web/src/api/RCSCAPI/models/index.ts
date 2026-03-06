@@ -389,6 +389,10 @@ export function createUserListDTOFromDiscriminatorValue(parseNode: ParseNode | u
  */
 export interface DeployListDTO extends Parsable {
     /**
+     * 访问Url
+     */
+    accessUrl?: string | null;
+    /**
      * 主机
      */
     host?: string | null;
@@ -472,6 +476,7 @@ export function deserializeIntoChangePasswordRequestModel(changePasswordRequestM
 // @ts-ignore
 export function deserializeIntoDeployListDTO(deployListDTO: Partial<DeployListDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
+        "AccessUrl": n => { deployListDTO.accessUrl = n.getStringValue(); },
         "Host": n => { deployListDTO.host = n.getStringValue(); },
         "Name": n => { deployListDTO.name = n.getStringValue(); },
         "Port": n => { deployListDTO.port = n.getNumberValue(); },
@@ -1511,6 +1516,7 @@ export function serializeChangePasswordRequestModel(writer: SerializationWriter,
 // @ts-ignore
 export function serializeDeployListDTO(writer: SerializationWriter, deployListDTO: Partial<DeployListDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!deployListDTO || isSerializingDerivedType) { return; }
+    writer.writeStringValue("AccessUrl", deployListDTO.accessUrl);
     writer.writeStringValue("Host", deployListDTO.host);
     writer.writeStringValue("Name", deployListDTO.name);
     writer.writeNumberValue("Port", deployListDTO.port);

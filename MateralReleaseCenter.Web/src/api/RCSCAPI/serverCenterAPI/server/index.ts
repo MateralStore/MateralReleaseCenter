@@ -8,6 +8,8 @@ import { GetDeployListRequestBuilderRequestsMetadata, type GetDeployListRequestB
 // @ts-ignore
 import { GetEnvironmentServerListRequestBuilderRequestsMetadata, type GetEnvironmentServerListRequestBuilder } from './getEnvironmentServerList/index.js';
 // @ts-ignore
+import { SourceCodeUpdateRequestBuilderRequestsMetadata, type SourceCodeUpdateRequestBuilder } from './sourceCodeUpdate/index.js';
+// @ts-ignore
 import { type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
 
 /**
@@ -26,6 +28,10 @@ export interface ServerRequestBuilder extends BaseRequestBuilder<ServerRequestBu
      * The GetEnvironmentServerList property
      */
     get getEnvironmentServerList(): GetEnvironmentServerListRequestBuilder;
+    /**
+     * The SourceCodeUpdate property
+     */
+    get sourceCodeUpdate(): SourceCodeUpdateRequestBuilder;
 }
 /**
  * Uri template for the request builder.
@@ -43,6 +49,9 @@ export const ServerRequestBuilderNavigationMetadata: Record<Exclude<keyof Server
     },
     getEnvironmentServerList: {
         requestsMetadata: GetEnvironmentServerListRequestBuilderRequestsMetadata,
+    },
+    sourceCodeUpdate: {
+        requestsMetadata: SourceCodeUpdateRequestBuilderRequestsMetadata,
     },
 };
 /* tslint:enable */

@@ -26,8 +26,7 @@ interface AppCardProps {
   record: ApplicationInfoListDTO
   appTypeEnum: ApplicationTypeEnumKeyValueModel[]
   apiPath: string
-  serverHost?: string | null
-  serverPort?: number | null
+  accessUrl?: string | null
   onRefresh: () => void
   onEdit: (id: string) => void
   onViewConsole?: (appID: string, appName: string) => void
@@ -37,8 +36,7 @@ export function AppCard({
   record,
   appTypeEnum,
   apiPath,
-  serverHost,
-  serverPort,
+  accessUrl,
   onRefresh,
   onEdit,
   onViewConsole,
@@ -392,7 +390,7 @@ export function AppCard({
             <div>
               {record.applicationType === 0 && record.mainModule ? (
                 <a
-                  href={`//${serverHost}:${serverPort}/${record.rootPath || ''}/${record.mainModule}`}
+                  href={`${accessUrl || ''}/${record.rootPath || ''}/${record.mainModule}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={e => e.stopPropagation()}

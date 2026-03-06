@@ -6,7 +6,7 @@ namespace MateralReleaseCenter.DeployServer.Application.EventHandlers;
 /// <summary>
 /// 源码更新事件
 /// </summary>
-public class SourceCodeUpdateEventHandler(IApplicationInfoService service, IOptionsMonitor<ApplicationConfig> applicationConfig, IOptionsMonitor<ConsulOptions> consulConfig, IHttpClientFactory httpClientFactory) : DeployServerEventHandler<SourceCodeUpdateEvent>(applicationConfig, consulConfig)
+public class SourceCodeUpdateEventHandler(IApplicationInfoService service, IOptionsMonitor<ApplicationConfig> applicationConfig, IOptionsMonitor<ConsulOptions> consulConfig) : DeployServerEventHandler<SourceCodeUpdateEvent>(applicationConfig, consulConfig)
 {
     /// <inheritdoc/>
     public override async Task HandleAsync(SourceCodeUpdateEvent @event)

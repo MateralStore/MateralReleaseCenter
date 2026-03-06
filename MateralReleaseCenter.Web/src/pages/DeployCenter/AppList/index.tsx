@@ -350,8 +350,7 @@ export function AppListPage() {
               record={record}
               appTypeEnum={appTypeEnum}
               apiPath={getApiPath()}
-              serverHost={selectedServerInfo?.host}
-              serverPort={selectedServerInfo?.port}
+              accessUrl={selectedServerInfo?.accessUrl}
               onRefresh={fetchAppList}
               onEdit={() => {
                 setEditingApp(record)

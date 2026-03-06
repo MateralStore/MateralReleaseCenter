@@ -17,4 +17,8 @@ public class DeployListDTO
     /// 端口
     /// </summary>
     public int Port { get; set; }
+    /// <summary>
+    /// 访问Url
+    /// </summary>
+    public string AccessUrl { get; set; } = string.Empty;
 }

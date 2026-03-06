@@ -31,7 +31,8 @@ public partial class ServerController(IEventBus eventBus, IOptionsMonitor<Consul
             {
                 Host = serviceInfo.ServiceAddress,
                 Name = serviceInfo.ServiceName,
-                Port = serviceInfo.ServicePort
+                Port = serviceInfo.ServicePort,
+                AccessUrl = serviceInfo.ServiceMeta["AccessUrl"].TrimEnd('/')
             };
             result.Add(item);
         }

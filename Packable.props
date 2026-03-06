@@ -15,6 +15,7 @@
 		<PackageReleaseNotes>https://github.com/MateralCMX/Materal</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<GitTagRegex>v*</GitTagRegex>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="GitInfo">

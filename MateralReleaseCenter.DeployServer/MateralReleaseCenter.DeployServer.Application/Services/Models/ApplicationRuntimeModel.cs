@@ -3,8 +3,8 @@ using MateralReleaseCenter.DeployServer.Application.Helpers;
 using MateralReleaseCenter.DeployServer.Application.Hubs;
 using MateralReleaseCenter.DeployServer.Application.Services.ApplicationHandlers;
 using Microsoft.AspNetCore.SignalR;
-using SharpCompress.Readers;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 using System.Threading.Tasks.Dataflow;
 
 namespace MateralReleaseCenter.DeployServer.Application.Services.Models;
@@ -81,7 +81,7 @@ public class ApplicationRuntimeModel(IServiceProvider serviceProvider, Applicati
     public void ExecuteApplyLasetReleasesTask() => _taskQueue.Post(new ApplicationTask
     {
         Application = this,
-        TargetTask = () => ApplyReleasesAsync()
+        TargetTask = ApplyReleasesAsync
     });
     /// <summary>
     /// 执行应用最后一个文件任务

@@ -17,6 +17,14 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
     private readonly HttpHelper _httpHelper = new();
     private Timer? _timer;
     private string? _lastConfigHash;
+    /// <summary>
+    /// 加载配置前
+    /// </summary>
+    public static event Action<MRCConfigurationSource, IDictionary<string, string?>>? OnLoadConfigBefor;
+    /// <summary>
+    /// 加载配置后
+    /// </summary>
+    public static event Action<MRCConfigurationSource, IDictionary<string, string?>, CollectionResultModel<ConfigItem>>? OnLoadConfigAfter;
 
     /// <inheritdoc/>
     public override void Load()
@@ -77,6 +85,7 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
 
     private async Task LoadConfigItemsAsync()
     {
+        OnLoadConfigBefor?.Invoke(source, Data);
         CollectionResultModel<ConfigItem> dataResult = await _httpHelper.SendPostAsync<CollectionResultModel<ConfigItem>>($"{source.Url}/EnvironmentServerAPI/ConfigurationItem/GetList", null, new
         {
             PageIndex = 1,
@@ -86,6 +95,7 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
         });
         if (dataResult.ResultType != ResultType.Success || dataResult.Data is null || dataResult.Data.Count == 0) return;
         LoadConfigItems(dataResult.Data);
+        OnLoadConfigAfter?.Invoke(source, Data, dataResult);
     }
 
     private void LoadConfigItems(ICollection<ConfigItem> configItems)
@@ -163,44 +173,5 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
                 AddJson(itemKey, item);
             }
         }
-    }
-    private class ConfigItem
-    {
-        /// <summary>
-        /// 唯一标识
-        /// </summary>
-        public Guid ID { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// 项目唯一标识
-        /// </summary>
-        public Guid ProjectID { get; set; }
-        /// <summary>
-        /// 项目名称
-        /// </summary>
-        public string ProjectName { get; set; } = string.Empty;
-        /// <summary>
-        /// 命名空间唯一标识
-        /// </summary>
-        public Guid NamespaceID { get; set; }
-        /// <summary>
-        /// 命名空间名称
-        /// </summary>
-        public string NamespaceName { get; set; } = string.Empty;
-        /// <summary>
-        /// 键
-        /// </summary>
-        public string Key { get; set; } = string.Empty;
-        /// <summary>
-        /// 值
-        /// </summary>
-        public string Value { get; set; } = string.Empty;
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string Description { get; set; } = string.Empty;
     }
 }

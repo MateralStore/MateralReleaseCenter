@@ -130,6 +130,10 @@ public class MRCConfigurationProvider(MRCConfigurationSource source) : Configura
         {
             AddJsonArray(key, jsonArray);
         }
+        else if (value is JsonValue jsonValue)
+        {
+            Data.TryAdd(key, jsonValue.ToString());
+        }
     }
     /// <summary>
     /// 添加Json对象

@@ -1,6 +1,7 @@
 using Materal.Utils.Extensions;
 using MateralReleaseCenter.EnvironmentServer.ConfigClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Materal.MergeBlock.RemoteConfig;
 
@@ -34,9 +35,18 @@ public class RemoteConfigModule() : MergeBlockModule("远程配置模块")
         if (string.IsNullOrWhiteSpace(configUrl) || !configUrl.IsUrl()) return;
         string? project = context.Configuration.GetConfigItem<string>("RemoteConfig:Project");
         if (string.IsNullOrWhiteSpace(project)) return;
-        string[]? namespaces = context.Configuration.GetConfigItem<string[]>("RemoteConfig:Namespace") ?? [];
+        string[] namespaces = context.Configuration.GetConfigItem<string[]>("RemoteConfig:Namespace") ?? [];
         int reloadInterval = context.Configuration.GetConfigItem<int>("RemoteConfig:ReloadInterval");
         if (reloadInterval == 0) reloadInterval = 30;
         config.AddMRCConfig(configUrl, project, namespaces, TimeSpan.FromSeconds(reloadInterval));
+
+        // 配置RemoteConfigOptions供服务使用
+        RemoteConfigOptions options = new()
+        {
+            Url = configUrl,
+            Project = project,
+            Namespace = namespaces
+        };
+        context.Services.AddSingleton(options);
     }
 }

@@ -2,30 +2,20 @@ using Materal.Extensions.DependencyInjection;
 using Materal.MergeBlock.RemoteConfig.Services.DTO;
 using Materal.MergeBlock.RemoteConfig.Services.Models;
 using Materal.Utils.Enums;
-using Materal.Utils.Extensions;
 using Materal.Utils.Models;
 using Materal.Utils.Network.Http;
 using MateralReleaseCenter.EnvironmentServer.ConfigClient;
-using Microsoft.Extensions.Configuration;
 
 namespace Materal.MergeBlock.RemoteConfig.Services;
 
 /// <summary>
 /// 远程配置服务实现
 /// </summary>
-public class RemoteConfigServiceImpl(IConfiguration configuration) : IRemoteConfigService, ITransientDependency<IRemoteConfigService>
+public class RemoteConfigServiceImpl(RemoteConfigOptions options) : IRemoteConfigService, ITransientDependency<IRemoteConfigService>
 {
     private readonly HttpHelper _httpHelper = new();
 
-    private string? _configUrl;
-    private string? _project;
-    private string[]? _namespaces;
-
-    private string ConfigUrl => _configUrl ??= configuration.GetConfigItem<string>("RemoteConfig:Url") ?? string.Empty;
-    private string Project => _project ??= configuration.GetConfigItem<string>("RemoteConfig:Project") ?? string.Empty;
-    private string[] Namespaces => _namespaces ??= configuration.GetConfigItem<string[]>("RemoteConfig:Namespace") ?? [];
-
-    private string[] GetNamespaceNames() => ["Application", .. Namespaces];
+    private string[] GetNamespaceNames() => ["Application", .. options.Namespace];
 
     /// <inheritdoc/>
     public async Task<RemoteConfigDTO?> GetConfigAsync(string key)
@@ -37,16 +27,16 @@ public class RemoteConfigServiceImpl(IConfiguration configuration) : IRemoteConf
     /// <inheritdoc/>
     public async Task<List<RemoteConfigDTO>> GetListAsync()
     {
-        if (string.IsNullOrWhiteSpace(ConfigUrl) || string.IsNullOrWhiteSpace(Project)) return [];
+        if (string.IsNullOrWhiteSpace(options.Url) || string.IsNullOrWhiteSpace(options.Project)) return [];
 
         CollectionResultModel<ConfigItem> dataResult = await _httpHelper.SendPostAsync<CollectionResultModel<ConfigItem>>(
-            $"{ConfigUrl}/EnvironmentServerAPI/ConfigurationItem/GetList",
+            $"{options.Url}/EnvironmentServerAPI/ConfigurationItem/GetList",
             null,
             new
             {
                 PageIndex = 1,
                 PageSize = int.MaxValue,
-                ProjectName = Project,
+                ProjectName = options.Project,
                 NamespaceNames = GetNamespaceNames()
             });
 
@@ -63,16 +53,16 @@ public class RemoteConfigServiceImpl(IConfiguration configuration) : IRemoteConf
     /// <inheritdoc/>
     public async Task EditConfigAsync(EditRemoteConfigModel model)
     {
-        if (string.IsNullOrWhiteSpace(ConfigUrl) || string.IsNullOrWhiteSpace(Project)) throw new InvalidOperationException("远程配置未初始化");
+        if (string.IsNullOrWhiteSpace(options.Url) || string.IsNullOrWhiteSpace(options.Project)) throw new InvalidOperationException("远程配置未初始化");
 
         CollectionResultModel<ConfigItem> dataResult = await _httpHelper.SendPostAsync<CollectionResultModel<ConfigItem>>(
-            $"{ConfigUrl}/EnvironmentServerAPI/ConfigurationItem/GetList",
+            $"{options.Url}/EnvironmentServerAPI/ConfigurationItem/GetList",
             null,
             new
             {
                 PageIndex = 1,
                 PageSize = int.MaxValue,
-                ProjectName = Project,
+                ProjectName = options.Project,
                 NamespaceNames = GetNamespaceNames()
             });
 
@@ -80,7 +70,7 @@ public class RemoteConfigServiceImpl(IConfiguration configuration) : IRemoteConf
 
         ConfigItem configItem = dataResult.Data.FirstOrDefault(m => m.Key.Equals(model.Key, StringComparison.OrdinalIgnoreCase)) ?? throw new InvalidOperationException($"配置项 {model.Key} 不存在");
         ResultModel editResult = await _httpHelper.SendPutAsync<ResultModel>(
-            $"{ConfigUrl}/EnvironmentServerAPI/ConfigurationItem/Edit",
+            $"{options.Url}/EnvironmentServerAPI/ConfigurationItem/Edit",
             null,
             new
             {

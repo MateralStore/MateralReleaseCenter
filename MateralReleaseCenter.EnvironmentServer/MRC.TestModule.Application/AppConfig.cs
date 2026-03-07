@@ -6,4 +6,8 @@ namespace MRC.TestModule.Application;
 [Options("TestModule")]
 public class AppConfig : IOptions
 {
+    /// <summary>
+    /// ≤‚ ‘÷µ
+    /// </summary>
+    public string TestValue { get; set; } = string.Empty;
 }

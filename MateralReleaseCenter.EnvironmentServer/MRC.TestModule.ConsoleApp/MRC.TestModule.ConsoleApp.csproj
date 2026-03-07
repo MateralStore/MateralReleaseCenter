@@ -14,7 +14,6 @@
 		<PackageReference Include="Materal.MergeBlock" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Materal.MergeBlock.RemoteConfig\Materal.MergeBlock.RemoteConfig.csproj" />
 		<ProjectReference Include="..\MRC.TestModule.Application\MRC.TestModule.Application.csproj" />
 	</ItemGroup>
 </Project>

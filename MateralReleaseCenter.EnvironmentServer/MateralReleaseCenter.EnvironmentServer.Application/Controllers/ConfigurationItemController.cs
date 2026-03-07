@@ -16,5 +16,9 @@ namespace MateralReleaseCenter.EnvironmentServer.Application.Controllers
         [AllowAnonymous]
         public override Task<CollectionResultModel<ConfigurationItemListDTO>> GetListAsync(QueryConfigurationItemRequestModel requestModel)
             => base.GetListAsync(requestModel);
+
+        /// <inheritdoc/>
+        [AllowAnonymous]
+        public override Task<ResultModel> EditAsync(EditConfigurationItemRequestModel requestModel) => base.EditAsync(requestModel);
     }
 }

@@ -1,3 +1,4 @@
+using Materal.MergeBlock.Abstractions.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MRC.TestModule.Application;
@@ -11,6 +12,7 @@ public class TestModule() : MergeBlockModule("测试模块")
     public override void OnConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.Configure<AppConfig>(context.Configuration!);
+        context.Services.AddMergeBlockHostedService<TestService>();
         base.OnConfigureServices(context);
     }
 }

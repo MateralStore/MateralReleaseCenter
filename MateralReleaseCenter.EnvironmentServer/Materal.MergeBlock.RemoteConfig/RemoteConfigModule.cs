@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 namespace Materal.MergeBlock.RemoteConfig;
 
 /// <summary>
-/// Consul模块
+/// 远程配置模块
 /// </summary>
 public class RemoteConfigModule() : MergeBlockModule("远程配置模块")
 {

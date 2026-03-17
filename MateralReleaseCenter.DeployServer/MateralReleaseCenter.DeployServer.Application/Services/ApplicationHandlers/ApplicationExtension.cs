@@ -17,6 +17,7 @@ public static class ApplicationExtension
         ApplicationTypeEnum.StaticDocument => typeof(StaticDocumentApplicationHandler).Instantiation<IApplicationHandler>(serviceProvider),
         ApplicationTypeEnum.Exe => typeof(ExeApplicationHandler).Instantiation<IApplicationHandler>(serviceProvider),
         ApplicationTypeEnum.DotNet => typeof(DotNetApplicationHandler).Instantiation<IApplicationHandler>(serviceProvider),
+        ApplicationTypeEnum.NodeJs => typeof(NodeJsApplicationHandler).Instantiation<IApplicationHandler>(serviceProvider),
         _ => throw new ArgumentOutOfRangeException(nameof(applicationType), applicationType, null),
     };
 }

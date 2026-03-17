@@ -19,6 +19,11 @@
         /// .Net
         /// </summary>
         [Description(".Net")]
-        DotNet = 2
+        DotNet = 2,
+        /// <summary>
+        /// NodeJs
+        /// </summary>
+        [Description("NodeJs")]
+        NodeJs = 3
     }
 }

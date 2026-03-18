@@ -19,7 +19,7 @@ export interface AddApplicationInfoRequestModel extends Parsable {
     /**
      * 环境变量
      */
-    environments?: string | null;
+    environments?: EnvironmentRequestModel[] | null;
     /**
      * 增量更新
      */
@@ -114,7 +114,7 @@ export interface ApplicationInfoDTO extends Parsable {
     /**
      * 环境变量
      */
-    environments?: string | null;
+    environments?: EnvironmentDTO[] | null;
     /**
      * 唯一标识
      */
@@ -193,7 +193,7 @@ export interface ApplicationInfoListDTO extends Parsable {
     /**
      * 环境变量
      */
-    environments?: string | null;
+    environments?: EnvironmentDTO[] | null;
     /**
      * 唯一标识
      */
@@ -422,6 +422,24 @@ export function createEditGlobalParameterRequestModelFromDiscriminatorValue(pars
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {EnvironmentDTO}
+ */
+// @ts-ignore
+export function createEnvironmentDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoEnvironmentDTO;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {EnvironmentRequestModel}
+ */
+// @ts-ignore
+export function createEnvironmentRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoEnvironmentRequestModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {FileInfoDTO}
  */
 // @ts-ignore
@@ -618,7 +636,7 @@ export function deserializeIntoAddApplicationInfoRequestModel(addApplicationInfo
     return {
         "ApplicationType": n => { addApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
         "AuthToken": n => { addApplicationInfoRequestModel.authToken = n.getStringValue(); },
-        "Environments": n => { addApplicationInfoRequestModel.environments = n.getStringValue(); },
+        "Environments": n => { addApplicationInfoRequestModel.environments = n.getCollectionOfObjectValues<EnvironmentRequestModel>(createEnvironmentRequestModelFromDiscriminatorValue); },
         "IsIncrementalUpdating": n => { addApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { addApplicationInfoRequestModel.mainModule = n.getStringValue(); },
         "Name": n => { addApplicationInfoRequestModel.name = n.getStringValue(); },
@@ -668,7 +686,7 @@ export function deserializeIntoApplicationInfoDTO(applicationInfoDTO: Partial<Ap
         "ApplicationTypeTxt": n => { applicationInfoDTO.applicationTypeTxt = n.getStringValue(); },
         "AuthToken": n => { applicationInfoDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoDTO.createTime = n.getDateValue(); },
-        "Environments": n => { applicationInfoDTO.environments = n.getStringValue(); },
+        "Environments": n => { applicationInfoDTO.environments = n.getCollectionOfObjectValues<EnvironmentDTO>(createEnvironmentDTOFromDiscriminatorValue); },
         "ID": n => { applicationInfoDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoDTO.mainModule = n.getStringValue(); },
@@ -706,7 +724,7 @@ export function deserializeIntoApplicationInfoListDTO(applicationInfoListDTO: Pa
         "ApplicationTypeTxt": n => { applicationInfoListDTO.applicationTypeTxt = n.getStringValue(); },
         "AuthToken": n => { applicationInfoListDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoListDTO.createTime = n.getDateValue(); },
-        "Environments": n => { applicationInfoListDTO.environments = n.getStringValue(); },
+        "Environments": n => { applicationInfoListDTO.environments = n.getCollectionOfObjectValues<EnvironmentDTO>(createEnvironmentDTOFromDiscriminatorValue); },
         "ID": n => { applicationInfoListDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoListDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoListDTO.mainModule = n.getStringValue(); },
@@ -791,7 +809,7 @@ export function deserializeIntoEditApplicationInfoRequestModel(editApplicationIn
     return {
         "ApplicationType": n => { editApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
         "AuthToken": n => { editApplicationInfoRequestModel.authToken = n.getStringValue(); },
-        "Environments": n => { editApplicationInfoRequestModel.environments = n.getStringValue(); },
+        "Environments": n => { editApplicationInfoRequestModel.environments = n.getCollectionOfObjectValues<EnvironmentRequestModel>(createEnvironmentRequestModelFromDiscriminatorValue); },
         "ID": n => { editApplicationInfoRequestModel.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { editApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { editApplicationInfoRequestModel.mainModule = n.getStringValue(); },
@@ -826,6 +844,30 @@ export function deserializeIntoEditGlobalParameterRequestModel(editGlobalParamet
         "ID": n => { editGlobalParameterRequestModel.iD = n.getGuidValue(); },
         "Name": n => { editGlobalParameterRequestModel.name = n.getStringValue(); },
         "Value": n => { editGlobalParameterRequestModel.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param EnvironmentDTO The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoEnvironmentDTO(environmentDTO: Partial<EnvironmentDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Key": n => { environmentDTO.key = n.getStringValue(); },
+        "Value": n => { environmentDTO.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param EnvironmentRequestModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoEnvironmentRequestModel(environmentRequestModel: Partial<EnvironmentRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Key": n => { environmentRequestModel.key = n.getStringValue(); },
+        "Value": n => { environmentRequestModel.value = n.getStringValue(); },
     }
 }
 /**
@@ -1169,7 +1211,7 @@ export interface EditApplicationInfoRequestModel extends Parsable {
     /**
      * 环境变量
      */
-    environments?: string | null;
+    environments?: EnvironmentRequestModel[] | null;
     /**
      * 唯一标识
      */
@@ -1234,6 +1276,32 @@ export interface EditGlobalParameterRequestModel extends Parsable {
     name?: string | null;
     /**
      * 值
+     */
+    value?: string | null;
+}
+/**
+ * 环境变量模型
+ */
+export interface EnvironmentDTO extends Parsable {
+    /**
+     * The Key property
+     */
+    key?: string | null;
+    /**
+     * The Value property
+     */
+    value?: string | null;
+}
+/**
+ * 环境变量模型
+ */
+export interface EnvironmentRequestModel extends Parsable {
+    /**
+     * The Key property
+     */
+    key?: string | null;
+    /**
+     * The Value property
      */
     value?: string | null;
 }
@@ -1764,7 +1832,7 @@ export function serializeAddApplicationInfoRequestModel(writer: SerializationWri
     if (!addApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", addApplicationInfoRequestModel.applicationType);
     writer.writeStringValue("AuthToken", addApplicationInfoRequestModel.authToken);
-    writer.writeStringValue("Environments", addApplicationInfoRequestModel.environments);
+    writer.writeCollectionOfObjectValues<EnvironmentRequestModel>("Environments", addApplicationInfoRequestModel.environments, serializeEnvironmentRequestModel);
     writer.writeBooleanValue("IsIncrementalUpdating", addApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", addApplicationInfoRequestModel.mainModule);
     writer.writeStringValue("Name", addApplicationInfoRequestModel.name);
@@ -1812,7 +1880,7 @@ export function serializeApplicationInfoDTO(writer: SerializationWriter, applica
     writer.writeNumberValue("ApplicationType", applicationInfoDTO.applicationType);
     writer.writeStringValue("AuthToken", applicationInfoDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoDTO.createTime);
-    writer.writeStringValue("Environments", applicationInfoDTO.environments);
+    writer.writeCollectionOfObjectValues<EnvironmentDTO>("Environments", applicationInfoDTO.environments, serializeEnvironmentDTO);
     writer.writeGuidValue("ID", applicationInfoDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoDTO.mainModule);
@@ -1848,7 +1916,7 @@ export function serializeApplicationInfoListDTO(writer: SerializationWriter, app
     writer.writeNumberValue("ApplicationType", applicationInfoListDTO.applicationType);
     writer.writeStringValue("AuthToken", applicationInfoListDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoListDTO.createTime);
-    writer.writeStringValue("Environments", applicationInfoListDTO.environments);
+    writer.writeCollectionOfObjectValues<EnvironmentDTO>("Environments", applicationInfoListDTO.environments, serializeEnvironmentDTO);
     writer.writeGuidValue("ID", applicationInfoListDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoListDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoListDTO.mainModule);
@@ -1931,7 +1999,7 @@ export function serializeEditApplicationInfoRequestModel(writer: SerializationWr
     if (!editApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", editApplicationInfoRequestModel.applicationType);
     writer.writeStringValue("AuthToken", editApplicationInfoRequestModel.authToken);
-    writer.writeStringValue("Environments", editApplicationInfoRequestModel.environments);
+    writer.writeCollectionOfObjectValues<EnvironmentRequestModel>("Environments", editApplicationInfoRequestModel.environments, serializeEnvironmentRequestModel);
     writer.writeGuidValue("ID", editApplicationInfoRequestModel.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", editApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", editApplicationInfoRequestModel.mainModule);
@@ -1966,6 +2034,30 @@ export function serializeEditGlobalParameterRequestModel(writer: SerializationWr
     writer.writeGuidValue("ID", editGlobalParameterRequestModel.iD);
     writer.writeStringValue("Name", editGlobalParameterRequestModel.name);
     writer.writeStringValue("Value", editGlobalParameterRequestModel.value);
+}
+/**
+ * Serializes information the current object
+ * @param EnvironmentDTO The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeEnvironmentDTO(writer: SerializationWriter, environmentDTO: Partial<EnvironmentDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!environmentDTO || isSerializingDerivedType) { return; }
+    writer.writeStringValue("Key", environmentDTO.key);
+    writer.writeStringValue("Value", environmentDTO.value);
+}
+/**
+ * Serializes information the current object
+ * @param EnvironmentRequestModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeEnvironmentRequestModel(writer: SerializationWriter, environmentRequestModel: Partial<EnvironmentRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!environmentRequestModel || isSerializingDerivedType) { return; }
+    writer.writeStringValue("Key", environmentRequestModel.key);
+    writer.writeStringValue("Value", environmentRequestModel.value);
 }
 /**
  * Serializes information the current object

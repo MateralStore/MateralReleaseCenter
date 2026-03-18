@@ -1,4 +1,5 @@
-﻿using MateralReleaseCenter.DeployServer.Application.Services.Models;
+﻿using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
+using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -24,7 +25,7 @@ public class ExeApplicationHandler : ApplicationHandler
         if (!File.Exists(exePath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {exePath}");
 
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.Exe);
-        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.Exe);
+        List<EnvironmentDTO> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.Exe);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? string.Empty : runParams;
 
 

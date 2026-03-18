@@ -1,3 +1,4 @@
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
 
@@ -23,7 +24,7 @@ public class NodeJsApplicationHandler : ApplicationHandler
         if (!File.Exists(jsPath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {jsPath}");
 
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
-        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
+        List<EnvironmentDTO> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? jsPath : $"{jsPath} {runParams}";
 
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;

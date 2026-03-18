@@ -46,6 +46,7 @@ public partial class ApplicationInfoServiceImpl(IServiceProvider serviceProvider
     /// <returns></returns>
     protected override async Task<Guid> AddAsync(ApplicationInfo domain, AddApplicationInfoModel model)
     {
+        domain.Environments = model.Environments.ToJson();
         Guid result = await base.AddAsync(domain, model);
         ApplicationRuntimeHost.ApplicationRuntimes.TryAdd(result, new ApplicationRuntimeModel(serviceProvider, domain, config));
         return result;
@@ -69,6 +70,7 @@ public partial class ApplicationInfoServiceImpl(IServiceProvider serviceProvider
     /// <returns></returns>
     protected override async Task EditAsync(ApplicationInfo domainFromDB, EditApplicationInfoModel model)
     {
+        domainFromDB.Environments = model.Environments.ToJson();
         await base.EditAsync(domainFromDB, model);
         ApplicationRuntimeHost.ApplicationRuntimes[model.ID].ApplicationInfo = domainFromDB;
     }

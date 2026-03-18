@@ -1,4 +1,4 @@
-using MateralReleaseCenter.DeployServer.Application.Services.Models;
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,7 +24,7 @@ public static class ProcessStartInfoHelper
         string fileName,
         string arguments,
         string workingDirectory,
-        List<EnvironmentsModel> environments,
+        List<EnvironmentDTO> environments,
         bool createNoWindow = true,
         bool showMinimizedOnWindows = false)
     {
@@ -41,7 +41,7 @@ public static class ProcessStartInfoHelper
             StandardErrorEncoding = Encoding.UTF8,
             WorkingDirectory = workingDirectory
         };
-        foreach (EnvironmentsModel item in environments)
+        foreach (EnvironmentDTO item in environments)
         {
             if (item.Key is null) continue;
             processStartInfo.Environment.TryAdd(item.Key, item.Value);

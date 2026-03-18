@@ -1,3 +1,4 @@
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
 
@@ -127,16 +128,16 @@ public abstract class ApplicationHandler : IApplicationHandler
     /// <param name="model"></param>
     /// <param name="applicationType"></param>
     /// <returns></returns>
-    protected async Task<List<EnvironmentsModel>> GetEnvironmentsAsync(ApplicationRuntimeModel model, ApplicationTypeEnum applicationType)
+    protected async Task<List<EnvironmentDTO>> GetEnvironmentsAsync(ApplicationRuntimeModel model, ApplicationTypeEnum applicationType)
     {
         using IServiceScope scope = MateralServices.ServiceProvider.CreateScope();
         IGlobalEnvironmentRepository globalEnvironmentRepository = scope.ServiceProvider.GetRequiredService<IGlobalEnvironmentRepository>();
         List<GlobalEnvironment> globalEnvironments = await globalEnvironmentRepository.FindAsync(m => m.ApplicationType == applicationType);
 
-        List<EnvironmentsModel> environments = [];
+        List<EnvironmentDTO> environments = [];
         if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.Environments))
         {
-            List<EnvironmentsModel> appEnvironments = model.ApplicationInfo.Environments.JsonToObject<List<EnvironmentsModel>>();
+            List<EnvironmentDTO> appEnvironments = model.ApplicationInfo.Environments.JsonToObject<List<EnvironmentDTO>>();
             environments.AddRange(appEnvironments);
         }
 

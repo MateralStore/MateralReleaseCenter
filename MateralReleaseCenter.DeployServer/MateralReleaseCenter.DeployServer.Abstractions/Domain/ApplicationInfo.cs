@@ -40,6 +40,7 @@
         /// <summary>
         /// 环境变量
         /// </summary>
+        [NotAdd, NotEdit, NotListDTO, NotDTO]
         public string? Environments { get; set; }
 
         /// <summary>

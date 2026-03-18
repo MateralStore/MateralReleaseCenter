@@ -1,3 +1,4 @@
+using MateralReleaseCenter.DeployServer.Abstractions.DTO.ApplicationInfo;
 using MateralReleaseCenter.DeployServer.Application.Services.Models;
 using System.Diagnostics;
 
@@ -23,7 +24,7 @@ public class DotNetApplicationHandler : ApplicationHandler
         if (!File.Exists(dllPath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {dllPath}");
 
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
-        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
+        List<EnvironmentDTO> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? dllPath : $"{dllPath} {runParams}";
 
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;

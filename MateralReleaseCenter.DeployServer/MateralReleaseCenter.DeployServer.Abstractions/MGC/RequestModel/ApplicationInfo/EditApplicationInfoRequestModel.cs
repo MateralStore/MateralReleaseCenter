@@ -26,10 +26,6 @@ public partial class EditApplicationInfoRequestModel : IEditRequestModel
     /// </summary>
     public bool IsIncrementalUpdating { get; set; }
     /// <summary>
-    /// 环境变量
-    /// </summary>
-    public string? Environments { get; set; }
-    /// <summary>
     /// 运行参数
     /// </summary>
     public string? RunParams { get; set; }

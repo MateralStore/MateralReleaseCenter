@@ -6,6 +6,10 @@
     public partial class ApplicationInfoListDTO
     {
         /// <summary>
+        /// 环境变量
+        /// </summary>
+        public List<EnvironmentDTO> Environments { get; set; } = [];
+        /// <summary>
         /// 应用程序状态
         /// </summary>
         public ApplicationStatusEnum ApplicationStatus { get; set; }

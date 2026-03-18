@@ -36,6 +36,7 @@ namespace MateralReleaseCenter.DeployServer.Application.AutoMapperProfile
             dto.RunParams = model.ApplicationInfo.RunParams;
             dto.RepositoryUrl = model.ApplicationInfo.RepositoryUrl;
             dto.AuthToken = model.ApplicationInfo.AuthToken;
+            dto.Environments = model.ApplicationInfo.Environments?.JsonToObject<List<EnvironmentDTO>>() ?? [];
         }
     }
 }

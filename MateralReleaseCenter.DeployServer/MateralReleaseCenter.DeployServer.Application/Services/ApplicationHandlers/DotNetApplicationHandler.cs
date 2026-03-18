@@ -15,21 +15,21 @@ public class DotNetApplicationHandler : ApplicationHandler
     public override async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime)
     {
         if (applicationRuntime.ApplicationStatus != ApplicationStatusEnum.Stop) throw new MateralReleaseCenterException("应用程序尚未停止");
-
         if (applicationRuntime.ApplicationInfo.ApplicationType != ApplicationTypeEnum.DotNet) throw new MateralReleaseCenterException("处理器类型错误");
-
-        string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
+        string workingDirectory = GetWorkingDirectory(applicationRuntime);
         if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
-
         string dllPath = Path.Combine(workingDirectory, applicationRuntime.ApplicationInfo.MainModule);
         if (!dllPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("DotNet应用程序的主模块必须为.dll文件");
+        if (!File.Exists(dllPath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {dllPath}");
 
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
         List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? dllPath : $"{dllPath} {runParams}";
+
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
+
         try
         {
             ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("dotnet", arguments, workingDirectory, environments);

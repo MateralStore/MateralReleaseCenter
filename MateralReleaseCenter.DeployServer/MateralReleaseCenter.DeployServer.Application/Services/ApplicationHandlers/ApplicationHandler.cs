@@ -147,4 +147,11 @@ public abstract class ApplicationHandler : IApplicationHandler
 
         return environments;
     }
+
+    /// <summary>
+    /// 获取工作目录
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    protected string GetWorkingDirectory(ApplicationRuntimeModel model) => Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", model.ApplicationInfo.RootPath);
 }

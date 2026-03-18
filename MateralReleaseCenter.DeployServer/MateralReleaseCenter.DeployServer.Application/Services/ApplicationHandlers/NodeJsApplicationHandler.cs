@@ -15,26 +15,24 @@ public class NodeJsApplicationHandler : ApplicationHandler
     public override async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime)
     {
         if (applicationRuntime.ApplicationStatus != ApplicationStatusEnum.Stop) throw new MateralReleaseCenterException("应用程序尚未停止");
-
         if (applicationRuntime.ApplicationInfo.ApplicationType != ApplicationTypeEnum.NodeJs) throw new MateralReleaseCenterException("处理器类型错误");
-
+        string workingDirectory = GetWorkingDirectory(applicationRuntime);
+        if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
         string jsPath = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath, applicationRuntime.ApplicationInfo.MainModule);
         if (!jsPath.EndsWith(".js", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("NodeJs应用程序的主模块必须为.js文件");
         if (!File.Exists(jsPath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {jsPath}");
 
-        string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
-        if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
-
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
         List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? jsPath : $"{jsPath} {runParams}";
+
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
+
         try
         {
             ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("node", arguments, workingDirectory, environments);
-            //processStartInfo.Environment["TestValue"] = "TestEnvironmentValue";
 
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object? sender, DataReceivedEventArgs e)

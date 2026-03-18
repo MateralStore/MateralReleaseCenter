@@ -15,9 +15,9 @@ import { GetListRequestBuilderRequestsMetadata, type GetListRequestBuilder } fro
 import { type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
 
 /**
- * Builds and executes requests for operations under /DeployServerAPI/DefaultData
+ * Builds and executes requests for operations under /DeployServerAPI/GlobalParameter
  */
-export interface DefaultDataRequestBuilder extends BaseRequestBuilder<DefaultDataRequestBuilder> {
+export interface GlobalParameterRequestBuilder extends BaseRequestBuilder<GlobalParameterRequestBuilder> {
     /**
      * The Add property
      */
@@ -42,11 +42,11 @@ export interface DefaultDataRequestBuilder extends BaseRequestBuilder<DefaultDat
 /**
  * Uri template for the request builder.
  */
-export const DefaultDataRequestBuilderUriTemplate = "{+baseurl}/DeployServerAPI/DefaultData";
+export const GlobalParameterRequestBuilderUriTemplate = "{+baseurl}/DeployServerAPI/GlobalParameter";
 /**
  * Metadata for all the navigation properties in the request builder.
  */
-export const DefaultDataRequestBuilderNavigationMetadata: Record<Exclude<keyof DefaultDataRequestBuilder, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
+export const GlobalParameterRequestBuilderNavigationMetadata: Record<Exclude<keyof GlobalParameterRequestBuilder, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     add: {
         requestsMetadata: AddRequestBuilderRequestsMetadata,
     },

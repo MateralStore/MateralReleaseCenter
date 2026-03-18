@@ -17,7 +17,7 @@ const SyncToolPage = lazy(() => import('../pages/ConfigCenter/SyncTool'))
 
 const AppListPage = lazy(() => import('../pages/DeployCenter/AppList'))
 
-const DefaultDataListPage = lazy(() => import('../pages/DeployCenter/DefaultDataList'))
+const GlobalParameterListPage = lazy(() => import('../pages/DeployCenter/GlobalParameterList'))
 
 // 测试页面
 const ConsoleViewerTestPage = lazy(() => import('../pages/Test/ConsoleViewerTest'))
@@ -144,10 +144,10 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: 'data',
+            path: 'global-parameters',
             element: (
               <Suspense fallback={<LoadingFallback />}>
-                <DefaultDataListPage />
+                <GlobalParameterListPage />
               </Suspense>
             ),
           },

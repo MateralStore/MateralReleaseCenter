@@ -7,7 +7,7 @@ import { createResultModelFromDiscriminatorValue, type ResultModel } from '../..
 import { type BaseRequestBuilder, type Guid, type Parsable, type ParsableFactory, type RequestConfiguration, type RequestInformation, type RequestsMetadata } from '@microsoft/kiota-abstractions';
 
 /**
- * Builds and executes requests for operations under /DeployServerAPI/DefaultData/Delete
+ * Builds and executes requests for operations under /DeployServerAPI/GlobalEnvironment/Delete
  */
 export interface DeleteRequestBuilder extends BaseRequestBuilder<DeleteRequestBuilder> {
     /**
@@ -27,7 +27,7 @@ export interface DeleteRequestBuilderDeleteQueryParameters {
 /**
  * Uri template for the request builder.
  */
-export const DeleteRequestBuilderUriTemplate = "{+baseurl}/DeployServerAPI/DefaultData/Delete?id={id}";
+export const DeleteRequestBuilderUriTemplate = "{+baseurl}/DeployServerAPI/GlobalEnvironment/Delete?id={id}";
 /**
  * Metadata for all the requests in the request builder.
  */

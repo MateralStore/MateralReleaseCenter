@@ -4,9 +4,11 @@
 // @ts-ignore
 import { ApplicationInfoRequestBuilderNavigationMetadata, type ApplicationInfoRequestBuilder } from './applicationInfo/index.js';
 // @ts-ignore
-import { DefaultDataRequestBuilderNavigationMetadata, type DefaultDataRequestBuilder } from './defaultData/index.js';
-// @ts-ignore
 import { EnumsRequestBuilderNavigationMetadata, type EnumsRequestBuilder } from './enums/index.js';
+// @ts-ignore
+import { GlobalEnvironmentRequestBuilderNavigationMetadata, type GlobalEnvironmentRequestBuilder } from './globalEnvironment/index.js';
+// @ts-ignore
+import { GlobalParameterRequestBuilderNavigationMetadata, type GlobalParameterRequestBuilder } from './globalParameter/index.js';
 // @ts-ignore
 import { type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata } from '@microsoft/kiota-abstractions';
 
@@ -19,13 +21,17 @@ export interface DeployServerAPIRequestBuilder extends BaseRequestBuilder<Deploy
      */
     get applicationInfo(): ApplicationInfoRequestBuilder;
     /**
-     * The DefaultData property
-     */
-    get defaultData(): DefaultDataRequestBuilder;
-    /**
      * The Enums property
      */
     get enums(): EnumsRequestBuilder;
+    /**
+     * The GlobalEnvironment property
+     */
+    get globalEnvironment(): GlobalEnvironmentRequestBuilder;
+    /**
+     * The GlobalParameter property
+     */
+    get globalParameter(): GlobalParameterRequestBuilder;
 }
 /**
  * Uri template for the request builder.
@@ -38,11 +44,14 @@ export const DeployServerAPIRequestBuilderNavigationMetadata: Record<Exclude<key
     applicationInfo: {
         navigationMetadata: ApplicationInfoRequestBuilderNavigationMetadata,
     },
-    defaultData: {
-        navigationMetadata: DefaultDataRequestBuilderNavigationMetadata,
-    },
     enums: {
         navigationMetadata: EnumsRequestBuilderNavigationMetadata,
+    },
+    globalEnvironment: {
+        navigationMetadata: GlobalEnvironmentRequestBuilderNavigationMetadata,
+    },
+    globalParameter: {
+        navigationMetadata: GlobalParameterRequestBuilderNavigationMetadata,
     },
 };
 /* tslint:enable */

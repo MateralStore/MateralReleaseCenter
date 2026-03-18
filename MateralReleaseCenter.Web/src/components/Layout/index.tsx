@@ -22,7 +22,7 @@ export function Layout() {
       label: '发布中心',
       children: [
         { key: '/deploy/app', label: '应用管理' },
-        { key: '/deploy/data', label: '默认数据' },
+        { key: '/deploy/global-parameters', label: '全局参数' },
       ],
     },
     {

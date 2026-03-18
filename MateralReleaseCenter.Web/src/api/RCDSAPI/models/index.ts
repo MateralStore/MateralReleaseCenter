@@ -17,6 +17,10 @@ export interface AddApplicationInfoRequestModel extends Parsable {
      */
     authToken?: string | null;
     /**
+     * 环境变量
+     */
+    environments?: string | null;
+    /**
      * 增量更新
      */
     isIncrementalUpdating?: boolean | null;
@@ -42,21 +46,42 @@ export interface AddApplicationInfoRequestModel extends Parsable {
     runParams?: string | null;
 }
 /**
- * 默认数据添加请求模型
+ * 全局环境变量添加请求模型
  */
-export interface AddDefaultDataRequestModel extends Parsable {
+export interface AddGlobalEnvironmentRequestModel extends Parsable {
     /**
      * 应用程序类型
      */
     applicationType?: number | null;
     /**
-     * 数据
+     * 描述
      */
-    data?: string | null;
+    description?: string | null;
     /**
      * 键
      */
     key?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+/**
+ * 全局参数添加请求模型
+ */
+export interface AddGlobalParameterRequestModel extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 名称
+     */
+    name?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
 }
 /**
  * 应用程序信息数据传输模型
@@ -86,6 +111,10 @@ export interface ApplicationInfoDTO extends Parsable {
      * 创建时间
      */
     createTime?: Date | null;
+    /**
+     * 环境变量
+     */
+    environments?: string | null;
     /**
      * 唯一标识
      */
@@ -161,6 +190,10 @@ export interface ApplicationInfoListDTO extends Parsable {
      * 创建时间
      */
     createTime?: Date | null;
+    /**
+     * 环境变量
+     */
+    environments?: string | null;
     /**
      * 唯一标识
      */
@@ -272,11 +305,20 @@ export function createAddApplicationInfoRequestModelFromDiscriminatorValue(parse
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {AddDefaultDataRequestModel}
+ * @returns {AddGlobalEnvironmentRequestModel}
  */
 // @ts-ignore
-export function createAddDefaultDataRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoAddDefaultDataRequestModel;
+export function createAddGlobalEnvironmentRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoAddGlobalEnvironmentRequestModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {AddGlobalParameterRequestModel}
+ */
+// @ts-ignore
+export function createAddGlobalParameterRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoAddGlobalParameterRequestModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -353,42 +395,6 @@ export function createApplicationTypeEnumKeyValueModelListResultModelFromDiscrim
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {DefaultDataDTO}
- */
-// @ts-ignore
-export function createDefaultDataDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoDefaultDataDTO;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {DefaultDataDTOResultModel}
- */
-// @ts-ignore
-export function createDefaultDataDTOResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoDefaultDataDTOResultModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {DefaultDataListDTOCollectionResultModel}
- */
-// @ts-ignore
-export function createDefaultDataListDTOCollectionResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoDefaultDataListDTOCollectionResultModel;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {DefaultDataListDTO}
- */
-// @ts-ignore
-export function createDefaultDataListDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoDefaultDataListDTO;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {EditApplicationInfoRequestModel}
  */
 // @ts-ignore
@@ -398,11 +404,20 @@ export function createEditApplicationInfoRequestModelFromDiscriminatorValue(pars
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {EditDefaultDataRequestModel}
+ * @returns {EditGlobalEnvironmentRequestModel}
  */
 // @ts-ignore
-export function createEditDefaultDataRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoEditDefaultDataRequestModel;
+export function createEditGlobalEnvironmentRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoEditGlobalEnvironmentRequestModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {EditGlobalParameterRequestModel}
+ */
+// @ts-ignore
+export function createEditGlobalParameterRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoEditGlobalParameterRequestModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -421,6 +436,78 @@ export function createFileInfoDTOFromDiscriminatorValue(parseNode: ParseNode | u
 // @ts-ignore
 export function createFileInfoDTOListResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoFileInfoDTOListResultModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalEnvironmentDTO}
+ */
+// @ts-ignore
+export function createGlobalEnvironmentDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalEnvironmentDTO;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalEnvironmentDTOResultModel}
+ */
+// @ts-ignore
+export function createGlobalEnvironmentDTOResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalEnvironmentDTOResultModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalEnvironmentListDTOCollectionResultModel}
+ */
+// @ts-ignore
+export function createGlobalEnvironmentListDTOCollectionResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalEnvironmentListDTOCollectionResultModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalEnvironmentListDTO}
+ */
+// @ts-ignore
+export function createGlobalEnvironmentListDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalEnvironmentListDTO;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalParameterDTO}
+ */
+// @ts-ignore
+export function createGlobalParameterDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalParameterDTO;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalParameterDTOResultModel}
+ */
+// @ts-ignore
+export function createGlobalParameterDTOResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalParameterDTOResultModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalParameterListDTOCollectionResultModel}
+ */
+// @ts-ignore
+export function createGlobalParameterListDTOCollectionResultModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalParameterListDTOCollectionResultModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {GlobalParameterListDTO}
+ */
+// @ts-ignore
+export function createGlobalParameterListDTOFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoGlobalParameterListDTO;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -461,11 +548,20 @@ export function createQueryApplicationInfoRequestModelFromDiscriminatorValue(par
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {QueryDefaultDataRequestModel}
+ * @returns {QueryGlobalEnvironmentRequestModel}
  */
 // @ts-ignore
-export function createQueryDefaultDataRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoQueryDefaultDataRequestModel;
+export function createQueryGlobalEnvironmentRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoQueryGlobalEnvironmentRequestModel;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {QueryGlobalParameterRequestModel}
+ */
+// @ts-ignore
+export function createQueryGlobalParameterRequestModelFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoQueryGlobalParameterRequestModel;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -513,100 +609,6 @@ export function createStringICollectionResultModelFromDiscriminatorValue(parseNo
     return deserializeIntoStringICollectionResultModel;
 }
 /**
- * 默认数据数据传输模型
- */
-export interface DefaultDataDTO extends Parsable {
-    /**
-     * 应用程序类型
-     */
-    applicationType?: number | null;
-    /**
-     * 应用程序类型文本
-     */
-    applicationTypeText?: string | null;
-    /**
-     * 创建时间
-     */
-    createTime?: Date | null;
-    /**
-     * 数据
-     */
-    data?: string | null;
-    /**
-     * 唯一标识
-     */
-    iD?: Guid | null;
-    /**
-     * 键
-     */
-    key?: string | null;
-}
-export interface DefaultDataDTOResultModel extends Parsable {
-    /**
-     * 默认数据数据传输模型
-     */
-    data?: DefaultDataDTO | null;
-    /**
-     * The Message property
-     */
-    message?: string | null;
-    /**
-     * The ResultType property
-     */
-    resultType?: number | null;
-}
-/**
- * 默认数据列表数据传输模型
- */
-export interface DefaultDataListDTO extends Parsable {
-    /**
-     * 应用程序类型
-     */
-    applicationType?: number | null;
-    /**
-     * 应用程序类型文本
-     */
-    applicationTypeText?: string | null;
-    /**
-     * 创建时间
-     */
-    createTime?: Date | null;
-    /**
-     * 数据
-     */
-    data?: string | null;
-    /**
-     * 唯一标识
-     */
-    iD?: Guid | null;
-    /**
-     * 键
-     */
-    key?: string | null;
-}
-export interface DefaultDataListDTOCollectionResultModel extends Parsable {
-    /**
-     * The Data property
-     */
-    data?: DefaultDataListDTO[] | null;
-    /**
-     * The Message property
-     */
-    message?: string | null;
-    /**
-     * The PageModel property
-     */
-    pageModel?: PageModel | null;
-    /**
-     * The RangeModel property
-     */
-    rangeModel?: RangeModel | null;
-    /**
-     * The ResultType property
-     */
-    resultType?: number | null;
-}
-/**
  * The deserialization information for the current model
  * @param AddApplicationInfoRequestModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
@@ -616,6 +618,7 @@ export function deserializeIntoAddApplicationInfoRequestModel(addApplicationInfo
     return {
         "ApplicationType": n => { addApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
         "AuthToken": n => { addApplicationInfoRequestModel.authToken = n.getStringValue(); },
+        "Environments": n => { addApplicationInfoRequestModel.environments = n.getStringValue(); },
         "IsIncrementalUpdating": n => { addApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { addApplicationInfoRequestModel.mainModule = n.getStringValue(); },
         "Name": n => { addApplicationInfoRequestModel.name = n.getStringValue(); },
@@ -626,15 +629,29 @@ export function deserializeIntoAddApplicationInfoRequestModel(addApplicationInfo
 }
 /**
  * The deserialization information for the current model
- * @param AddDefaultDataRequestModel The instance to deserialize into.
+ * @param AddGlobalEnvironmentRequestModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoAddDefaultDataRequestModel(addDefaultDataRequestModel: Partial<AddDefaultDataRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoAddGlobalEnvironmentRequestModel(addGlobalEnvironmentRequestModel: Partial<AddGlobalEnvironmentRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "ApplicationType": n => { addDefaultDataRequestModel.applicationType = n.getNumberValue(); },
-        "Data": n => { addDefaultDataRequestModel.data = n.getStringValue(); },
-        "Key": n => { addDefaultDataRequestModel.key = n.getStringValue(); },
+        "ApplicationType": n => { addGlobalEnvironmentRequestModel.applicationType = n.getNumberValue(); },
+        "Description": n => { addGlobalEnvironmentRequestModel.description = n.getStringValue(); },
+        "Key": n => { addGlobalEnvironmentRequestModel.key = n.getStringValue(); },
+        "Value": n => { addGlobalEnvironmentRequestModel.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param AddGlobalParameterRequestModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoAddGlobalParameterRequestModel(addGlobalParameterRequestModel: Partial<AddGlobalParameterRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { addGlobalParameterRequestModel.applicationType = n.getNumberValue(); },
+        "Name": n => { addGlobalParameterRequestModel.name = n.getStringValue(); },
+        "Value": n => { addGlobalParameterRequestModel.value = n.getStringValue(); },
     }
 }
 /**
@@ -651,6 +668,7 @@ export function deserializeIntoApplicationInfoDTO(applicationInfoDTO: Partial<Ap
         "ApplicationTypeTxt": n => { applicationInfoDTO.applicationTypeTxt = n.getStringValue(); },
         "AuthToken": n => { applicationInfoDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoDTO.createTime = n.getDateValue(); },
+        "Environments": n => { applicationInfoDTO.environments = n.getStringValue(); },
         "ID": n => { applicationInfoDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoDTO.mainModule = n.getStringValue(); },
@@ -688,6 +706,7 @@ export function deserializeIntoApplicationInfoListDTO(applicationInfoListDTO: Pa
         "ApplicationTypeTxt": n => { applicationInfoListDTO.applicationTypeTxt = n.getStringValue(); },
         "AuthToken": n => { applicationInfoListDTO.authToken = n.getStringValue(); },
         "CreateTime": n => { applicationInfoListDTO.createTime = n.getDateValue(); },
+        "Environments": n => { applicationInfoListDTO.environments = n.getStringValue(); },
         "ID": n => { applicationInfoListDTO.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { applicationInfoListDTO.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { applicationInfoListDTO.mainModule = n.getStringValue(); },
@@ -764,66 +783,6 @@ export function deserializeIntoApplicationTypeEnumKeyValueModelListResultModel(a
 }
 /**
  * The deserialization information for the current model
- * @param DefaultDataDTO The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoDefaultDataDTO(defaultDataDTO: Partial<DefaultDataDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "ApplicationType": n => { defaultDataDTO.applicationType = n.getNumberValue(); },
-        "ApplicationTypeText": n => { defaultDataDTO.applicationTypeText = n.getStringValue(); },
-        "CreateTime": n => { defaultDataDTO.createTime = n.getDateValue(); },
-        "Data": n => { defaultDataDTO.data = n.getStringValue(); },
-        "ID": n => { defaultDataDTO.iD = n.getGuidValue(); },
-        "Key": n => { defaultDataDTO.key = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param DefaultDataDTOResultModel The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoDefaultDataDTOResultModel(defaultDataDTOResultModel: Partial<DefaultDataDTOResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "Data": n => { defaultDataDTOResultModel.data = n.getObjectValue<DefaultDataDTO>(createDefaultDataDTOFromDiscriminatorValue); },
-        "Message": n => { defaultDataDTOResultModel.message = n.getStringValue(); },
-        "ResultType": n => { defaultDataDTOResultModel.resultType = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param DefaultDataListDTO The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoDefaultDataListDTO(defaultDataListDTO: Partial<DefaultDataListDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "ApplicationType": n => { defaultDataListDTO.applicationType = n.getNumberValue(); },
-        "ApplicationTypeText": n => { defaultDataListDTO.applicationTypeText = n.getStringValue(); },
-        "CreateTime": n => { defaultDataListDTO.createTime = n.getDateValue(); },
-        "Data": n => { defaultDataListDTO.data = n.getStringValue(); },
-        "ID": n => { defaultDataListDTO.iD = n.getGuidValue(); },
-        "Key": n => { defaultDataListDTO.key = n.getStringValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
- * @param DefaultDataListDTOCollectionResultModel The instance to deserialize into.
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoDefaultDataListDTOCollectionResultModel(defaultDataListDTOCollectionResultModel: Partial<DefaultDataListDTOCollectionResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-        "Data": n => { defaultDataListDTOCollectionResultModel.data = n.getCollectionOfObjectValues<DefaultDataListDTO>(createDefaultDataListDTOFromDiscriminatorValue); },
-        "Message": n => { defaultDataListDTOCollectionResultModel.message = n.getStringValue(); },
-        "PageModel": n => { defaultDataListDTOCollectionResultModel.pageModel = n.getObjectValue<PageModel>(createPageModelFromDiscriminatorValue); },
-        "RangeModel": n => { defaultDataListDTOCollectionResultModel.rangeModel = n.getObjectValue<RangeModel>(createRangeModelFromDiscriminatorValue); },
-        "ResultType": n => { defaultDataListDTOCollectionResultModel.resultType = n.getNumberValue(); },
-    }
-}
-/**
- * The deserialization information for the current model
  * @param EditApplicationInfoRequestModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -832,6 +791,7 @@ export function deserializeIntoEditApplicationInfoRequestModel(editApplicationIn
     return {
         "ApplicationType": n => { editApplicationInfoRequestModel.applicationType = n.getNumberValue(); },
         "AuthToken": n => { editApplicationInfoRequestModel.authToken = n.getStringValue(); },
+        "Environments": n => { editApplicationInfoRequestModel.environments = n.getStringValue(); },
         "ID": n => { editApplicationInfoRequestModel.iD = n.getGuidValue(); },
         "IsIncrementalUpdating": n => { editApplicationInfoRequestModel.isIncrementalUpdating = n.getBooleanValue(); },
         "MainModule": n => { editApplicationInfoRequestModel.mainModule = n.getStringValue(); },
@@ -841,16 +801,31 @@ export function deserializeIntoEditApplicationInfoRequestModel(editApplicationIn
 }
 /**
  * The deserialization information for the current model
- * @param EditDefaultDataRequestModel The instance to deserialize into.
+ * @param EditGlobalEnvironmentRequestModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoEditDefaultDataRequestModel(editDefaultDataRequestModel: Partial<EditDefaultDataRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoEditGlobalEnvironmentRequestModel(editGlobalEnvironmentRequestModel: Partial<EditGlobalEnvironmentRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "ApplicationType": n => { editDefaultDataRequestModel.applicationType = n.getNumberValue(); },
-        "Data": n => { editDefaultDataRequestModel.data = n.getStringValue(); },
-        "ID": n => { editDefaultDataRequestModel.iD = n.getGuidValue(); },
-        "Key": n => { editDefaultDataRequestModel.key = n.getStringValue(); },
+        "ApplicationType": n => { editGlobalEnvironmentRequestModel.applicationType = n.getNumberValue(); },
+        "Description": n => { editGlobalEnvironmentRequestModel.description = n.getStringValue(); },
+        "ID": n => { editGlobalEnvironmentRequestModel.iD = n.getGuidValue(); },
+        "Key": n => { editGlobalEnvironmentRequestModel.key = n.getStringValue(); },
+        "Value": n => { editGlobalEnvironmentRequestModel.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param EditGlobalParameterRequestModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoEditGlobalParameterRequestModel(editGlobalParameterRequestModel: Partial<EditGlobalParameterRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { editGlobalParameterRequestModel.applicationType = n.getNumberValue(); },
+        "ID": n => { editGlobalParameterRequestModel.iD = n.getGuidValue(); },
+        "Name": n => { editGlobalParameterRequestModel.name = n.getStringValue(); },
+        "Value": n => { editGlobalParameterRequestModel.value = n.getStringValue(); },
     }
 }
 /**
@@ -877,6 +852,128 @@ export function deserializeIntoFileInfoDTOListResultModel(fileInfoDTOListResultM
         "Data": n => { fileInfoDTOListResultModel.data = n.getCollectionOfObjectValues<FileInfoDTO>(createFileInfoDTOFromDiscriminatorValue); },
         "Message": n => { fileInfoDTOListResultModel.message = n.getStringValue(); },
         "ResultType": n => { fileInfoDTOListResultModel.resultType = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalEnvironmentDTO The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalEnvironmentDTO(globalEnvironmentDTO: Partial<GlobalEnvironmentDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { globalEnvironmentDTO.applicationType = n.getNumberValue(); },
+        "ApplicationTypeText": n => { globalEnvironmentDTO.applicationTypeText = n.getStringValue(); },
+        "CreateTime": n => { globalEnvironmentDTO.createTime = n.getDateValue(); },
+        "Description": n => { globalEnvironmentDTO.description = n.getStringValue(); },
+        "ID": n => { globalEnvironmentDTO.iD = n.getGuidValue(); },
+        "Key": n => { globalEnvironmentDTO.key = n.getStringValue(); },
+        "Value": n => { globalEnvironmentDTO.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalEnvironmentDTOResultModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalEnvironmentDTOResultModel(globalEnvironmentDTOResultModel: Partial<GlobalEnvironmentDTOResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Data": n => { globalEnvironmentDTOResultModel.data = n.getObjectValue<GlobalEnvironmentDTO>(createGlobalEnvironmentDTOFromDiscriminatorValue); },
+        "Message": n => { globalEnvironmentDTOResultModel.message = n.getStringValue(); },
+        "ResultType": n => { globalEnvironmentDTOResultModel.resultType = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalEnvironmentListDTO The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalEnvironmentListDTO(globalEnvironmentListDTO: Partial<GlobalEnvironmentListDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { globalEnvironmentListDTO.applicationType = n.getNumberValue(); },
+        "ApplicationTypeText": n => { globalEnvironmentListDTO.applicationTypeText = n.getStringValue(); },
+        "CreateTime": n => { globalEnvironmentListDTO.createTime = n.getDateValue(); },
+        "Description": n => { globalEnvironmentListDTO.description = n.getStringValue(); },
+        "ID": n => { globalEnvironmentListDTO.iD = n.getGuidValue(); },
+        "Key": n => { globalEnvironmentListDTO.key = n.getStringValue(); },
+        "Value": n => { globalEnvironmentListDTO.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalEnvironmentListDTOCollectionResultModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalEnvironmentListDTOCollectionResultModel(globalEnvironmentListDTOCollectionResultModel: Partial<GlobalEnvironmentListDTOCollectionResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Data": n => { globalEnvironmentListDTOCollectionResultModel.data = n.getCollectionOfObjectValues<GlobalEnvironmentListDTO>(createGlobalEnvironmentListDTOFromDiscriminatorValue); },
+        "Message": n => { globalEnvironmentListDTOCollectionResultModel.message = n.getStringValue(); },
+        "PageModel": n => { globalEnvironmentListDTOCollectionResultModel.pageModel = n.getObjectValue<PageModel>(createPageModelFromDiscriminatorValue); },
+        "RangeModel": n => { globalEnvironmentListDTOCollectionResultModel.rangeModel = n.getObjectValue<RangeModel>(createRangeModelFromDiscriminatorValue); },
+        "ResultType": n => { globalEnvironmentListDTOCollectionResultModel.resultType = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalParameterDTO The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalParameterDTO(globalParameterDTO: Partial<GlobalParameterDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { globalParameterDTO.applicationType = n.getNumberValue(); },
+        "ApplicationTypeText": n => { globalParameterDTO.applicationTypeText = n.getStringValue(); },
+        "CreateTime": n => { globalParameterDTO.createTime = n.getDateValue(); },
+        "ID": n => { globalParameterDTO.iD = n.getGuidValue(); },
+        "Name": n => { globalParameterDTO.name = n.getStringValue(); },
+        "Value": n => { globalParameterDTO.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalParameterDTOResultModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalParameterDTOResultModel(globalParameterDTOResultModel: Partial<GlobalParameterDTOResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Data": n => { globalParameterDTOResultModel.data = n.getObjectValue<GlobalParameterDTO>(createGlobalParameterDTOFromDiscriminatorValue); },
+        "Message": n => { globalParameterDTOResultModel.message = n.getStringValue(); },
+        "ResultType": n => { globalParameterDTOResultModel.resultType = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalParameterListDTO The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalParameterListDTO(globalParameterListDTO: Partial<GlobalParameterListDTO> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { globalParameterListDTO.applicationType = n.getNumberValue(); },
+        "ApplicationTypeText": n => { globalParameterListDTO.applicationTypeText = n.getStringValue(); },
+        "CreateTime": n => { globalParameterListDTO.createTime = n.getDateValue(); },
+        "ID": n => { globalParameterListDTO.iD = n.getGuidValue(); },
+        "Name": n => { globalParameterListDTO.name = n.getStringValue(); },
+        "Value": n => { globalParameterListDTO.value = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param GlobalParameterListDTOCollectionResultModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoGlobalParameterListDTOCollectionResultModel(globalParameterListDTOCollectionResultModel: Partial<GlobalParameterListDTOCollectionResultModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "Data": n => { globalParameterListDTOCollectionResultModel.data = n.getCollectionOfObjectValues<GlobalParameterListDTO>(createGlobalParameterListDTOFromDiscriminatorValue); },
+        "Message": n => { globalParameterListDTOCollectionResultModel.message = n.getStringValue(); },
+        "PageModel": n => { globalParameterListDTOCollectionResultModel.pageModel = n.getObjectValue<PageModel>(createPageModelFromDiscriminatorValue); },
+        "RangeModel": n => { globalParameterListDTOCollectionResultModel.rangeModel = n.getObjectValue<RangeModel>(createRangeModelFromDiscriminatorValue); },
+        "ResultType": n => { globalParameterListDTOCollectionResultModel.resultType = n.getNumberValue(); },
     }
 }
 /**
@@ -952,23 +1049,44 @@ export function deserializeIntoQueryApplicationInfoRequestModel(queryApplication
 }
 /**
  * The deserialization information for the current model
- * @param QueryDefaultDataRequestModel The instance to deserialize into.
+ * @param QueryGlobalEnvironmentRequestModel The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoQueryDefaultDataRequestModel(queryDefaultDataRequestModel: Partial<QueryDefaultDataRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+export function deserializeIntoQueryGlobalEnvironmentRequestModel(queryGlobalEnvironmentRequestModel: Partial<QueryGlobalEnvironmentRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
-        "ApplicationType": n => { queryDefaultDataRequestModel.applicationType = n.getNumberValue(); },
-        "IDs": n => { queryDefaultDataRequestModel.iDs = n.getCollectionOfPrimitiveValues<Guid>(); },
-        "IsAsc": n => { queryDefaultDataRequestModel.isAsc = n.getBooleanValue(); },
-        "Key": n => { queryDefaultDataRequestModel.key = n.getStringValue(); },
-        "MaxCreateTime": n => { queryDefaultDataRequestModel.maxCreateTime = n.getDateValue(); },
-        "MinCreateTime": n => { queryDefaultDataRequestModel.minCreateTime = n.getDateValue(); },
-        "PageIndex": n => { queryDefaultDataRequestModel.pageIndex = n.getNumberValue(); },
-        "PageSize": n => { queryDefaultDataRequestModel.pageSize = n.getNumberValue(); },
-        "Skip": n => { queryDefaultDataRequestModel.skip = n.getNumberValue(); },
-        "SortPropertyName": n => { queryDefaultDataRequestModel.sortPropertyName = n.getStringValue(); },
-        "Take": n => { queryDefaultDataRequestModel.take = n.getNumberValue(); },
+        "ApplicationType": n => { queryGlobalEnvironmentRequestModel.applicationType = n.getNumberValue(); },
+        "IDs": n => { queryGlobalEnvironmentRequestModel.iDs = n.getCollectionOfPrimitiveValues<Guid>(); },
+        "IsAsc": n => { queryGlobalEnvironmentRequestModel.isAsc = n.getBooleanValue(); },
+        "Key": n => { queryGlobalEnvironmentRequestModel.key = n.getStringValue(); },
+        "MaxCreateTime": n => { queryGlobalEnvironmentRequestModel.maxCreateTime = n.getDateValue(); },
+        "MinCreateTime": n => { queryGlobalEnvironmentRequestModel.minCreateTime = n.getDateValue(); },
+        "PageIndex": n => { queryGlobalEnvironmentRequestModel.pageIndex = n.getNumberValue(); },
+        "PageSize": n => { queryGlobalEnvironmentRequestModel.pageSize = n.getNumberValue(); },
+        "Skip": n => { queryGlobalEnvironmentRequestModel.skip = n.getNumberValue(); },
+        "SortPropertyName": n => { queryGlobalEnvironmentRequestModel.sortPropertyName = n.getStringValue(); },
+        "Take": n => { queryGlobalEnvironmentRequestModel.take = n.getNumberValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param QueryGlobalParameterRequestModel The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoQueryGlobalParameterRequestModel(queryGlobalParameterRequestModel: Partial<QueryGlobalParameterRequestModel> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "ApplicationType": n => { queryGlobalParameterRequestModel.applicationType = n.getNumberValue(); },
+        "IDs": n => { queryGlobalParameterRequestModel.iDs = n.getCollectionOfPrimitiveValues<Guid>(); },
+        "IsAsc": n => { queryGlobalParameterRequestModel.isAsc = n.getBooleanValue(); },
+        "MaxCreateTime": n => { queryGlobalParameterRequestModel.maxCreateTime = n.getDateValue(); },
+        "MinCreateTime": n => { queryGlobalParameterRequestModel.minCreateTime = n.getDateValue(); },
+        "Name": n => { queryGlobalParameterRequestModel.name = n.getStringValue(); },
+        "PageIndex": n => { queryGlobalParameterRequestModel.pageIndex = n.getNumberValue(); },
+        "PageSize": n => { queryGlobalParameterRequestModel.pageSize = n.getNumberValue(); },
+        "Skip": n => { queryGlobalParameterRequestModel.skip = n.getNumberValue(); },
+        "SortPropertyName": n => { queryGlobalParameterRequestModel.sortPropertyName = n.getStringValue(); },
+        "Take": n => { queryGlobalParameterRequestModel.take = n.getNumberValue(); },
     }
 }
 /**
@@ -1049,6 +1167,10 @@ export interface EditApplicationInfoRequestModel extends Parsable {
      */
     authToken?: string | null;
     /**
+     * 环境变量
+     */
+    environments?: string | null;
+    /**
      * 唯一标识
      */
     iD?: Guid | null;
@@ -1070,17 +1192,17 @@ export interface EditApplicationInfoRequestModel extends Parsable {
     runParams?: string | null;
 }
 /**
- * 默认数据修改请求模型
+ * 全局环境变量修改请求模型
  */
-export interface EditDefaultDataRequestModel extends Parsable {
+export interface EditGlobalEnvironmentRequestModel extends Parsable {
     /**
      * 应用程序类型
      */
     applicationType?: number | null;
     /**
-     * 数据
+     * 描述
      */
-    data?: string | null;
+    description?: string | null;
     /**
      * 唯一标识
      */
@@ -1089,6 +1211,31 @@ export interface EditDefaultDataRequestModel extends Parsable {
      * 键
      */
     key?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+/**
+ * 全局参数修改请求模型
+ */
+export interface EditGlobalParameterRequestModel extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 唯一标识
+     */
+    iD?: Guid | null;
+    /**
+     * 名称
+     */
+    name?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
 }
 /**
  * 文件信息数据传输模型
@@ -1116,6 +1263,202 @@ export interface FileInfoDTOListResultModel extends Parsable {
      * The Message property
      */
     message?: string | null;
+    /**
+     * The ResultType property
+     */
+    resultType?: number | null;
+}
+/**
+ * 全局环境变量数据传输模型
+ */
+export interface GlobalEnvironmentDTO extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 应用程序类型文本
+     */
+    applicationTypeText?: string | null;
+    /**
+     * 创建时间
+     */
+    createTime?: Date | null;
+    /**
+     * 描述
+     */
+    description?: string | null;
+    /**
+     * 唯一标识
+     */
+    iD?: Guid | null;
+    /**
+     * 键
+     */
+    key?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+export interface GlobalEnvironmentDTOResultModel extends Parsable {
+    /**
+     * 全局环境变量数据传输模型
+     */
+    data?: GlobalEnvironmentDTO | null;
+    /**
+     * The Message property
+     */
+    message?: string | null;
+    /**
+     * The ResultType property
+     */
+    resultType?: number | null;
+}
+/**
+ * 全局环境变量列表数据传输模型
+ */
+export interface GlobalEnvironmentListDTO extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 应用程序类型文本
+     */
+    applicationTypeText?: string | null;
+    /**
+     * 创建时间
+     */
+    createTime?: Date | null;
+    /**
+     * 描述
+     */
+    description?: string | null;
+    /**
+     * 唯一标识
+     */
+    iD?: Guid | null;
+    /**
+     * 键
+     */
+    key?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+export interface GlobalEnvironmentListDTOCollectionResultModel extends Parsable {
+    /**
+     * The Data property
+     */
+    data?: GlobalEnvironmentListDTO[] | null;
+    /**
+     * The Message property
+     */
+    message?: string | null;
+    /**
+     * The PageModel property
+     */
+    pageModel?: PageModel | null;
+    /**
+     * The RangeModel property
+     */
+    rangeModel?: RangeModel | null;
+    /**
+     * The ResultType property
+     */
+    resultType?: number | null;
+}
+/**
+ * 全局参数数据传输模型
+ */
+export interface GlobalParameterDTO extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 应用程序类型文本
+     */
+    applicationTypeText?: string | null;
+    /**
+     * 创建时间
+     */
+    createTime?: Date | null;
+    /**
+     * 唯一标识
+     */
+    iD?: Guid | null;
+    /**
+     * 名称
+     */
+    name?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+export interface GlobalParameterDTOResultModel extends Parsable {
+    /**
+     * 全局参数数据传输模型
+     */
+    data?: GlobalParameterDTO | null;
+    /**
+     * The Message property
+     */
+    message?: string | null;
+    /**
+     * The ResultType property
+     */
+    resultType?: number | null;
+}
+/**
+ * 全局参数列表数据传输模型
+ */
+export interface GlobalParameterListDTO extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 应用程序类型文本
+     */
+    applicationTypeText?: string | null;
+    /**
+     * 创建时间
+     */
+    createTime?: Date | null;
+    /**
+     * 唯一标识
+     */
+    iD?: Guid | null;
+    /**
+     * 名称
+     */
+    name?: string | null;
+    /**
+     * 值
+     */
+    value?: string | null;
+}
+export interface GlobalParameterListDTOCollectionResultModel extends Parsable {
+    /**
+     * The Data property
+     */
+    data?: GlobalParameterListDTO[] | null;
+    /**
+     * The Message property
+     */
+    message?: string | null;
+    /**
+     * The PageModel property
+     */
+    pageModel?: PageModel | null;
+    /**
+     * The RangeModel property
+     */
+    rangeModel?: RangeModel | null;
     /**
      * The ResultType property
      */
@@ -1257,9 +1600,9 @@ export interface QueryApplicationInfoRequestModel extends Parsable {
     take?: number | null;
 }
 /**
- * 默认数据查询请求模型
+ * 全局环境变量查询请求模型
  */
-export interface QueryDefaultDataRequestModel extends Parsable {
+export interface QueryGlobalEnvironmentRequestModel extends Parsable {
     /**
      * 应用程序类型
      */
@@ -1284,6 +1627,55 @@ export interface QueryDefaultDataRequestModel extends Parsable {
      * 最小创建时间
      */
     minCreateTime?: Date | null;
+    /**
+     * The PageIndex property
+     */
+    pageIndex?: number | null;
+    /**
+     * The PageSize property
+     */
+    pageSize?: number | null;
+    /**
+     * The Skip property
+     */
+    skip?: number | null;
+    /**
+     * The SortPropertyName property
+     */
+    sortPropertyName?: string | null;
+    /**
+     * The Take property
+     */
+    take?: number | null;
+}
+/**
+ * 全局参数查询请求模型
+ */
+export interface QueryGlobalParameterRequestModel extends Parsable {
+    /**
+     * 应用程序类型
+     */
+    applicationType?: number | null;
+    /**
+     * 唯一标识组
+     */
+    iDs?: Guid[] | null;
+    /**
+     * The IsAsc property
+     */
+    isAsc?: boolean | null;
+    /**
+     * 最大创建时间
+     */
+    maxCreateTime?: Date | null;
+    /**
+     * 最小创建时间
+     */
+    minCreateTime?: Date | null;
+    /**
+     * 名称
+     */
+    name?: string | null;
     /**
      * The PageIndex property
      */
@@ -1372,6 +1764,7 @@ export function serializeAddApplicationInfoRequestModel(writer: SerializationWri
     if (!addApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", addApplicationInfoRequestModel.applicationType);
     writer.writeStringValue("AuthToken", addApplicationInfoRequestModel.authToken);
+    writer.writeStringValue("Environments", addApplicationInfoRequestModel.environments);
     writer.writeBooleanValue("IsIncrementalUpdating", addApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", addApplicationInfoRequestModel.mainModule);
     writer.writeStringValue("Name", addApplicationInfoRequestModel.name);
@@ -1381,16 +1774,30 @@ export function serializeAddApplicationInfoRequestModel(writer: SerializationWri
 }
 /**
  * Serializes information the current object
- * @param AddDefaultDataRequestModel The instance to serialize from.
+ * @param AddGlobalEnvironmentRequestModel The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeAddDefaultDataRequestModel(writer: SerializationWriter, addDefaultDataRequestModel: Partial<AddDefaultDataRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!addDefaultDataRequestModel || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("ApplicationType", addDefaultDataRequestModel.applicationType);
-    writer.writeStringValue("Data", addDefaultDataRequestModel.data);
-    writer.writeStringValue("Key", addDefaultDataRequestModel.key);
+export function serializeAddGlobalEnvironmentRequestModel(writer: SerializationWriter, addGlobalEnvironmentRequestModel: Partial<AddGlobalEnvironmentRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!addGlobalEnvironmentRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", addGlobalEnvironmentRequestModel.applicationType);
+    writer.writeStringValue("Description", addGlobalEnvironmentRequestModel.description);
+    writer.writeStringValue("Key", addGlobalEnvironmentRequestModel.key);
+    writer.writeStringValue("Value", addGlobalEnvironmentRequestModel.value);
+}
+/**
+ * Serializes information the current object
+ * @param AddGlobalParameterRequestModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeAddGlobalParameterRequestModel(writer: SerializationWriter, addGlobalParameterRequestModel: Partial<AddGlobalParameterRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!addGlobalParameterRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", addGlobalParameterRequestModel.applicationType);
+    writer.writeStringValue("Name", addGlobalParameterRequestModel.name);
+    writer.writeStringValue("Value", addGlobalParameterRequestModel.value);
 }
 /**
  * Serializes information the current object
@@ -1405,6 +1812,7 @@ export function serializeApplicationInfoDTO(writer: SerializationWriter, applica
     writer.writeNumberValue("ApplicationType", applicationInfoDTO.applicationType);
     writer.writeStringValue("AuthToken", applicationInfoDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoDTO.createTime);
+    writer.writeStringValue("Environments", applicationInfoDTO.environments);
     writer.writeGuidValue("ID", applicationInfoDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoDTO.mainModule);
@@ -1440,6 +1848,7 @@ export function serializeApplicationInfoListDTO(writer: SerializationWriter, app
     writer.writeNumberValue("ApplicationType", applicationInfoListDTO.applicationType);
     writer.writeStringValue("AuthToken", applicationInfoListDTO.authToken);
     writer.writeDateValue("CreateTime", applicationInfoListDTO.createTime);
+    writer.writeStringValue("Environments", applicationInfoListDTO.environments);
     writer.writeGuidValue("ID", applicationInfoListDTO.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", applicationInfoListDTO.isIncrementalUpdating);
     writer.writeStringValue("MainModule", applicationInfoListDTO.mainModule);
@@ -1513,64 +1922,6 @@ export function serializeApplicationTypeEnumKeyValueModelListResultModel(writer:
 }
 /**
  * Serializes information the current object
- * @param DefaultDataDTO The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeDefaultDataDTO(writer: SerializationWriter, defaultDataDTO: Partial<DefaultDataDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!defaultDataDTO || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("ApplicationType", defaultDataDTO.applicationType);
-    writer.writeDateValue("CreateTime", defaultDataDTO.createTime);
-    writer.writeStringValue("Data", defaultDataDTO.data);
-    writer.writeGuidValue("ID", defaultDataDTO.iD);
-    writer.writeStringValue("Key", defaultDataDTO.key);
-}
-/**
- * Serializes information the current object
- * @param DefaultDataDTOResultModel The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeDefaultDataDTOResultModel(writer: SerializationWriter, defaultDataDTOResultModel: Partial<DefaultDataDTOResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!defaultDataDTOResultModel || isSerializingDerivedType) { return; }
-    writer.writeObjectValue<DefaultDataDTO>("Data", defaultDataDTOResultModel.data, serializeDefaultDataDTO);
-    writer.writeStringValue("Message", defaultDataDTOResultModel.message);
-    writer.writeNumberValue("ResultType", defaultDataDTOResultModel.resultType);
-}
-/**
- * Serializes information the current object
- * @param DefaultDataListDTO The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeDefaultDataListDTO(writer: SerializationWriter, defaultDataListDTO: Partial<DefaultDataListDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!defaultDataListDTO || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("ApplicationType", defaultDataListDTO.applicationType);
-    writer.writeDateValue("CreateTime", defaultDataListDTO.createTime);
-    writer.writeStringValue("Data", defaultDataListDTO.data);
-    writer.writeGuidValue("ID", defaultDataListDTO.iD);
-    writer.writeStringValue("Key", defaultDataListDTO.key);
-}
-/**
- * Serializes information the current object
- * @param DefaultDataListDTOCollectionResultModel The instance to serialize from.
- * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeDefaultDataListDTOCollectionResultModel(writer: SerializationWriter, defaultDataListDTOCollectionResultModel: Partial<DefaultDataListDTOCollectionResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!defaultDataListDTOCollectionResultModel || isSerializingDerivedType) { return; }
-    writer.writeCollectionOfObjectValues<DefaultDataListDTO>("Data", defaultDataListDTOCollectionResultModel.data, serializeDefaultDataListDTO);
-    writer.writeStringValue("Message", defaultDataListDTOCollectionResultModel.message);
-    writer.writeObjectValue<PageModel>("PageModel", defaultDataListDTOCollectionResultModel.pageModel, serializePageModel);
-    writer.writeObjectValue<RangeModel>("RangeModel", defaultDataListDTOCollectionResultModel.rangeModel, serializeRangeModel);
-    writer.writeNumberValue("ResultType", defaultDataListDTOCollectionResultModel.resultType);
-}
-/**
- * Serializes information the current object
  * @param EditApplicationInfoRequestModel The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
@@ -1580,6 +1931,7 @@ export function serializeEditApplicationInfoRequestModel(writer: SerializationWr
     if (!editApplicationInfoRequestModel || isSerializingDerivedType) { return; }
     writer.writeNumberValue("ApplicationType", editApplicationInfoRequestModel.applicationType);
     writer.writeStringValue("AuthToken", editApplicationInfoRequestModel.authToken);
+    writer.writeStringValue("Environments", editApplicationInfoRequestModel.environments);
     writer.writeGuidValue("ID", editApplicationInfoRequestModel.iD);
     writer.writeBooleanValue("IsIncrementalUpdating", editApplicationInfoRequestModel.isIncrementalUpdating);
     writer.writeStringValue("MainModule", editApplicationInfoRequestModel.mainModule);
@@ -1588,17 +1940,32 @@ export function serializeEditApplicationInfoRequestModel(writer: SerializationWr
 }
 /**
  * Serializes information the current object
- * @param EditDefaultDataRequestModel The instance to serialize from.
+ * @param EditGlobalEnvironmentRequestModel The instance to serialize from.
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeEditDefaultDataRequestModel(writer: SerializationWriter, editDefaultDataRequestModel: Partial<EditDefaultDataRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!editDefaultDataRequestModel || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("ApplicationType", editDefaultDataRequestModel.applicationType);
-    writer.writeStringValue("Data", editDefaultDataRequestModel.data);
-    writer.writeGuidValue("ID", editDefaultDataRequestModel.iD);
-    writer.writeStringValue("Key", editDefaultDataRequestModel.key);
+export function serializeEditGlobalEnvironmentRequestModel(writer: SerializationWriter, editGlobalEnvironmentRequestModel: Partial<EditGlobalEnvironmentRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!editGlobalEnvironmentRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", editGlobalEnvironmentRequestModel.applicationType);
+    writer.writeStringValue("Description", editGlobalEnvironmentRequestModel.description);
+    writer.writeGuidValue("ID", editGlobalEnvironmentRequestModel.iD);
+    writer.writeStringValue("Key", editGlobalEnvironmentRequestModel.key);
+    writer.writeStringValue("Value", editGlobalEnvironmentRequestModel.value);
+}
+/**
+ * Serializes information the current object
+ * @param EditGlobalParameterRequestModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeEditGlobalParameterRequestModel(writer: SerializationWriter, editGlobalParameterRequestModel: Partial<EditGlobalParameterRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!editGlobalParameterRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", editGlobalParameterRequestModel.applicationType);
+    writer.writeGuidValue("ID", editGlobalParameterRequestModel.iD);
+    writer.writeStringValue("Name", editGlobalParameterRequestModel.name);
+    writer.writeStringValue("Value", editGlobalParameterRequestModel.value);
 }
 /**
  * Serializes information the current object
@@ -1625,6 +1992,124 @@ export function serializeFileInfoDTOListResultModel(writer: SerializationWriter,
     writer.writeCollectionOfObjectValues<FileInfoDTO>("Data", fileInfoDTOListResultModel.data, serializeFileInfoDTO);
     writer.writeStringValue("Message", fileInfoDTOListResultModel.message);
     writer.writeNumberValue("ResultType", fileInfoDTOListResultModel.resultType);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalEnvironmentDTO The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalEnvironmentDTO(writer: SerializationWriter, globalEnvironmentDTO: Partial<GlobalEnvironmentDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalEnvironmentDTO || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", globalEnvironmentDTO.applicationType);
+    writer.writeDateValue("CreateTime", globalEnvironmentDTO.createTime);
+    writer.writeStringValue("Description", globalEnvironmentDTO.description);
+    writer.writeGuidValue("ID", globalEnvironmentDTO.iD);
+    writer.writeStringValue("Key", globalEnvironmentDTO.key);
+    writer.writeStringValue("Value", globalEnvironmentDTO.value);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalEnvironmentDTOResultModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalEnvironmentDTOResultModel(writer: SerializationWriter, globalEnvironmentDTOResultModel: Partial<GlobalEnvironmentDTOResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalEnvironmentDTOResultModel || isSerializingDerivedType) { return; }
+    writer.writeObjectValue<GlobalEnvironmentDTO>("Data", globalEnvironmentDTOResultModel.data, serializeGlobalEnvironmentDTO);
+    writer.writeStringValue("Message", globalEnvironmentDTOResultModel.message);
+    writer.writeNumberValue("ResultType", globalEnvironmentDTOResultModel.resultType);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalEnvironmentListDTO The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalEnvironmentListDTO(writer: SerializationWriter, globalEnvironmentListDTO: Partial<GlobalEnvironmentListDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalEnvironmentListDTO || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", globalEnvironmentListDTO.applicationType);
+    writer.writeDateValue("CreateTime", globalEnvironmentListDTO.createTime);
+    writer.writeStringValue("Description", globalEnvironmentListDTO.description);
+    writer.writeGuidValue("ID", globalEnvironmentListDTO.iD);
+    writer.writeStringValue("Key", globalEnvironmentListDTO.key);
+    writer.writeStringValue("Value", globalEnvironmentListDTO.value);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalEnvironmentListDTOCollectionResultModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalEnvironmentListDTOCollectionResultModel(writer: SerializationWriter, globalEnvironmentListDTOCollectionResultModel: Partial<GlobalEnvironmentListDTOCollectionResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalEnvironmentListDTOCollectionResultModel || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<GlobalEnvironmentListDTO>("Data", globalEnvironmentListDTOCollectionResultModel.data, serializeGlobalEnvironmentListDTO);
+    writer.writeStringValue("Message", globalEnvironmentListDTOCollectionResultModel.message);
+    writer.writeObjectValue<PageModel>("PageModel", globalEnvironmentListDTOCollectionResultModel.pageModel, serializePageModel);
+    writer.writeObjectValue<RangeModel>("RangeModel", globalEnvironmentListDTOCollectionResultModel.rangeModel, serializeRangeModel);
+    writer.writeNumberValue("ResultType", globalEnvironmentListDTOCollectionResultModel.resultType);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalParameterDTO The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalParameterDTO(writer: SerializationWriter, globalParameterDTO: Partial<GlobalParameterDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalParameterDTO || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", globalParameterDTO.applicationType);
+    writer.writeDateValue("CreateTime", globalParameterDTO.createTime);
+    writer.writeGuidValue("ID", globalParameterDTO.iD);
+    writer.writeStringValue("Name", globalParameterDTO.name);
+    writer.writeStringValue("Value", globalParameterDTO.value);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalParameterDTOResultModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalParameterDTOResultModel(writer: SerializationWriter, globalParameterDTOResultModel: Partial<GlobalParameterDTOResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalParameterDTOResultModel || isSerializingDerivedType) { return; }
+    writer.writeObjectValue<GlobalParameterDTO>("Data", globalParameterDTOResultModel.data, serializeGlobalParameterDTO);
+    writer.writeStringValue("Message", globalParameterDTOResultModel.message);
+    writer.writeNumberValue("ResultType", globalParameterDTOResultModel.resultType);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalParameterListDTO The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalParameterListDTO(writer: SerializationWriter, globalParameterListDTO: Partial<GlobalParameterListDTO> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalParameterListDTO || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", globalParameterListDTO.applicationType);
+    writer.writeDateValue("CreateTime", globalParameterListDTO.createTime);
+    writer.writeGuidValue("ID", globalParameterListDTO.iD);
+    writer.writeStringValue("Name", globalParameterListDTO.name);
+    writer.writeStringValue("Value", globalParameterListDTO.value);
+}
+/**
+ * Serializes information the current object
+ * @param GlobalParameterListDTOCollectionResultModel The instance to serialize from.
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeGlobalParameterListDTOCollectionResultModel(writer: SerializationWriter, globalParameterListDTOCollectionResultModel: Partial<GlobalParameterListDTOCollectionResultModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!globalParameterListDTOCollectionResultModel || isSerializingDerivedType) { return; }
+    writer.writeCollectionOfObjectValues<GlobalParameterListDTO>("Data", globalParameterListDTOCollectionResultModel.data, serializeGlobalParameterListDTO);
+    writer.writeStringValue("Message", globalParameterListDTOCollectionResultModel.message);
+    writer.writeObjectValue<PageModel>("PageModel", globalParameterListDTOCollectionResultModel.pageModel, serializePageModel);
+    writer.writeObjectValue<RangeModel>("RangeModel", globalParameterListDTOCollectionResultModel.rangeModel, serializeRangeModel);
+    writer.writeNumberValue("ResultType", globalParameterListDTOCollectionResultModel.resultType);
 }
 /**
  * Serializes information the current object
@@ -1698,23 +2183,44 @@ export function serializeQueryApplicationInfoRequestModel(writer: SerializationW
 /**
  * Serializes information the current object
  * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
- * @param QueryDefaultDataRequestModel The instance to serialize from.
+ * @param QueryGlobalEnvironmentRequestModel The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeQueryDefaultDataRequestModel(writer: SerializationWriter, queryDefaultDataRequestModel: Partial<QueryDefaultDataRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
-    if (!queryDefaultDataRequestModel || isSerializingDerivedType) { return; }
-    writer.writeNumberValue("ApplicationType", queryDefaultDataRequestModel.applicationType);
-    writer.writeCollectionOfPrimitiveValues<Guid>("IDs", queryDefaultDataRequestModel.iDs);
-    writer.writeBooleanValue("IsAsc", queryDefaultDataRequestModel.isAsc);
-    writer.writeStringValue("Key", queryDefaultDataRequestModel.key);
-    writer.writeDateValue("MaxCreateTime", queryDefaultDataRequestModel.maxCreateTime);
-    writer.writeDateValue("MinCreateTime", queryDefaultDataRequestModel.minCreateTime);
-    writer.writeNumberValue("PageIndex", queryDefaultDataRequestModel.pageIndex);
-    writer.writeNumberValue("PageSize", queryDefaultDataRequestModel.pageSize);
-    writer.writeNumberValue("Skip", queryDefaultDataRequestModel.skip);
-    writer.writeStringValue("SortPropertyName", queryDefaultDataRequestModel.sortPropertyName);
-    writer.writeNumberValue("Take", queryDefaultDataRequestModel.take);
+export function serializeQueryGlobalEnvironmentRequestModel(writer: SerializationWriter, queryGlobalEnvironmentRequestModel: Partial<QueryGlobalEnvironmentRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!queryGlobalEnvironmentRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", queryGlobalEnvironmentRequestModel.applicationType);
+    writer.writeCollectionOfPrimitiveValues<Guid>("IDs", queryGlobalEnvironmentRequestModel.iDs);
+    writer.writeBooleanValue("IsAsc", queryGlobalEnvironmentRequestModel.isAsc);
+    writer.writeStringValue("Key", queryGlobalEnvironmentRequestModel.key);
+    writer.writeDateValue("MaxCreateTime", queryGlobalEnvironmentRequestModel.maxCreateTime);
+    writer.writeDateValue("MinCreateTime", queryGlobalEnvironmentRequestModel.minCreateTime);
+    writer.writeNumberValue("PageIndex", queryGlobalEnvironmentRequestModel.pageIndex);
+    writer.writeNumberValue("PageSize", queryGlobalEnvironmentRequestModel.pageSize);
+    writer.writeNumberValue("Skip", queryGlobalEnvironmentRequestModel.skip);
+    writer.writeStringValue("SortPropertyName", queryGlobalEnvironmentRequestModel.sortPropertyName);
+    writer.writeNumberValue("Take", queryGlobalEnvironmentRequestModel.take);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param QueryGlobalParameterRequestModel The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeQueryGlobalParameterRequestModel(writer: SerializationWriter, queryGlobalParameterRequestModel: Partial<QueryGlobalParameterRequestModel> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!queryGlobalParameterRequestModel || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("ApplicationType", queryGlobalParameterRequestModel.applicationType);
+    writer.writeCollectionOfPrimitiveValues<Guid>("IDs", queryGlobalParameterRequestModel.iDs);
+    writer.writeBooleanValue("IsAsc", queryGlobalParameterRequestModel.isAsc);
+    writer.writeDateValue("MaxCreateTime", queryGlobalParameterRequestModel.maxCreateTime);
+    writer.writeDateValue("MinCreateTime", queryGlobalParameterRequestModel.minCreateTime);
+    writer.writeStringValue("Name", queryGlobalParameterRequestModel.name);
+    writer.writeNumberValue("PageIndex", queryGlobalParameterRequestModel.pageIndex);
+    writer.writeNumberValue("PageSize", queryGlobalParameterRequestModel.pageSize);
+    writer.writeNumberValue("Skip", queryGlobalParameterRequestModel.skip);
+    writer.writeStringValue("SortPropertyName", queryGlobalParameterRequestModel.sortPropertyName);
+    writer.writeNumberValue("Take", queryGlobalParameterRequestModel.take);
 }
 /**
  * Serializes information the current object

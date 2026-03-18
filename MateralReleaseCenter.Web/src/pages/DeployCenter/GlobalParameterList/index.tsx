@@ -24,33 +24,33 @@ import { rcscApiClient, createRCDSClient } from '../../../api/api-client'
 import { ValueEditor } from '../../../components/ValueEditor'
 import type { DeployListDTO } from '../../../api/RCSCAPI/models'
 import type {
-  DefaultDataListDTO,
-  QueryDefaultDataRequestModel,
+  GlobalParameterListDTO,
+  QueryGlobalParameterRequestModel,
   PageModel,
   ApplicationTypeEnumKeyValueModel,
-  AddDefaultDataRequestModel,
-  EditDefaultDataRequestModel,
+  AddGlobalParameterRequestModel,
+  EditGlobalParameterRequestModel,
 } from '../../../api/RCDSAPI/models'
 
 // 搜索表单类型
 interface SearchFormValues {
   serverID?: string
   applicationType?: number
-  key?: string
+  name?: string
 }
 
 // 表单类型
-interface DefaultDataFormValues {
+interface GlobalParameterFormValues {
   applicationType: number
-  key: string
+  name: string
   valueType: 'text' | 'json'
   value: string
 }
 
-export function DefaultDataListPage() {
+export function GlobalParameterListPage() {
   const { message: messageApi, modal } = App.useApp()
   const [form] = Form.useForm<SearchFormValues>()
-  const [dataForm] = Form.useForm<DefaultDataFormValues>()
+  const [dataForm] = Form.useForm<GlobalParameterFormValues>()
 
   // 发布服务列表
   const [serverList, setServerList] = useState<DeployListDTO[]>([])
@@ -61,7 +61,7 @@ export function DefaultDataListPage() {
   const [appTypeEnum, setAppTypeEnum] = useState<ApplicationTypeEnumKeyValueModel[]>([])
 
   // 搜索条件
-  const [searchParams, setSearchParams] = useState<QueryDefaultDataRequestModel>({
+  const [searchParams, setSearchParams] = useState<QueryGlobalParameterRequestModel>({
     pageIndex: 1,
     pageSize: 10,
     isAsc: true,
@@ -72,7 +72,7 @@ export function DefaultDataListPage() {
 
   // 数据状态
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<DefaultDataListDTO[]>([])
+  const [data, setData] = useState<GlobalParameterListDTO[]>([])
   const [pagination, setPagination] = useState<PageModel>({
     pageIndex: 1,
     pageSize: 10,
@@ -90,7 +90,7 @@ export function DefaultDataListPage() {
   // 模态窗状态
   const [modalVisible, setModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
-  const [editingData, setEditingData] = useState<DefaultDataListDTO | null>(null)
+  const [editingData, setEditingData] = useState<GlobalParameterListDTO | null>(null)
   const [submitLoading, setSubmitLoading] = useState(false)
   const [infoLoading, setInfoLoading] = useState(false)
   const [formValues, setFormValues] = useState<{
@@ -145,24 +145,24 @@ export function DefaultDataListPage() {
     }
   }, [selectedServerInfo])
 
-  // 获取默认数据列表
-  const fetchDefaultDataList = useCallback(async () => {
+  // 获取全局参数列表
+  const fetchGlobalParameterList = useCallback(async () => {
     if (!selectedServerInfo) return
     setLoading(true)
     try {
       const client = createRCDSClient(selectedServerInfo.name ?? '')
-      const result = await client.deployServerAPI.defaultData.getList.post(searchParamsRef.current)
+      const result = await client.deployServerAPI.globalParameter.getList.post(searchParamsRef.current)
       if (result?.resultType === 0 && result.data) {
         setData(result.data || [])
         if (result.pageModel) {
           setPagination(result.pageModel)
         }
       } else {
-        messageApi.error(result?.message || '获取默认数据列表失败')
+        messageApi.error(result?.message || '获取全局参数列表失败')
       }
     } catch (error) {
-      console.error('获取默认数据列表错误:', error)
-      messageApi.error('获取默认数据列表失败')
+      console.error('获取全局参数列表错误:', error)
+      messageApi.error('获取全局参数列表失败')
     } finally {
       setLoading(false)
     }
@@ -177,16 +177,16 @@ export function DefaultDataListPage() {
   useEffect(() => {
     if (selectedServerInfo) {
       fetchAppTypeEnum()
-      fetchDefaultDataList()
+      fetchGlobalParameterList()
     }
-  }, [selectedServerInfo, fetchAppTypeEnum, fetchDefaultDataList])
+  }, [selectedServerInfo, fetchAppTypeEnum, fetchGlobalParameterList])
 
   // 搜索参数变化时刷新列表
   useEffect(() => {
     if (selectedServerInfo && searchParams.pageIndex) {
-      fetchDefaultDataList()
+      fetchGlobalParameterList()
     }
-  }, [searchParams, selectedServerInfo, fetchDefaultDataList])
+  }, [searchParams, selectedServerInfo, fetchGlobalParameterList])
 
   // 处理服务器选择
   const handleServerChange = (value: string) => {
@@ -210,7 +210,7 @@ export function DefaultDataListPage() {
     setSearchParams({
       ...searchParams,
       applicationType: values.applicationType,
-      key: values.key || undefined,
+      name: values.name || undefined,
       pageIndex: 1,
     })
   }
@@ -241,21 +241,21 @@ export function DefaultDataListPage() {
       return
     }
     setEditingData(null)
-    setModalTitle('新增默认数据')
+    setModalTitle('新增全局参数')
     setFormValues({ valueType: 'text' })
     setModalVisible(true)
   }
 
   // 打开编辑模态窗
-  const handleEdit = async (record: DefaultDataListDTO) => {
+  const handleEdit = async (record: GlobalParameterListDTO) => {
     setEditingData(record)
-    setModalTitle('编辑默认数据')
+    setModalTitle('编辑全局参数')
     setFormValues({ valueType: 'text' })
     setModalVisible(true)
     setInfoLoading(true)
     try {
       const client = createRCDSClient(getApiPath())
-      const result = await client.deployServerAPI.defaultData.getInfo.get({
+      const result = await client.deployServerAPI.globalParameter.getInfo.get({
         queryParameters: {
           id: record.iD!,
         },
@@ -264,7 +264,7 @@ export function DefaultDataListPage() {
         const info = result.data
         // 判断是否为 JSON（尝试解析）
         let valueType: 'text' | 'json' = 'text'
-        let value = info.data || ''
+        let value = info.value || ''
         try {
           JSON.parse(value)
           valueType = 'json'
@@ -274,7 +274,7 @@ export function DefaultDataListPage() {
         }
         const newFormValues = {
           applicationType: info.applicationType ?? undefined,
-          key: info.key ?? undefined,
+          name: info.name ?? undefined,
           valueType,
           value,
         }
@@ -284,13 +284,13 @@ export function DefaultDataListPage() {
           dataForm.setFieldsValue(newFormValues)
         }, 0)
       } else {
-        messageApi.error(result?.message || '获取默认数据信息失败')
+        messageApi.error(result?.message || '获取全局参数信息失败')
         setModalVisible(false)
         return
       }
     } catch (error) {
-      console.error('获取默认数据信息错误:', error)
-      messageApi.error('获取默认数据信息失败')
+      console.error('获取全局参数信息错误:', error)
+      messageApi.error('获取全局参数信息失败')
       setModalVisible(false)
       return
     } finally {
@@ -298,29 +298,29 @@ export function DefaultDataListPage() {
     }
   }
 
-  // 删除默认数据
-  const handleDelete = (record: DefaultDataListDTO) => {
+  // 删除全局参数
+  const handleDelete = (record: GlobalParameterListDTO) => {
     modal.confirm({
       title: '确认删除',
-      content: `确定要删除默认数据"${record.key || ''}"吗？`,
+      content: `确定要删除全局参数"${record.name || ''}"吗？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
         try {
           const client = createRCDSClient(getApiPath())
-          const result = await client.deployServerAPI.defaultData.deletePath.delete({
+          const result = await client.deployServerAPI.globalParameter.deletePath.delete({
             queryParameters: {
               id: record.iD!,
             },
           })
           if (result?.resultType === 0) {
             messageApi.success('删除成功')
-            fetchDefaultDataList()
+            fetchGlobalParameterList()
           } else {
             messageApi.error(result?.message || '删除失败')
           }
         } catch (error) {
-          console.error('删除默认数据错误:', error)
+          console.error('删除全局参数错误:', error)
           messageApi.error('删除失败')
         }
       },
@@ -351,32 +351,32 @@ export function DefaultDataListPage() {
 
       if (editingData) {
         // 编辑
-        const editData: EditDefaultDataRequestModel = {
+        const editData: EditGlobalParameterRequestModel = {
           iD: editingData.iD!,
           applicationType: values.applicationType,
-          key: values.key,
-          data: dataValue,
+          name: values.name,
+          value: dataValue,
         }
-        const result = await client.deployServerAPI.defaultData.edit.put(editData)
+        const result = await client.deployServerAPI.globalParameter.edit.put(editData)
         if (result?.resultType === 0) {
           messageApi.success('编辑成功')
           setModalVisible(false)
-          fetchDefaultDataList()
+          fetchGlobalParameterList()
         } else {
           messageApi.error(result?.message || '编辑失败')
         }
       } else {
         // 新增
-        const addData: AddDefaultDataRequestModel = {
+        const addData: AddGlobalParameterRequestModel = {
           applicationType: values.applicationType,
-          key: values.key,
-          data: dataValue,
+          name: values.name,
+          value: dataValue,
         }
-        const result = await client.deployServerAPI.defaultData.add.post(addData)
+        const result = await client.deployServerAPI.globalParameter.add.post(addData)
         if (result?.resultType === 0) {
           messageApi.success('添加成功')
           setModalVisible(false)
-          fetchDefaultDataList()
+          fetchGlobalParameterList()
         } else {
           messageApi.error(result?.message || '添加失败')
         }
@@ -401,13 +401,6 @@ export function DefaultDataListPage() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
   }
 
-  // 截断显示值
-  const truncateValue = (value: string | undefined, maxLength: number = 50) => {
-    if (!value) return '-'
-    if (value.length <= maxLength) return value
-    return value.substring(0, maxLength) + '...'
-  }
-
   // 表格列定义
   const columns = [
     {
@@ -417,16 +410,16 @@ export function DefaultDataListPage() {
       width: 150,
     },
     {
-      title: '键',
-      dataIndex: 'key',
-      key: 'key',
+      title: '名称',
+      dataIndex: 'name',
+      key: 'name',
       width: 200,
     },
     {
       title: '值',
-      dataIndex: 'data',
-      key: 'data',
-      render: (value: string | undefined) => truncateValue(value),
+      dataIndex: 'value',
+      key: 'value',
+      ellipsis: true,
     },
     {
       title: '创建时间',
@@ -439,7 +432,7 @@ export function DefaultDataListPage() {
       title: '操作',
       key: 'action',
       width: 100,
-      render: (_: unknown, record: DefaultDataListDTO) => (
+      render: (_: unknown, record: GlobalParameterListDTO) => (
         <Space size="small">
           <Tooltip title="编辑">
             <Button
@@ -526,8 +519,8 @@ export function DefaultDataListPage() {
               }))}
             />
           </Form.Item>
-          <Form.Item name="key" style={{ marginBottom: 8 }}>
-            <Input placeholder="请输入键" style={{ width: 160 }} allowClear />
+          <Form.Item name="name" style={{ marginBottom: 8 }}>
+            <Input placeholder="请输入名称" style={{ width: 160 }} allowClear />
           </Form.Item>
           <Form.Item style={{ marginBottom: 8 }}>
             <Space>
@@ -540,7 +533,7 @@ export function DefaultDataListPage() {
             </Space>
           </Form.Item>
         </Form>
-        <Tooltip title="新增默认数据">
+        <Tooltip title="新增全局参数">
           <Button
             type="primary"
             icon={<PlusOutlined />}
@@ -611,11 +604,11 @@ export function DefaultDataListPage() {
               />
             </Form.Item>
             <Form.Item
-              name="key"
-              label="键"
-              rules={[{ required: true, message: '请输入键' }]}
+              name="name"
+              label="名称"
+              rules={[{ required: true, message: '请输入名称' }]}
             >
-              <Input placeholder="请输入键" />
+              <Input placeholder="请输入名称" />
             </Form.Item>
             <Form.Item
               name="value"
@@ -637,4 +630,4 @@ export function DefaultDataListPage() {
   )
 }
 
-export default DefaultDataListPage
+export default GlobalParameterListPage

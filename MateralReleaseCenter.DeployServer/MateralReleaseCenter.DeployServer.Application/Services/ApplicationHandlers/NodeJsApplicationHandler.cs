@@ -32,17 +32,8 @@ public class NodeJsApplicationHandler : ApplicationHandler
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = new()
-            {
-                FileName = "node",
-                Arguments = arguments,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                WorkingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath)
-            };
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("node", arguments, workingDirectory);
+            //processStartInfo.Environment["TestValue"] = "TestEnvironmentValue";
 
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object? sender, DataReceivedEventArgs e)

@@ -34,12 +34,16 @@ public class ExeApplicationHandler : ApplicationHandler
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !exePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             throw new MateralReleaseCenterException("主模块必须以.exe结尾");
         if (applicationRuntime.ApplicationStatus != ApplicationStatusEnum.Stop) throw new MateralReleaseCenterException("应用程序尚未停止");
+
+        string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
+        string arguments = !string.IsNullOrWhiteSpace(runParams) ? runParams : "";
+
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = GetProcessStartInfo(applicationRuntime, exePath, !string.IsNullOrWhiteSpace(runParams) ? runParams : "");
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create(exePath, arguments, workingDirectory, createNoWindow: false, showMinimizedOnWindows: true);
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object sender, DataReceivedEventArgs e)
             {
@@ -68,25 +72,5 @@ public class ExeApplicationHandler : ApplicationHandler
             applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}已停止");
         }
         await Task.CompletedTask;
-    }
-    private static ProcessStartInfo GetProcessStartInfo(ApplicationRuntimeModel applicationRuntime, string processPath, string arg)
-    {
-        string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
-        ProcessStartInfo processStartInfo = new()
-        {
-            FileName = processPath,
-            UseShellExecute = false,
-            CreateNoWindow = false,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            Arguments = arg,
-            WorkingDirectory = workingDirectory
-        };
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            processStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        }
-        return processStartInfo;
     }
 }

@@ -18,7 +18,11 @@ public class DotNetApplicationHandler : ApplicationHandler
 
         if (applicationRuntime.ApplicationInfo.ApplicationType != ApplicationTypeEnum.DotNet) throw new MateralReleaseCenterException("处理器类型错误");
 
-        string dllPath = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath, applicationRuntime.ApplicationInfo.MainModule); if (!dllPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("DotNet应用程序的主模块必须为.dll文件");
+        string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
+        if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
+
+        string dllPath = Path.Combine(workingDirectory, applicationRuntime.ApplicationInfo.MainModule); 
+        if (!dllPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("DotNet应用程序的主模块必须为.dll文件");
 
         string runParams = await GetRunParamsAsync(applicationRuntime);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? dllPath : $"{dllPath} {runParams}";
@@ -27,17 +31,7 @@ public class DotNetApplicationHandler : ApplicationHandler
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = new()
-            {
-                FileName = "dotnet",
-                Arguments = arguments,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                WorkingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath)
-            };
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("dotnet", arguments, workingDirectory);
 
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object? sender, DataReceivedEventArgs e)

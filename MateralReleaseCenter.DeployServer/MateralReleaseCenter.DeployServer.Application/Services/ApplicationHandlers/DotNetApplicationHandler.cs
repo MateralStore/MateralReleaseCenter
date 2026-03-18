@@ -21,17 +21,18 @@ public class DotNetApplicationHandler : ApplicationHandler
         string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
         if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
 
-        string dllPath = Path.Combine(workingDirectory, applicationRuntime.ApplicationInfo.MainModule); 
+        string dllPath = Path.Combine(workingDirectory, applicationRuntime.ApplicationInfo.MainModule);
         if (!dllPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("DotNet应用程序的主模块必须为.dll文件");
 
-        string runParams = await GetRunParamsAsync(applicationRuntime);
+        string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
+        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.DotNet);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? dllPath : $"{dllPath} {runParams}";
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("dotnet", arguments, workingDirectory);
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("dotnet", arguments, workingDirectory, environments);
 
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object? sender, DataReceivedEventArgs e)
@@ -93,28 +94,5 @@ public class DotNetApplicationHandler : ApplicationHandler
         }
 
         await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 获取运行参数
-    /// </summary>
-    private async Task<string> GetRunParamsAsync(ApplicationRuntimeModel model)
-    {
-        using IServiceScope scope = MateralServices.ServiceProvider.CreateScope();
-        IDefaultDataRepository defaultDataRepository = scope.ServiceProvider.GetRequiredService<IDefaultDataRepository>();
-        List<DefaultData> defaultDatas = await defaultDataRepository.FindAsync(m => m.ApplicationType == ApplicationTypeEnum.DotNet);
-
-        List<string> runParams = [];
-        if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.RunParams))
-        {
-            runParams.Add(model.ApplicationInfo.RunParams);
-        }
-
-        foreach (DefaultData defaultData in defaultDatas)
-        {
-            runParams.Add($"--{defaultData.Key}={defaultData.Data}");
-        }
-
-        return string.Join(" ", runParams);
     }
 }

@@ -30,6 +30,8 @@ public class ApplicationInfoConfigBase : BaseEntityConfig<ApplicationInfo>
         builder.Property(e => e.IsIncrementalUpdating)
             .IsRequired()
             .HasComment("增量更新");
+        builder.Property(e => e.Environments)
+            .HasComment("环境变量");
         builder.Property(e => e.RunParams)
             .HasComment("运行参数");
         builder.Property(e => e.RepositoryUrl)

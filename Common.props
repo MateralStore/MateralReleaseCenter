@@ -1,6 +1,6 @@
 ﻿<Project>
 	<PropertyGroup>
-		<TargetFrameworks>net10.0;</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
 		<ImplicitUsings>enable</ImplicitUsings>

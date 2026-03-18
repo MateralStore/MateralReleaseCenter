@@ -11,9 +11,13 @@ public sealed partial class DeployServerDBContext(DbContextOptions<DeployServerD
     /// </summary>
     public DbSet<ApplicationInfo>? ApplicationInfo { get; set; }
     /// <summary>
-    /// 默认数据
+    /// 全局环境变量
     /// </summary>
-    public DbSet<DefaultData>? DefaultData { get; set; }
+    public DbSet<GlobalEnvironment>? GlobalEnvironment { get; set; }
+    /// <summary>
+    /// 全局参数
+    /// </summary>
+    public DbSet<GlobalParameter>? GlobalParameter { get; set; }
     /// <summary>
     /// 配置模型
     /// </summary>

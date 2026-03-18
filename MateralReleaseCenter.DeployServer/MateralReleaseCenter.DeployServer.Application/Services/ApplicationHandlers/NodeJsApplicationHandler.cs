@@ -25,14 +25,15 @@ public class NodeJsApplicationHandler : ApplicationHandler
         string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
         if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
 
-        string runParams = await GetRunParamsAsync(applicationRuntime);
+        string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
+        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
         string arguments = string.IsNullOrWhiteSpace(runParams) ? jsPath : $"{jsPath} {runParams}";
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
         applicationRuntime.ClearConsoleMessage();
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("node", arguments, workingDirectory);
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create("node", arguments, workingDirectory, environments);
             //processStartInfo.Environment["TestValue"] = "TestEnvironmentValue";
 
             BindProcess = new Process { StartInfo = processStartInfo };
@@ -95,28 +96,5 @@ public class NodeJsApplicationHandler : ApplicationHandler
         }
 
         await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 获取运行参数
-    /// </summary>
-    private async Task<string> GetRunParamsAsync(ApplicationRuntimeModel model)
-    {
-        using IServiceScope scope = MateralServices.ServiceProvider.CreateScope();
-        IDefaultDataRepository defaultDataRepository = scope.ServiceProvider.GetRequiredService<IDefaultDataRepository>();
-        List<DefaultData> defaultDatas = await defaultDataRepository.FindAsync(m => m.ApplicationType == ApplicationTypeEnum.NodeJs);
-
-        List<string> runParams = [];
-        if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.RunParams))
-        {
-            runParams.Add(model.ApplicationInfo.RunParams);
-        }
-
-        foreach (DefaultData defaultData in defaultDatas)
-        {
-            runParams.Add($"--{defaultData.Key}={defaultData.Data}");
-        }
-
-        return string.Join(" ", runParams);
     }
 }

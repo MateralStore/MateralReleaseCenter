@@ -17,7 +17,8 @@ namespace MateralReleaseCenter.DeployServer.Abstractions.ControllerAccessors
         public static void AddDeployServerControllerAccessors(this IServiceCollection services)
         {
             services.TryAddSingleton<IApplicationInfoController, ApplicationInfoControllerAccessor>();
-            services.TryAddSingleton<IDefaultDataController, DefaultDataControllerAccessor>();
+            services.TryAddSingleton<IGlobalEnvironmentController, GlobalEnvironmentControllerAccessor>();
+            services.TryAddSingleton<IGlobalParameterController, GlobalParameterControllerAccessor>();
         }
     }
 }

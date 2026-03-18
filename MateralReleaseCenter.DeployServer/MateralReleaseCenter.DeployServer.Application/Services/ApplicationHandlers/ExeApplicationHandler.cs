@@ -16,7 +16,7 @@ public class ExeApplicationHandler : ApplicationHandler
     public override async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime)
     {
         string exePath = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath, $"{applicationRuntime.ApplicationInfo.MainModule}");
-        await StartApplicationAsync(applicationRuntime, exePath, applicationRuntime.ApplicationInfo.RunParams);
+        await StartApplicationAsync(applicationRuntime, exePath);
     }
     /// <summary>
     /// 停止应用程序
@@ -28,14 +28,15 @@ public class ExeApplicationHandler : ApplicationHandler
     /// </summary>
     /// <param name="applicationRuntime"></param>
     /// <param name="exePath"></param>
-    /// <param name="runParams"></param>
-    public virtual async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime, string exePath, string? runParams)
+    public virtual async Task StartApplicationAsync(ApplicationRuntimeModel applicationRuntime, string exePath)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !exePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             throw new MateralReleaseCenterException("主模块必须以.exe结尾");
         if (applicationRuntime.ApplicationStatus != ApplicationStatusEnum.Stop) throw new MateralReleaseCenterException("应用程序尚未停止");
 
         string workingDirectory = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath);
+        string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
+        List<EnvironmentsModel> environments = await GetEnvironmentsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);
         string arguments = !string.IsNullOrWhiteSpace(runParams) ? runParams : "";
 
         applicationRuntime.ApplicationStatus = ApplicationStatusEnum.ReadyRun;
@@ -43,7 +44,7 @@ public class ExeApplicationHandler : ApplicationHandler
         applicationRuntime.AddConsoleMessage($"{applicationRuntime.ApplicationInfo.Name}准备启动....");
         try
         {
-            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create(exePath, arguments, workingDirectory, createNoWindow: false, showMinimizedOnWindows: true);
+            ProcessStartInfo processStartInfo = ProcessStartInfoHelper.Create(exePath, arguments, workingDirectory, environments, createNoWindow: false, showMinimizedOnWindows: true);
             BindProcess = new Process { StartInfo = processStartInfo };
             void DataHandler(object sender, DataReceivedEventArgs e)
             {

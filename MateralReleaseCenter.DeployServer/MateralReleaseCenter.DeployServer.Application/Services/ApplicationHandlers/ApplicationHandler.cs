@@ -94,4 +94,57 @@ public abstract class ApplicationHandler : IApplicationHandler
         BindProcess.Dispose();
         BindProcess = null;
     }
+
+    /// <summary>
+    /// 获取运行参数
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="applicationType"></param>
+    /// <returns></returns>
+    protected async Task<string> GetRunParamsAsync(ApplicationRuntimeModel model, ApplicationTypeEnum applicationType)
+    {
+        using IServiceScope scope = MateralServices.ServiceProvider.CreateScope();
+        IGlobalParameterRepository globalParameterRepository = scope.ServiceProvider.GetRequiredService<IGlobalParameterRepository>();
+        List<GlobalParameter> globalParameters = await globalParameterRepository.FindAsync(m => m.ApplicationType == applicationType);
+
+        List<string> runParams = [];
+        if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.RunParams))
+        {
+            runParams.Add(model.ApplicationInfo.RunParams);
+        }
+
+        foreach (GlobalParameter globalParameter in globalParameters)
+        {
+            runParams.Add(globalParameter.Value);
+        }
+
+        return string.Join(" ", runParams);
+    }
+
+    /// <summary>
+    /// 获取环境变量
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="applicationType"></param>
+    /// <returns></returns>
+    protected async Task<List<EnvironmentsModel>> GetEnvironmentsAsync(ApplicationRuntimeModel model, ApplicationTypeEnum applicationType)
+    {
+        using IServiceScope scope = MateralServices.ServiceProvider.CreateScope();
+        IGlobalEnvironmentRepository globalEnvironmentRepository = scope.ServiceProvider.GetRequiredService<IGlobalEnvironmentRepository>();
+        List<GlobalEnvironment> globalEnvironments = await globalEnvironmentRepository.FindAsync(m => m.ApplicationType == applicationType);
+
+        List<EnvironmentsModel> environments = [];
+        if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.Environments))
+        {
+            List<EnvironmentsModel> appEnvironments = model.ApplicationInfo.Environments.JsonToObject<List<EnvironmentsModel>>();
+            environments.AddRange(appEnvironments);
+        }
+
+        foreach (GlobalEnvironment globalEnvironment in globalEnvironments)
+        {
+            environments.Add(new() { Key = globalEnvironment.Key, Value = globalEnvironment.Value });
+        }
+
+        return environments;
+    }
 }

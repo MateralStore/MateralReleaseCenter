@@ -13,6 +13,15 @@ if (Test-Path $materalReleaseCenterPath) {
     Remove-Item -Path $materalReleaseCenterPath -Recurse -Force
 }
 
+# 构建前端
+Write-Host "正在安装前端依赖..."
+Push-Location MateralReleaseCenter.Web
+pnpm install
+
+Write-Host "正在构建前端..."
+pnpm build
+Pop-Location
+
 # 发布 DeployServer.WebAPI
 Write-Host "正在发布 DeployServer.WebAPI..."
 dotnet publish "MateralReleaseCenter.DeployServer\MateralReleaseCenter.DeployServer.WebAPI\MateralReleaseCenter.DeployServer.WebAPI.csproj" -o "$publishPath\MateralReleaseCenter\DeployServer" -c Release -f net10.0

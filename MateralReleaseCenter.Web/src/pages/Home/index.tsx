@@ -18,10 +18,29 @@ export function HomePage() {
   const [loading, setLoading] = useState(false)
   const [serverGroups, setServerGroups] = useState<ServerGroup[]>([])
 
+  // 等待 rcscApiClient 初始化
+  const waitForRcscClient = useCallback(async () => {
+    const maxWait = 10000
+    const interval = 100
+    let waited = 0
+    while (!rcscApiClient && waited < maxWait) {
+      await new Promise(resolve => setTimeout(resolve, interval))
+      waited += interval
+    }
+    return !!rcscApiClient
+  }, [])
+
   // 获取所有Web应用
   const fetchWebApps = useCallback(async () => {
     setLoading(true)
     try {
+      // 等待 rcscApiClient 初始化
+      const isReady = await waitForRcscClient()
+      if (!isReady) {
+        console.error('获取Web应用列表错误: rcscApiClient 初始化超时')
+        setLoading(false)
+        return
+      }
       // 1. 获取所有发布服务
       const serverResult = await rcscApiClient.serverCenterAPI.server.getDeployList.get({})
       if (serverResult?.resultType !== 0 || !serverResult.data) {

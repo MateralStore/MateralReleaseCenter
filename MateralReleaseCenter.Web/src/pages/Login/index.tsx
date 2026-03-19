@@ -4,6 +4,7 @@ import { Form, Input, Button, Typography, Card, Alert, App } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { rcscApiClient } from '../../api/api-client'
 import { TokenManager } from '../../auth/tokenManager'
+import { useAuthStore } from '../../store/authStore'
 
 const { Title } = Typography
 
@@ -19,6 +20,7 @@ export function LoginPage() {
   const { message } = App.useApp()
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const login = useAuthStore(state => state.login)
 
   // 获取登录成功后的重定向路径，默认为 /home
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/home'
@@ -36,6 +38,19 @@ export function LoginPage() {
       if (result?.resultType === 0 && result.data?.token) {
         // 保存Token
         TokenManager.setToken(result.data.token, result.data.expiredTime ?? 0)
+        // 获取用户信息
+        try {
+          const userResult = await rcscApiClient.serverCenterAPI.user.getLoginUserInfo.get()
+          if (userResult?.resultType === 0 && userResult.data) {
+            login(result.data.token, result.data.expiredTime ?? 0, {
+              id: userResult.data.iD?.toString(),
+              account: userResult.data.account ?? undefined,
+              name: userResult.data.name ?? undefined,
+            })
+          }
+        } catch (err) {
+          console.error('获取用户信息失败:', err)
+        }
         message.success('登录成功')
         // 跳转到之前访问的页面或首页
         navigate(from, { replace: true })

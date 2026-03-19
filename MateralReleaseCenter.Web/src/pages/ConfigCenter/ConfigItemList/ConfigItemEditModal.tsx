@@ -134,7 +134,7 @@ export function ConfigItemEditModal({
         const result = await client.environmentServerAPI.configurationItem.edit.put({
           iD: editingConfigItem.iD!,
           description: values.description,
-          key: formValues.key,
+          key: values.key,
           value: submitValue,
         })
         if (result?.resultType === 0) {
@@ -196,8 +196,8 @@ export function ConfigItemEditModal({
           initialValues={formValues}
         >
           {id ? (
-            <Form.Item label="键">
-              <Input value={formValues.key} disabled />
+            <Form.Item name="key" label="键" rules={[{ required: true, message: '请输入键' }]}>
+              <Input placeholder="请输入键" />
             </Form.Item>
           ) : (
             <Form.Item name="key" label="键" rules={[{ required: true, message: '请输入键' }]}>

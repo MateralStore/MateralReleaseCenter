@@ -18,6 +18,7 @@ const SyncToolPage = lazy(() => import('../pages/ConfigCenter/SyncTool'))
 const AppListPage = lazy(() => import('../pages/DeployCenter/AppList'))
 
 const GlobalParameterListPage = lazy(() => import('../pages/DeployCenter/GlobalParameterList'))
+const GlobalEnvironmentListPage = lazy(() => import('../pages/DeployCenter/GlobalEnvironmentList'))
 
 // 测试页面
 const ConsoleViewerTestPage = lazy(() => import('../pages/Test/ConsoleViewerTest'))
@@ -148,6 +149,14 @@ const router = createBrowserRouter([
             element: (
               <Suspense fallback={<LoadingFallback />}>
                 <GlobalParameterListPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'global-environments',
+            element: (
+              <Suspense fallback={<LoadingFallback />}>
+                <GlobalEnvironmentListPage />
               </Suspense>
             ),
           },

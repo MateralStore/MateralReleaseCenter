@@ -23,6 +23,7 @@ export function Layout() {
       children: [
         { key: '/deploy/app', label: '应用管理' },
         { key: '/deploy/global-parameters', label: '全局参数' },
+        { key: '/deploy/global-environments', label: '全局环境变量' },
       ],
     },
     {

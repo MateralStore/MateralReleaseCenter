@@ -1,7 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { Form, Input, Select, Modal, Checkbox, Row, Col } from 'antd'
+import { Form, Input, Select, Modal, Checkbox, Row, Col, Button, Space } from 'antd'
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { createRCDSClient } from '../../../api/api-client'
-import type { ApplicationTypeEnumKeyValueModel } from '../../../api/RCDSAPI/models'
+import type { ApplicationTypeEnumKeyValueModel, EnvironmentRequestModel } from '../../../api/RCDSAPI/models'
+
+// 环境变量项
+interface EnvironmentItem {
+  key: string
+  value: string
+}
 
 // 添加/编辑表单类型
 interface AppFormValues {
@@ -13,6 +20,7 @@ interface AppFormValues {
   runParameters?: string
   repositoryUrl?: string
   authToken?: string
+  environments?: EnvironmentItem[]
 }
 
 interface AppFormModalProps {
@@ -39,6 +47,7 @@ export function AppFormModal({
   const [form] = Form.useForm<AppFormValues>()
   const [loading, setLoading] = useState(false)
   const [editingData, setEditingData] = useState<AppFormValues | null>(null)
+  const [environments, setEnvironments] = useState<EnvironmentItem[]>([{ key: '', value: '' }])
   const prevIdRef = useRef<string | undefined>(undefined)
 
   // 获取应用信息
@@ -74,6 +83,12 @@ export function AppFormModal({
             repositoryUrl: result.data.repositoryUrl ?? undefined,
             authToken: result.data.authToken ?? undefined,
           }
+          // 处理环境变量
+          const envs: EnvironmentItem[] = result.data.environments?.map((e: EnvironmentRequestModel) => ({
+            key: e.key ?? '',
+            value: e.value ?? '',
+          })) ?? [{ key: '', value: '' }]
+          setEnvironments(envs)
           setEditingData(data)
           // 直接设置表单值
           form.setFieldsValue(data)
@@ -94,6 +109,7 @@ export function AppFormModal({
       if (!id) {
         form.resetFields()
         setEditingData(null)
+        setEnvironments([{ key: '', value: '' }])
       }
     }
   }, [open, id, form])
@@ -103,6 +119,11 @@ export function AppFormModal({
     try {
       const values = await form.validateFields()
       const client = createRCDSClient(apiPath)
+
+      // 处理环境变量
+      const envList: EnvironmentRequestModel[] = environments
+        .filter(e => e.key.trim() !== '')
+        .map(e => ({ key: e.key, value: e.value }))
 
       if (id) {
         // 编辑
@@ -114,6 +135,7 @@ export function AppFormModal({
           runParams: values.runParameters,
           repositoryUrl: values.repositoryUrl,
           authToken: values.authToken,
+          environments: envList,
         })
       } else {
         // 新增
@@ -126,6 +148,7 @@ export function AppFormModal({
           runParams: values.runParameters,
           repositoryUrl: values.repositoryUrl,
           authToken: values.authToken,
+          environments: envList,
         })
       }
       onSuccess()
@@ -138,6 +161,25 @@ export function AppFormModal({
   const getAppTypeText = (type: number | null | undefined) => {
     const item = appTypeEnum.find(e => e.key === type)
     return item?.value || '-'
+  }
+
+  // 添加环境变量
+  const addEnvironment = () => {
+    setEnvironments([...environments, { key: '', value: '' }])
+  }
+
+  // 删除环境变量
+  const removeEnvironment = (index: number) => {
+    if (environments.length > 1) {
+      setEnvironments(environments.filter((_, i) => i !== index))
+    }
+  }
+
+  // 更新环境变量
+  const updateEnvironment = (index: number, field: 'key' | 'value', value: string) => {
+    const newEnvs = [...environments]
+    newEnvs[index][field] = value
+    setEnvironments(newEnvs)
   }
 
   return (
@@ -203,7 +245,42 @@ export function AppFormModal({
           {/* 第二列：运行参数 */}
           <Col span={8}>
             <Form.Item name="runParameters" label="运行参数">
-              <Input.TextArea placeholder="请输入运行参数" rows={4} />
+              <Input.TextArea placeholder="请输入运行参数" rows={5} />
+            </Form.Item>
+            <Form.Item label="环境变量">
+              <Space orientation="vertical" style={{ width: '100%' }} size="small">
+                {environments.map((env, index) => (
+                  <Space key={index} style={{ width: '100%' }} size="small">
+                    <Input
+                      placeholder="键"
+                      value={env.key}
+                      onChange={e => updateEnvironment(index, 'key', e.target.value)}
+                      style={{ flex: 1 }}
+                    />
+                    <Input
+                      placeholder="值"
+                      value={env.value}
+                      onChange={e => updateEnvironment(index, 'value', e.target.value)}
+                      style={{ flex: 1 }}
+                    />
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => removeEnvironment(index)}
+                      disabled={environments.length === 1}
+                    />
+                  </Space>
+                ))}
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  onClick={addEnvironment}
+                  block
+                >
+                  添加环境变量
+                </Button>
+              </Space>
             </Form.Item>
           </Col>
 

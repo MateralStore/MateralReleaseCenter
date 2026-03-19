@@ -4,11 +4,9 @@ import {
   Button,
   Input,
   Form,
-  Modal,
   Pagination,
   Space,
   App,
-  Spin,
   Select,
   Tooltip,
 } from 'antd'
@@ -25,9 +23,9 @@ import type {
   NamespaceListDTO,
   QueryNamespaceRequestModel,
   PageModel,
-  AddNamespaceRequestModel,
 } from '../../../api/RCSCAPI/models'
 import type { Guid } from '@microsoft/kiota-abstractions'
+import { NamespaceFormModal } from './NamespaceFormModal'
 
 // 搜索表单类型
 interface SearchFormValues {
@@ -36,16 +34,9 @@ interface SearchFormValues {
   description?: string
 }
 
-// 添加/编辑表单类型
-interface NamespaceFormValues {
-  name: string
-  description?: string
-}
-
 export function NamespaceListPage() {
   const { message: messageApi, modal } = App.useApp()
   const [form] = Form.useForm<SearchFormValues>()
-  const [namespaceForm] = Form.useForm<NamespaceFormValues>()
 
   // 项目列表
   const [projects, setProjects] = useState<ProjectListDTO[]>([])
@@ -80,9 +71,6 @@ export function NamespaceListPage() {
   const [modalVisible, setModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
   const [editingNamespace, setEditingNamespace] = useState<NamespaceListDTO | null>(null)
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [infoLoading, setInfoLoading] = useState(false)
-  const [formValues, setFormValues] = useState<{ name?: string; description?: string }>({})
 
   // 获取项目列表
   const fetchProjects = useCallback(async () => {
@@ -200,46 +188,25 @@ export function NamespaceListPage() {
     }
     setEditingNamespace(null)
     setModalTitle('新增命名空间')
-    setFormValues({})
     setModalVisible(true)
   }
 
   // 打开编辑模态窗
-  const handleEdit = async (record: NamespaceListDTO) => {
+  const handleEdit = (record: NamespaceListDTO) => {
     setEditingNamespace(record)
     setModalTitle('编辑命名空间')
-    setFormValues({})
     setModalVisible(true)
-    setInfoLoading(true)
-    try {
-      const result = await rcscApiClient.serverCenterAPI.namespace.getInfo.get({
-        queryParameters: {
-          id: record.iD!,
-        },
-      })
-      if (result?.resultType === 0 && result.data) {
-        const newFormValues = {
-          name: result.data.name || '',
-          description: result.data.description || '',
-        }
-        setFormValues(newFormValues)
-        // 异步设置表单值，确保 Form 渲染完成后再设置
-        setTimeout(() => {
-          namespaceForm.setFieldsValue(newFormValues)
-        }, 0)
-      } else {
-        messageApi.error(result?.message || '获取命名空间信息失败')
-        setModalVisible(false)
-        return
-      }
-    } catch (error) {
-      console.error('获取命名空间信息错误:', error)
-      messageApi.error('获取命名空间信息失败')
-      setModalVisible(false)
-      return
-    } finally {
-      setInfoLoading(false)
-    }
+  }
+
+  // 模态窗成功回调
+  const handleModalSuccess = () => {
+    setModalVisible(false)
+    fetchNamespaceList()
+  }
+
+  // 模态窗取消回调
+  const handleModalCancel = () => {
+    setModalVisible(false)
   }
 
   // 删除命名空间
@@ -268,48 +235,6 @@ export function NamespaceListPage() {
         }
       },
     })
-  }
-
-  // 提交表单
-  const handleSubmit = async () => {
-    try {
-      const values = await namespaceForm.validateFields()
-      setSubmitLoading(true)
-
-      if (editingNamespace) {
-        // 编辑命名空间
-        const result = await rcscApiClient.serverCenterAPI.namespace.edit.put({
-          iD: editingNamespace.iD!,
-          description: values.description,
-        })
-        if (result?.resultType === 0) {
-          messageApi.success('编辑成功')
-          setModalVisible(false)
-          fetchNamespaceList()
-        } else {
-          messageApi.error(result?.message || '编辑失败')
-        }
-      } else {
-        // 新增命名空间
-        const addData: AddNamespaceRequestModel = {
-          name: values.name,
-          description: values.description,
-          projectID: searchParams.projectID as unknown as Guid,
-        }
-        const result = await rcscApiClient.serverCenterAPI.namespace.add.post(addData)
-        if (result?.resultType === 0) {
-          messageApi.success('添加成功')
-          setModalVisible(false)
-          fetchNamespaceList()
-        } else {
-          messageApi.error(result?.message || '添加失败')
-        }
-      }
-    } catch (error) {
-      console.error('提交表单错误:', error)
-    } finally {
-      setSubmitLoading(false)
-    }
   }
 
   // 格式化日期
@@ -454,48 +379,15 @@ export function NamespaceListPage() {
       </div>
 
       {/* 添加/编辑模态窗 */}
-      <Modal
-        title={modalTitle}
+      <NamespaceFormModal
+        id={editingNamespace?.iD}
         open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={handleSubmit}
-        confirmLoading={submitLoading}
-        width={480}
-        destroyOnHidden
-        closable={!infoLoading}
-        mask={{ closable: !infoLoading }}
-      >
-        {infoLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <Spin />
-          </div>
-        ) : (
-          <Form
-            form={namespaceForm}
-            layout="vertical"
-            preserve={false}
-            key={editingNamespace?.iD?.toString() || 'add'}
-            initialValues={infoLoading ? undefined : formValues}
-          >
-            {editingNamespace ? (
-              <Form.Item label="名称">
-                <Input value={formValues.name || ''} disabled />
-              </Form.Item>
-            ) : (
-              <Form.Item
-                name="name"
-                label="名称"
-                rules={[{ required: true, message: '请输入名称' }]}
-              >
-                <Input placeholder="请输入名称" />
-              </Form.Item>
-            )}
-            <Form.Item name="description" label="描述">
-              <Input.TextArea placeholder="请输入描述" rows={3} />
-            </Form.Item>
-          </Form>
-        )}
-      </Modal>
+        title={modalTitle}
+        editingNamespace={editingNamespace}
+        projectID={searchParams.projectID}
+        onSuccess={handleModalSuccess}
+        onCancel={handleModalCancel}
+      />
     </div>
   )
 }

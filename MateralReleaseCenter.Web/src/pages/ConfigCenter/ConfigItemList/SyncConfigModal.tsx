@@ -89,7 +89,6 @@ export function SyncConfigModal({
       onOk={handleSubmit}
       confirmLoading={loading}
       width={480}
-      destroyOnHidden
     >
       <Form form={form} layout="vertical">
         <Form.Item

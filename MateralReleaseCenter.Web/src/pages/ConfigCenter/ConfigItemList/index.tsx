@@ -4,11 +4,9 @@ import {
   Button,
   Input,
   Form,
-  Modal,
   Pagination,
   Space,
   App,
-  Spin,
   Select,
   Tooltip,
 } from 'antd'
@@ -22,8 +20,8 @@ import {
   CopyOutlined,
 } from '@ant-design/icons'
 import { rcscApiClient, createRCESClient } from '../../../api/api-client'
-import { ValueEditor } from '../../../components/ValueEditor'
 import { SyncConfigModal } from './SyncConfigModal'
+import { ConfigItemEditModal } from './ConfigItemEditModal'
 import type {
   ProjectListDTO,
   NamespaceListDTO,
@@ -31,7 +29,6 @@ import type {
   PageModel,
 } from '../../../api/RCSCAPI/models'
 import type {
-  AddConfigurationItemRequestModel,
   QueryConfigurationItemRequestModel,
   ConfigurationItemListDTO as RCESConfigurationItemListDTO,
 } from '../../../api/RCESAPI/models'
@@ -43,13 +40,6 @@ interface SearchFormValues {
   projectID?: string
   namespaceID?: string
   key?: string
-}
-
-// 添加/编辑表单类型
-interface ConfigItemFormValues {
-  description: string
-  key: string
-  value: string
 }
 
 export function ConfigItemListPage() {
@@ -104,19 +94,9 @@ export function ConfigItemListPage() {
 
   // 添加/编辑模态窗状态
   const [editModalVisible, setEditModalVisible] = useState(false)
-  const [editModalTitle, setEditModalTitle] = useState('')
   const [editingConfigItem, setEditingConfigItem] = useState<RCESConfigurationItemListDTO | null>(
     null
   )
-  const [editForm] = Form.useForm<ConfigItemFormValues>()
-  const [editSubmitLoading, setEditSubmitLoading] = useState(false)
-  const [editInfoLoading, setEditInfoLoading] = useState(false)
-  const [formValues, setFormValues] = useState<ConfigItemFormValues>({
-    description: '',
-    key: '',
-    value: '',
-  })
-  const [valueType, setValueType] = useState<'text' | 'json'>('text')
 
   // 获取环境服务程序列表
   const fetchEnvironments = useCallback(async () => {
@@ -387,124 +367,22 @@ export function ConfigItemListPage() {
   // 打开新增模态窗
   const handleAdd = () => {
     setEditingConfigItem(null)
-    setEditModalTitle('新增配置项')
-    setFormValues({ description: '', key: '', value: '' })
-    setValueType('text')
     setEditModalVisible(true)
   }
 
   // 打开编辑模态窗
-  const handleEdit = async (record: RCESConfigurationItemListDTO) => {
-    if (!currentRCESClient) return
+  const handleEdit = (record: RCESConfigurationItemListDTO) => {
     setEditingConfigItem(record)
-    setEditModalTitle('编辑配置项')
-    setFormValues({ description: '', key: '', value: '' })
     setEditModalVisible(true)
-    setEditInfoLoading(true)
-    try {
-      const result = await currentRCESClient.environmentServerAPI.configurationItem.getInfo.get({
-        queryParameters: {
-          id: record.iD!,
-        },
-      })
-      if (result?.resultType === 0 && result.data) {
-        const data = result.data
-        // 判断值类型
-        let currentValueType: 'text' | 'json' = 'text'
-        if (data.value) {
-          try {
-            JSON.parse(data.value)
-            currentValueType = 'json'
-          } catch {
-            currentValueType = 'text'
-          }
-        }
-        setValueType(currentValueType)
-        const newFormValues = {
-          description: data.description || '',
-          key: data.key || '',
-          value: data.value || '',
-        }
-        setFormValues(newFormValues)
-        // 异步设置表单值，确保 Form 渲染完成后再设置
-        setTimeout(() => {
-          editForm.setFieldsValue(newFormValues)
-        }, 0)
-      } else {
-        messageApi.error(result?.message || '获取配置项信息失败')
-        setEditModalVisible(false)
-        return
-      }
-    } catch (error) {
-      console.error('获取配置项信息错误:', error)
-      messageApi.error('获取配置项信息失败')
-      setEditModalVisible(false)
-      return
-    } finally {
-      setEditInfoLoading(false)
-    }
   }
 
-  // 提交表单
-  const handleEditSubmit = async () => {
-    if (!currentRCESClient) return
-    try {
-      const values = await editForm.validateFields()
-
-      // 验证值不能为空
-      if (!formValues.value || formValues.value.trim() === '') {
-        messageApi.error('请输入值')
-        return
-      }
-
-      setEditSubmitLoading(true)
-
-      // 获取值（从 formValues 而非表单验证结果）
-      const submitValue = formValues.value
-
-      if (editingConfigItem) {
-        // 编辑
-        const result = await currentRCESClient.environmentServerAPI.configurationItem.edit.put({
-          iD: editingConfigItem.iD!,
-          description: values.description,
-          key: formValues.key,
-          value: submitValue,
-        })
-        if (result?.resultType === 0) {
-          messageApi.success('编辑成功')
-          setEditModalVisible(false)
-          fetchConfigItemList()
-        } else {
-          messageApi.error(result?.message || '编辑失败')
-        }
-      } else {
-        // 新增
-        const addData: AddConfigurationItemRequestModel = {
-          description: values.description,
-          key: values.key,
-          value: submitValue,
-          namespaceID: searchParams.namespaceID!,
-        }
-        const result =
-          await currentRCESClient.environmentServerAPI.configurationItem.add.post(addData)
-        if (result?.resultType === 0) {
-          messageApi.success('添加成功')
-          setEditModalVisible(false)
-          fetchConfigItemList()
-        } else {
-          messageApi.error(result?.message || '添加失败')
-        }
-      }
-    } catch (error) {
-      console.error('提交表单错误:', error)
-    } finally {
-      setEditSubmitLoading(false)
-    }
+  const handleEditModalSuccess = () => {
+    setEditModalVisible(false)
+    fetchConfigItemList()
   }
 
-  // 值类型变化
-  const handleValueTypeChange = (type: 'text' | 'json') => {
-    setValueType(type)
+  const handleEditModalCancel = () => {
+    setEditModalVisible(false)
   }
 
   // 表格列定义
@@ -702,58 +580,14 @@ export function ConfigItemListPage() {
       />
 
       {/* 添加/编辑模态窗 */}
-      <Modal
-        title={editModalTitle}
+      <ConfigItemEditModal
         open={editModalVisible}
-        onCancel={() => setEditModalVisible(false)}
-        onOk={handleEditSubmit}
-        confirmLoading={editSubmitLoading}
-        width={640}
-        destroyOnHidden
-        closable={!editInfoLoading}
-        mask={{ closable: !editInfoLoading }}
-      >
-        {editInfoLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <Spin />
-          </div>
-        ) : (
-          <Form
-            form={editForm}
-            layout="vertical"
-            preserve={false}
-            key={editingConfigItem?.iD?.toString() || 'add'}
-            initialValues={editInfoLoading ? undefined : formValues}
-          >
-            {editingConfigItem ? (
-              <Form.Item label="键">
-                <Input value={formValues.key} disabled />
-              </Form.Item>
-            ) : (
-              <Form.Item name="key" label="键" rules={[{ required: true, message: '请输入键' }]}>
-                <Input placeholder="请输入键" />
-              </Form.Item>
-            )}
-            <Form.Item
-              name="description"
-              label="描述"
-              rules={[{ required: true, message: '请输入描述' }]}
-            >
-              <Input.TextArea placeholder="请输入描述" rows={3} />
-            </Form.Item>
-            <Form.Item label="值" required>
-              <ValueEditor
-                value={formValues.value}
-                valueType={valueType}
-                onChange={val => setFormValues(prev => ({ ...prev, value: val }))}
-                onValueTypeChange={handleValueTypeChange}
-                height="200px"
-              />
-              <input type="hidden" name="value" value={formValues.value || ''} />
-            </Form.Item>
-          </Form>
-        )}
-      </Modal>
+        environmentName={currentEnvironment}
+        namespaceID={searchParams.namespaceID}
+        editingConfigItem={editingConfigItem}
+        onSuccess={handleEditModalSuccess}
+        onCancel={handleEditModalCancel}
+      />
     </div>
   )
 }

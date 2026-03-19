@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Table, Button, Input, Form, Modal, Pagination, Space, App, Tooltip, Spin } from 'antd'
+import { Table, Button, Input, Form, Pagination, Space, App, Tooltip } from 'antd'
 import {
   PlusOutlined,
   SearchOutlined,
@@ -9,12 +9,8 @@ import {
   ReloadOutlined,
 } from '@ant-design/icons'
 import { rcscApiClient } from '../../../api/api-client'
-import type {
-  UserListDTO,
-  QueryUserRequestModel,
-  PageModel,
-  AddUserRequestModel,
-} from '../../../api/RCSCAPI/models'
+import type { UserListDTO, QueryUserRequestModel, PageModel } from '../../../api/RCSCAPI/models'
+import { UserFormModal } from './UserFormModal'
 
 // 搜索表单类型
 interface SearchFormValues {
@@ -22,17 +18,9 @@ interface SearchFormValues {
   name?: string
 }
 
-// 添加/编辑表单类型
-interface UserFormValues {
-  account?: string
-  password?: string
-  name: string
-}
-
 export function UserListPage() {
-  const { message: messageApi } = App.useApp()
+  const { message: messageApi, modal } = App.useApp()
   const [form] = Form.useForm<SearchFormValues>()
-  const [userForm] = Form.useForm<UserFormValues>()
 
   // 搜索条件
   const [searchParams, setSearchParams] = useState<QueryUserRequestModel>({
@@ -64,9 +52,6 @@ export function UserListPage() {
   const [modalVisible, setModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
   const [editingUser, setEditingUser] = useState<UserListDTO | null>(null)
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [infoLoading, setInfoLoading] = useState(false)
-  const [formValues, setFormValues] = useState<UserFormValues>({ account: '', name: '' })
 
   // 获取用户列表
   const fetchUserList = useCallback(async () => {
@@ -127,51 +112,30 @@ export function UserListPage() {
   const handleAdd = () => {
     setEditingUser(null)
     setModalTitle('新增用户')
-    userForm.resetFields()
     setModalVisible(true)
   }
 
   // 打开编辑模态窗
-  const handleEdit = async (record: UserListDTO) => {
+  const handleEdit = (record: UserListDTO) => {
     setEditingUser(record)
     setModalTitle('编辑用户')
-    setFormValues({ account: '', name: '' })
     setModalVisible(true)
-    setInfoLoading(true)
-    try {
-      const result = await rcscApiClient.serverCenterAPI.user.getInfo.get({
-        queryParameters: {
-          id: record.iD!,
-        },
-      })
-      if (result?.resultType === 0 && result.data) {
-        const newFormValues = {
-          account: result.data.account || '',
-          name: result.data.name || '',
-        }
-        setFormValues(newFormValues)
-        // 异步设置表单值，确保 Form 渲染完成后再设置
-        setTimeout(() => {
-          userForm.setFieldsValue(newFormValues)
-        }, 0)
-      } else {
-        messageApi.error(result?.message || '获取用户信息失败')
-        setModalVisible(false)
-        return
-      }
-    } catch (error) {
-      console.error('获取用户信息错误:', error)
-      messageApi.error('获取用户信息失败')
-      setModalVisible(false)
-      return
-    } finally {
-      setInfoLoading(false)
-    }
+  }
+
+  // 模态窗成功回调
+  const handleModalSuccess = () => {
+    setModalVisible(false)
+    fetchUserList()
+  }
+
+  // 模态窗取消回调
+  const handleModalCancel = () => {
+    setModalVisible(false)
   }
 
   // 删除用户
   const handleDelete = (record: UserListDTO) => {
-    Modal.confirm({
+    modal.confirm({
       title: '确认删除',
       content: `确定要删除用户"${record.name || ''}"吗？`,
       okText: '确认',
@@ -199,7 +163,7 @@ export function UserListPage() {
 
   // 重置密码
   const handleResetPassword = (record: UserListDTO) => {
-    Modal.confirm({
+    modal.confirm({
       title: '确认重置密码',
       content: `确定要重置用户"${record.name || ''}"的密码吗？`,
       okText: '确认',
@@ -222,47 +186,6 @@ export function UserListPage() {
         }
       },
     })
-  }
-
-  // 提交表单
-  const handleSubmit = async () => {
-    try {
-      const values = await userForm.validateFields()
-      setSubmitLoading(true)
-
-      if (editingUser) {
-        // 编辑用户
-        const result = await rcscApiClient.serverCenterAPI.user.edit.put({
-          iD: editingUser.iD!,
-          name: values.name,
-        })
-        if (result?.resultType === 0) {
-          messageApi.success('编辑成功')
-          setModalVisible(false)
-          fetchUserList()
-        } else {
-          messageApi.error(result?.message || '编辑失败')
-        }
-      } else {
-        // 新增用户
-        const addData: AddUserRequestModel = {
-          account: values.account!,
-          name: values.name,
-        }
-        const result = await rcscApiClient.serverCenterAPI.user.add.post(addData)
-        if (result?.resultType === 0) {
-          messageApi.success('添加成功')
-          setModalVisible(false)
-          fetchUserList()
-        } else {
-          messageApi.error(result?.message || '添加失败')
-        }
-      }
-    } catch (error) {
-      console.error('提交表单错误:', error)
-    } finally {
-      setSubmitLoading(false)
-    }
   }
 
   // 格式化日期
@@ -399,48 +322,14 @@ export function UserListPage() {
       </div>
 
       {/* 添加/编辑模态窗 */}
-      <Modal
-        title={modalTitle}
+      <UserFormModal
+        id={editingUser?.iD}
         open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={handleSubmit}
-        confirmLoading={submitLoading}
-        width={480}
-        destroyOnHidden
-        closable={!infoLoading}
-        mask={{ closable: !infoLoading }}
-      >
-        {infoLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px 0' }}>
-            <Spin />
-          </div>
-        ) : (
-          <Form
-            form={userForm}
-            layout="vertical"
-            preserve={false}
-            key={editingUser?.iD?.toString() || 'add'}
-            initialValues={formValues}
-          >
-            {editingUser ? (
-              <Form.Item label="账号">
-                <Input value={formValues.account || ''} disabled />
-              </Form.Item>
-          ) : (
-            <Form.Item
-              name="account"
-              label="账号"
-              rules={[{ required: true, message: '请输入账号' }]}
-            >
-              <Input placeholder="请输入账号" />
-            </Form.Item>
-          )}
-          <Form.Item name="name" label="姓名" rules={[{ required: true, message: '请输入姓名' }]}>
-            <Input placeholder="请输入姓名" />
-          </Form.Item>
-        </Form>
-        )}
-      </Modal>
+        title={modalTitle}
+        editingUser={editingUser}
+        onSuccess={handleModalSuccess}
+        onCancel={handleModalCancel}
+      />
     </div>
   )
 }

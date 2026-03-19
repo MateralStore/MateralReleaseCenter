@@ -170,9 +170,7 @@ export function AppFormModal({
 
   // 删除环境变量
   const removeEnvironment = (index: number) => {
-    if (environments.length > 1) {
-      setEnvironments(environments.filter((_, i) => i !== index))
-    }
+    setEnvironments(environments.filter((_, i) => i !== index))
   }
 
   // 更新环境变量
@@ -268,7 +266,6 @@ export function AppFormModal({
                       danger
                       icon={<DeleteOutlined />}
                       onClick={() => removeEnvironment(index)}
-                      disabled={environments.length === 1}
                     />
                   </Space>
                 ))}

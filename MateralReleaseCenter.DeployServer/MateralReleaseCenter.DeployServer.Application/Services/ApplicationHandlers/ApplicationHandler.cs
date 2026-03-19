@@ -135,7 +135,7 @@ public abstract class ApplicationHandler : IApplicationHandler
         List<GlobalEnvironment> globalEnvironments = await globalEnvironmentRepository.FindAsync(m => m.ApplicationType == applicationType);
 
         List<EnvironmentDTO> environments = [];
-        if (model.ApplicationInfo.RunParams is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.Environments))
+        if (model.ApplicationInfo.Environments is not null && !string.IsNullOrWhiteSpace(model.ApplicationInfo.Environments))
         {
             List<EnvironmentDTO> appEnvironments = model.ApplicationInfo.Environments.JsonToObject<List<EnvironmentDTO>>();
             environments.AddRange(appEnvironments);

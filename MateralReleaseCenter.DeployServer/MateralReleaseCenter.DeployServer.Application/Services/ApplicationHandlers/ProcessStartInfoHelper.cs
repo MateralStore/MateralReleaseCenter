@@ -20,13 +20,7 @@ public static class ProcessStartInfoHelper
     /// <param name="createNoWindow">是否创建窗口，默认 true</param>
     /// <param name="showMinimizedOnWindows">在 Windows 上是否最小化窗口，默认 false</param>
     /// <returns></returns>
-    public static ProcessStartInfo Create(
-        string fileName,
-        string arguments,
-        string workingDirectory,
-        List<EnvironmentDTO> environments,
-        bool createNoWindow = true,
-        bool showMinimizedOnWindows = false)
+    public static ProcessStartInfo Create(string fileName, string arguments, string workingDirectory, List<EnvironmentDTO> environments, bool createNoWindow = true, bool showMinimizedOnWindows = false)
     {
         ProcessStartInfo processStartInfo = new()
         {
@@ -41,6 +35,7 @@ public static class ProcessStartInfoHelper
             StandardErrorEncoding = Encoding.UTF8,
             WorkingDirectory = workingDirectory
         };
+
         foreach (EnvironmentDTO item in environments)
         {
             if (item.Key is null) continue;

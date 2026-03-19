@@ -23,6 +23,7 @@ import {
 } from '@ant-design/icons'
 import { rcscApiClient, createRCESClient } from '../../../api/api-client'
 import { ValueEditor } from '../../../components/ValueEditor'
+import { SyncConfigModal } from './SyncConfigModal'
 import type {
   ProjectListDTO,
   NamespaceListDTO,
@@ -42,12 +43,6 @@ interface SearchFormValues {
   projectID?: string
   namespaceID?: string
   key?: string
-}
-
-// 同步表单类型
-interface SyncFormValues {
-  targetEnvironments: string[]
-  syncMode: number
 }
 
 // 添加/编辑表单类型
@@ -106,8 +101,6 @@ export function ConfigItemListPage() {
   // 同步模态窗状态
   const [syncModalVisible, setSyncModalVisible] = useState(false)
   const [syncTargetItem, setSyncTargetItem] = useState<RCESConfigurationItemListDTO | null>(null)
-  const [syncForm] = Form.useForm<SyncFormValues>()
-  const [syncLoading, setSyncLoading] = useState(false)
 
   // 添加/编辑模态窗状态
   const [editModalVisible, setEditModalVisible] = useState(false)
@@ -374,50 +367,14 @@ export function ConfigItemListPage() {
     setSyncModalVisible(true)
   }
 
-  // 提交同步
-  const handleSyncSubmit = async () => {
-    if (!currentRCESClient || !syncTargetItem) return
-    try {
-      const values = await syncForm.validateFields()
-      setSyncLoading(true)
+  // 同步成功回调
+  const handleSyncSuccess = () => {
+    setSyncModalVisible(false)
+  }
 
-      // 先获取当前配置项的详细信息
-      const infoResult = await currentRCESClient.environmentServerAPI.configurationItem.getInfo.get(
-        {
-          queryParameters: {
-            id: syncTargetItem.iD!,
-          },
-        }
-      )
-
-      if (infoResult?.resultType !== 0 || !infoResult.data) {
-        messageApi.error('获取配置项信息失败')
-        return
-      }
-
-      const configItem = infoResult.data
-      const targetEnvironments = values.targetEnvironments as string[]
-
-      // 循环调用 Add 接口将配置项添加到每个目标环境
-      for (const envName of targetEnvironments) {
-        const targetClient = createRCESClient(envName)
-        await targetClient.environmentServerAPI.configurationItem.add.post({
-          description: configItem.description,
-          key: configItem.key,
-          value: configItem.value,
-          namespaceID: configItem.namespaceID,
-        })
-      }
-
-      messageApi.success('同步成功')
-      setSyncModalVisible(false)
-      syncForm.resetFields()
-    } catch (error) {
-      console.error('同步配置项错误:', error)
-      messageApi.error('同步失败')
-    } finally {
-      setSyncLoading(false)
-    }
+  // 同步取消回调
+  const handleSyncCancel = () => {
+    setSyncModalVisible(false)
   }
 
   // 截断显示值
@@ -735,34 +692,14 @@ export function ConfigItemListPage() {
       </div>
 
       {/* 同步模态窗 */}
-      <Modal
-        title="同步配置"
+      <SyncConfigModal
         open={syncModalVisible}
-        onCancel={() => setSyncModalVisible(false)}
-        onOk={handleSyncSubmit}
-        confirmLoading={syncLoading}
-        width={480}
-        destroyOnHidden
-      >
-        <Form form={syncForm} layout="vertical">
-          <Form.Item
-            name="targetEnvironments"
-            label="目标环境"
-            rules={[{ required: true, message: '请选择目标环境' }]}
-          >
-            <Select
-              mode="multiple"
-              placeholder="请选择目标环境"
-              options={environments
-                .filter(e => e.name !== currentEnvironment)
-                .map(e => ({
-                  label: e.name,
-                  value: e.name || '',
-                }))}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+        targetItem={syncTargetItem}
+        environments={environments}
+        currentEnvironment={currentEnvironment}
+        onSuccess={handleSyncSuccess}
+        onCancel={handleSyncCancel}
+      />
 
       {/* 添加/编辑模态窗 */}
       <Modal

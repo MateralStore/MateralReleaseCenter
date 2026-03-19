@@ -20,7 +20,6 @@ public class NodeJsApplicationHandler : ApplicationHandler
         string workingDirectory = GetWorkingDirectory(applicationRuntime);
         if (!Directory.Exists(workingDirectory)) throw new MateralReleaseCenterException($"应用程序目录不存在: {workingDirectory}");
         string jsPath = Path.Combine(typeof(DeployServerModule).Assembly.GetDirectoryPath(), "Application", applicationRuntime.ApplicationInfo.RootPath, applicationRuntime.ApplicationInfo.MainModule);
-        if (!jsPath.EndsWith(".js", StringComparison.OrdinalIgnoreCase)) throw new MateralReleaseCenterException("NodeJs应用程序的主模块必须为.js文件");
         if (!File.Exists(jsPath)) throw new MateralReleaseCenterException($"应用程序主模块不存在: {jsPath}");
 
         string runParams = await GetRunParamsAsync(applicationRuntime, ApplicationTypeEnum.NodeJs);

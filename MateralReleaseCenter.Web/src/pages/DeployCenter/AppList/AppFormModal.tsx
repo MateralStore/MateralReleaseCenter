@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Form, Input, Select, Modal, Checkbox } from 'antd'
+import { Form, Input, Select, Modal, Checkbox, Row, Col } from 'antd'
 import { createRCDSClient } from '../../../api/api-client'
 import type { ApplicationTypeEnumKeyValueModel } from '../../../api/RCDSAPI/models'
 
@@ -147,63 +147,76 @@ export function AppFormModal({
       onCancel={onCancel}
       onOk={handleSubmit}
       confirmLoading={loading}
-      width={480}
+      width={900}
       destroyOnHidden
     >
       <Form form={form} layout="vertical" preserve={false} autoComplete="off">
-        <Form.Item
-          name="applicationType"
-          label="应用程序类型"
-          rules={[{ required: true, message: '请选择应用程序类型' }]}
-        >
-          <Select
-            placeholder="请选择应用程序类型"
-            loading={appTypeLoading}
-            options={appTypeEnum.map(item => ({
-              value: item.key!,
-              label: item.value,
-            }))}
-          />
-        </Form.Item>
-        {!id && (
-          <>
-            <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
-              <Input placeholder="请输入名称" />
+        <Row gutter={16}>
+          {/* 第一列：基础信息 */}
+          <Col span={8}>
+            <Form.Item
+              name="applicationType"
+              label="应用程序类型"
+              rules={[{ required: true, message: '请选择应用程序类型' }]}
+            >
+              <Select
+                placeholder="请选择应用程序类型"
+                loading={appTypeLoading}
+                options={appTypeEnum.map(item => ({
+                  value: item.key!,
+                  label: item.value,
+                }))}
+              />
             </Form.Item>
-            <Form.Item name="path" label="路径" rules={[{ required: true, message: '请输入路径' }]}>
-              <Input placeholder="请输入路径" />
+            {!id && (
+              <>
+                <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
+                  <Input placeholder="请输入名称" />
+                </Form.Item>
+                <Form.Item name="path" label="路径" rules={[{ required: true, message: '请输入路径' }]}>
+                  <Input placeholder="请输入路径" />
+                </Form.Item>
+              </>
+            )}
+            {id && editingData && (
+              <>
+                <Form.Item label="名称">
+                  <Input value={editingData.name} disabled />
+                </Form.Item>
+                <Form.Item label="路径">
+                  <Input value={editingData.path} disabled />
+                </Form.Item>
+              </>
+            )}
+            <Form.Item
+              name="mainModule"
+              label="主模块"
+              rules={[{ required: true, message: '请输入主模块' }]}
+            >
+              <Input placeholder="请输入主模块" />
             </Form.Item>
-          </>
-        )}
-        {id && editingData && (
-          <>
-            <Form.Item label="名称">
-              <Input value={editingData.name} disabled />
+            <Form.Item name="isIncrementalUpdating" valuePropName="checked" label=" ">
+              <Checkbox>增量更新</Checkbox>
             </Form.Item>
-            <Form.Item label="路径">
-              <Input value={editingData.path} disabled />
+          </Col>
+
+          {/* 第二列：运行参数 */}
+          <Col span={8}>
+            <Form.Item name="runParameters" label="运行参数">
+              <Input.TextArea placeholder="请输入运行参数" rows={4} />
             </Form.Item>
-          </>
-        )}
-        <Form.Item
-          name="mainModule"
-          label="主模块"
-          rules={[{ required: true, message: '请输入主模块' }]}
-        >
-          <Input placeholder="请输入主模块" />
-        </Form.Item>
-        <Form.Item name="isIncrementalUpdating" valuePropName="checked">
-          <Checkbox>增量更新</Checkbox>
-        </Form.Item>
-        <Form.Item name="runParameters" label="运行参数">
-          <Input.TextArea placeholder="请输入运行参数" rows={3} />
-        </Form.Item>
-        <Form.Item name="repositoryUrl" label="仓库地址">
-          <Input placeholder="请输入仓库地址" autoComplete="off" data-form-unique="repo" />
-        </Form.Item>
-        <Form.Item name="authToken" label="授权Token">
-          <Input.Password placeholder="请输入授权Token" autoComplete="new-custom-token" data-form-unique="token" />
-        </Form.Item>
+          </Col>
+
+          {/* 第三列：Git信息 */}
+          <Col span={8}>
+            <Form.Item name="repositoryUrl" label="仓库地址">
+              <Input placeholder="请输入仓库地址" autoComplete="off" data-form-unique="repo" />
+            </Form.Item>
+            <Form.Item name="authToken" label="授权Token">
+              <Input.Password placeholder="请输入授权Token" autoComplete="new-custom-token" data-form-unique="token" />
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </Modal>
   )
